@@ -195,6 +195,33 @@ button {
   line-height: 1.2;
 }
 
+.home-yield-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.home-series-switcher,
+.home-axis-switcher {
+  padding: 4px;
+  gap: 4px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.home-axis-switcher {
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.home-axis-switcher.is-hidden {
+  display: none;
+  pointer-events: none;
+}
+
 .home-range-switcher {
   flex: 0 0 auto;
 }
@@ -628,6 +655,69 @@ button {
   overflow: hidden;
 }
 
+.fear-sentiment-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.sentiment-step {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  opacity: 0.72;
+}
+
+.sentiment-step.is-active {
+  opacity: 1;
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.sentiment-label {
+  color: var(--text-0);
+  font: 600 11px/1.2 "IBM Plex Mono", monospace;
+  text-transform: uppercase;
+}
+
+.sentiment-range {
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.sentiment-step.extreme-fear,
+.rating-pill.extreme-fear {
+  background: rgba(255, 91, 91, 0.14);
+  color: #ffa7a7;
+}
+
+.sentiment-step.fear,
+.rating-pill.fear {
+  background: rgba(255, 184, 100, 0.14);
+  color: #ffbf7b;
+}
+
+.sentiment-step.neutral,
+.rating-pill.neutral {
+  background: rgba(255, 210, 92, 0.13);
+  color: #ffd76f;
+}
+
+.sentiment-step.greed,
+.rating-pill.greed {
+  background: rgba(127, 209, 255, 0.13);
+  color: var(--accent);
+}
+
+.sentiment-step.extreme-greed,
+.rating-pill.extreme-greed {
+  background: rgba(139, 240, 200, 0.14);
+  color: var(--accent-2);
+}
+
 .metric-column,
 .chart-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -674,6 +764,10 @@ button {
   gap: 8px;
 }
 
+.metric-symbol-line {
+  flex-wrap: wrap;
+}
+
 .metric-symbol {
   font: 500 13px/1 "IBM Plex Mono", monospace;
   color: var(--text-0);
@@ -697,14 +791,12 @@ button {
   color: var(--accent-2);
 }
 
-.source-pill.sample,
-.rating-pill.neutral {
+.source-pill.sample {
   background: rgba(255, 184, 100, 0.14);
   color: var(--warn);
 }
 
-.source-pill.empty,
-.rating-pill.fear {
+.source-pill.empty {
   background: rgba(255, 123, 114, 0.14);
   color: var(--danger);
 }
@@ -860,6 +952,11 @@ button {
 
 .tooltip-value {
   font: 500 16px/1.2 "IBM Plex Mono", monospace;
+}
+
+.tooltip-value-row {
+  margin-top: 4px;
+  white-space: nowrap;
 }
 
 .tooltip-date {
@@ -1059,6 +1156,10 @@ button {
   .thesis-band,
   .macro-grid,
   .fear-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fear-sentiment-strip {
     grid-template-columns: 1fr;
   }
 

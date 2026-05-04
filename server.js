@@ -26,6 +26,8 @@ const FRED_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=";
 const DISK_CACHE_DIR = path.join(ROOT, ".cache");
 const AHR_STATE_FILE = path.join(DISK_CACHE_DIR, "ahr_state.json");
 const CACHE = new Map();
+const PYTHON_BIN = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
+const CURL_BIN = process.env.CURL || (process.platform === "win32" ? "curl.exe" : "curl");
 const TTL_MS = {
   cnn: 5 * 60 * 1000,
   ahr: 60 * 1000,
@@ -546,7 +548,7 @@ function fetchCnnViaPython() {
   return new Promise((resolve, reject) => {
     const scriptPath = path.join(ROOT, "cnn_proxy_helper.py");
     execFile(
-      "python",
+      PYTHON_BIN,
       [scriptPath],
       {
         cwd: ROOT,
@@ -582,7 +584,7 @@ function fetchCnnViaPython() {
 function fetchViaCurl(targetUrl) {
   return new Promise((resolve, reject) => {
     execFile(
-      "curl.exe",
+      CURL_BIN,
       ["--noproxy", "*", "-sSL", targetUrl],
       {
         cwd: ROOT,

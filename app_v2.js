@@ -127,6 +127,8 @@ const state = {
 
 const homeYieldState = {
   range: "6M",
+  selectedSeries: "all",
+  axisMode: "absolute",
   series: [],
   status: "loading",
   message: "Loading US Treasury yield trends...",
@@ -181,9 +183,12 @@ function cacheRefs() {
   refs.fearSummary = document.getElementById("fear-summary");
   refs.fearReading = document.getElementById("fear-reading");
   refs.fearSourceNote = document.getElementById("fear-source-note");
+  refs.fearSentimentStrip = document.getElementById("fear-sentiment-strip");
   refs.globalLoadStatus = document.getElementById("global-load-status");
   refs.globalLoadProgress = document.getElementById("global-load-progress");
   refs.globalLoadDetail = document.getElementById("global-load-detail");
+  refs.homeSeriesSwitcher = document.getElementById("home-series-switcher");
+  refs.homeAxisSwitcher = document.getElementById("home-axis-switcher");
   refs.homeRangeSwitcher = document.getElementById("home-range-switcher");
   refs.homeYieldCanvas = document.getElementById("home-yield-canvas");
   refs.homeYieldTooltip = document.getElementById("home-yield-tooltip");
@@ -241,13 +246,37 @@ function bindEvents() {
   });
   refs.chartCanvas.addEventListener("mousemove", handleChartHover);
   refs.chartCanvas.addEventListener("mouseleave", hideTooltip);
+  refs.homeSeriesSwitcher.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-home-series]");
+    if (!button) {
+      return;
+    }
+    homeYieldState.selectedSeries = button.dataset.homeSeries;
+    if (homeYieldState.selectedSeries !== "all") {
+      homeYieldState.axisMode = "absolute";
+    }
+    renderHomeControls();
+    renderHomeYieldLegend();
+    startHomeYieldAnimation();
+  });
+  refs.homeAxisSwitcher.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-home-axis]");
+    if (!button || homeYieldState.selectedSeries !== "all") {
+      return;
+    }
+    homeYieldState.axisMode = button.dataset.homeAxis;
+    renderHomeControls();
+    renderHomeYieldLegend();
+    startHomeYieldAnimation();
+  });
   refs.homeRangeSwitcher.addEventListener("click", (event) => {
     const button = event.target.closest("[data-home-range]");
     if (!button) {
       return;
     }
     homeYieldState.range = button.dataset.homeRange;
-    renderHomeRangeButtons();
+    renderHomeControls();
+    renderHomeYieldLegend();
     startHomeYieldAnimation();
   });
   refs.homeYieldCanvas.addEventListener("mousemove", handleHomeYieldHover);
@@ -308,8 +337,8 @@ async function loadCachedDashboard() {
   state.lastRefreshAt = getLatestDataDate(seriesMap) ? new Date() : state.lastRefreshAt;
   state.networkStatus = {
     fred: summarizeFredStatus(fredResults),
-    cnn: cnnBundle.ok ? `cnn ${cnnBundle.cacheStatus.toLowerCase()}` : `cnn ${cnnBundle.reason}`,
-    ahr: ahrSeries?.source === "live" ? `ahr ${ahrSeries.cacheStatus.toLowerCase()}` : "ahr unavailable",
+    cnn: cnnBundle.ok ? `cnn ${formatCacheStatus(cnnBundle.cacheStatus)}` : `cnn ${cnnBundle.reason}`,
+    ahr: ahrSeries?.source === "live" ? `ahr ${formatCacheStatus(ahrSeries.cacheStatus)}` : "ahr unavailable",
   };
   render();
 }
@@ -385,13 +414,14 @@ async function refreshDashboard(mode = "refresh") {
   state.lastRefreshAt = new Date();
   state.networkStatus = {
     fred: summarizeFredStatus(fredResults),
-    cnn: cnnBundle.ok ? `cnn ${cnnBundle.cacheStatus.toLowerCase()}` : `cnn ${cnnBundle.reason}`,
-    ahr: ahrSeries?.source === "live" ? `ahr ${ahrSeries.cacheStatus.toLowerCase()}` : "ahr unavailable",
+    cnn: cnnBundle.ok ? `cnn ${formatCacheStatus(cnnBundle.cacheStatus)}` : `cnn ${cnnBundle.reason}`,
+    ahr: ahrSeries?.source === "live" ? `ahr ${formatCacheStatus(ahrSeries.cacheStatus)}` : "ahr unavailable",
   };
   refs.refreshButton.disabled = false;
+  const hasWarning = hasAnyWarning(fredResults, cnnBundle, ahrSeries);
   setFeedHealth({
-    phase: hasAnyError(fredResults, cnnBundle, ahrSeries) ? "partial" : "ready",
-    tone: hasAnyLive(seriesMap) ? (hasAnyError(fredResults, cnnBundle, ahrSeries) ? "warning" : "ok") : "error",
+    phase: hasAnyError(fredResults, cnnBundle, ahrSeries) || hasWarning ? "partial" : "ready",
+    tone: hasAnyLive(seriesMap) ? (hasAnyError(fredResults, cnnBundle, ahrSeries) || hasWarning ? "warning" : "ok") : "error",
     title: hasAnyLive(seriesMap) ? "数据已更新" : "数据获取失败",
     detail: formatStatus(cnnBundle, seriesMap, { changedCount, latestDataDate, refreshStartedAt, refreshSeq }),
     feeds: buildFeedHealth(fredResults, cnnBundle, ahrSeries),
@@ -429,7 +459,7 @@ async function fetchFredSeries(def, mode = "") {
 }
 
 async function refreshHomeYieldChart(mode = "refresh") {
-  renderHomeRangeButtons();
+  renderHomeControls();
   homeYieldState.status = "loading";
   homeYieldState.message = mode === "cache" ? "Loading local US Treasury yield cache..." : "Incrementally updating US3Y / US10Y / US30Y from FRED...";
   renderHomeYieldLegend();
@@ -447,8 +477,9 @@ async function refreshHomeYieldChart(mode = "refresh") {
   if (homeYieldState.series.length) {
     const latestDate = getLatestHomeYieldDate();
     const errorText = errors.length ? ` · ${errors.length} feed unavailable` : "";
+    const staleText = homeYieldState.series.some((series) => series.cacheStatus === "STALE") ? " · using stale local cache" : "";
     homeYieldState.status = errors.length ? "partial" : "ready";
-    homeYieldState.message = `Updated ${latestDate ? formatDate(latestDate) : "--"} · Source: FRED${errorText}`;
+    homeYieldState.message = `Updated ${latestDate ? formatDate(latestDate) : "--"} · Source: FRED${errorText}${staleText}`;
   } else {
     homeYieldState.status = "error";
     homeYieldState.message = errors.map((result) => `${result.symbol}: ${result.reason}`).join(" · ") || "No data";
@@ -477,6 +508,7 @@ async function fetchHomeYieldSeries(def, mode = "") {
             source: "live",
             data,
             updatedAt: data[data.length - 1].date,
+            cacheStatus: response.headers.get("X-Proxy-Cache") || "MISS",
           },
         }
       : { ok: false, symbol: def.symbol, reason: "empty response" };
@@ -540,9 +572,15 @@ async function fetchAhrSeries(mode = "") {
 
     const updatedAt = normalizeExternalDate(payload.updated_at_unix) || data[data.length - 1]?.date || todayIso();
     const currentValue = Number.parseFloat(payload.ahr999);
-    if (Number.isFinite(currentValue) && (!data.length || data[data.length - 1].date !== updatedAt)) {
-      data.push({ date: updatedAt, value: currentValue });
+    if (Number.isFinite(currentValue) && updatedAt) {
+      const currentIndex = data.findIndex((point) => point.date === updatedAt);
+      if (currentIndex >= 0) {
+        data[currentIndex] = { date: updatedAt, value: currentValue };
+      } else {
+        data.push({ date: updatedAt, value: currentValue });
+      }
     }
+    data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     return data.length
       ? {
@@ -555,6 +593,7 @@ async function fetchAhrSeries(mode = "") {
             priceUsd: payload.price_usd,
             gma200: payload.gma200_usd,
             indexGrowth: payload.index_growth_val,
+            historyPoints: data.length,
           },
           cacheStatus: response.headers.get("X-Proxy-Cache") || "MISS",
         }
@@ -687,6 +726,14 @@ function hasAnyError(fredResults, cnnBundle, ahrSeries) {
   return needsRetry(fredResults, cnnBundle, ahrSeries);
 }
 
+function hasAnyWarning(fredResults, cnnBundle, ahrSeries) {
+  return (
+    fredResults.some((result) => result.ok && result.series?.cacheStatus === "STALE") ||
+    cnnBundle.cacheStatus === "STALE" ||
+    ahrSeries?.cacheStatus === "STALE"
+  );
+}
+
 function hasAnyLive(seriesMap) {
   return Array.from(seriesMap.values()).some((series) => series.source === "live");
 }
@@ -730,9 +777,10 @@ function mergeFredResults(originalResults, retryResults) {
 
 function summarizeFredStatus(fredResults) {
   const liveCount = fredResults.filter((result) => result.ok).length;
+  const staleCount = fredResults.filter((result) => result.ok && result.series?.cacheStatus === "STALE").length;
   const failed = fredResults.find((result) => !result.ok);
   if (liveCount === fredResults.length) {
-    return `fred ${liveCount}/${fredResults.length} live`;
+    return staleCount ? `fred ${liveCount}/${fredResults.length} live · ${staleCount} stale` : `fred ${liveCount}/${fredResults.length} live`;
   }
   if (liveCount > 0) {
     return `fred partial ${liveCount}/${fredResults.length}: ${failed?.reason || "unknown"}`;
@@ -742,8 +790,9 @@ function summarizeFredStatus(fredResults) {
 
 function buildFeedHealth(fredResults, cnnBundle, ahrSeries) {
   const fredLive = fredResults.filter((result) => result.ok).length;
+  const fredStale = fredResults.filter((result) => result.ok && result.series?.cacheStatus === "STALE").length;
   const fredFailed = fredResults.find((result) => !result.ok);
-  const fredState = fredLive === fredResults.length ? "ok" : fredLive > 0 ? "warning" : "error";
+  const fredState = fredLive === fredResults.length && !fredStale ? "ok" : fredLive > 0 ? "warning" : "error";
   const cnnState = cnnBundle.ok ? (cnnBundle.cacheStatus === "STALE" ? "warning" : "ok") : "error";
   const ahrState = ahrSeries?.source === "live" ? (ahrSeries.cacheStatus === "STALE" ? "warning" : "ok") : "error";
 
@@ -751,17 +800,17 @@ function buildFeedHealth(fredResults, cnnBundle, ahrSeries) {
     fred: {
       state: fredState,
       label: "FRED",
-      detail: fredState === "ok" ? `${fredLive}/${fredResults.length} live` : fredFailed?.reason || "unavailable",
+      detail: fredState === "ok" ? `${fredLive}/${fredResults.length} live` : fredStale ? `${fredStale} stale cache` : fredFailed?.reason || "unavailable",
     },
     cnn: {
       state: cnnState,
       label: "CNN",
-      detail: cnnBundle.ok ? cnnBundle.cacheStatus.toLowerCase() : cnnBundle.reason,
+      detail: cnnBundle.ok ? formatCacheStatus(cnnBundle.cacheStatus) : cnnBundle.reason,
     },
     ahr: {
       state: ahrState,
       label: "AHR999",
-      detail: ahrSeries?.source === "live" ? (ahrSeries.cacheStatus || "live").toLowerCase() : ahrSeries?.latestMeta?.proxyError || "unavailable",
+      detail: ahrSeries?.source === "live" ? formatCacheStatus(ahrSeries.cacheStatus || "live") : ahrSeries?.latestMeta?.proxyError || "unavailable",
     },
   };
 }
@@ -947,11 +996,16 @@ function renderMetricRow(series) {
   }
   const latest = getLatestValue(series);
   const delta = getRangeDelta(series, "30D");
+  const rating = getSeriesRating(series);
+  const ratingHtml = rating
+    ? `<span class="rating-pill ${fearRatingClass(rating)}">${escapeHtml(rating)}</span>`
+    : "";
   row.innerHTML = `
     <div class="metric-main">
       <div class="metric-symbol-line">
         <span class="metric-symbol">${series.symbol}</span>
         <span class="source-pill ${series.source}">${getSourcePill(series)}</span>
+        ${ratingHtml}
       </div>
       <div class="metric-meta-line">
         <span class="metric-name">${series.name}</span>
@@ -1006,12 +1060,32 @@ function updateFearSummary() {
   const fear = getSeries("cnn_fear");
   const ahr = getSeries("ahr999");
   const value = getLatestValue(fear);
-  const rating = fear?.latestMeta?.rating || classifyFearRating(value);
+  const rating = getSeriesRating(fear);
   refs.fearSummary.textContent = `CNN Fear & Greed ${formatValue(fear, value)}`;
   refs.fearReading.textContent = rating || "No data";
   const cnnText = fear.source === "live" ? `CNN proxy ${cnnBundleLabel(state.networkStatus.cnn)}` : state.networkStatus.cnn;
   const ahrText = ahr?.source === "live" ? `AHR proxy ${cnnBundleLabel(state.networkStatus.ahr)}` : state.networkStatus.ahr;
-  refs.fearSourceNote.textContent = `${cnnText} · ${ahrText}`;
+  const ahrHistory = ahr?.latestMeta?.historyPoints ? ` · AHR ${ahr.latestMeta.historyPoints} pts` : "";
+  refs.fearSourceNote.textContent = `${cnnText} · ${ahrText}${ahrHistory}`;
+  renderFearSentimentStrip(rating);
+}
+
+function renderFearSentimentStrip(activeRating) {
+  if (!refs.fearSentimentStrip) {
+    return;
+  }
+  const normalized = normalizeRating(activeRating);
+  refs.fearSentimentStrip.innerHTML = getFearRatingScale()
+    .map((item) => {
+      const isActive = item.key === normalized;
+      return `
+        <div class="sentiment-step ${item.className} ${isActive ? "is-active" : ""}">
+          <span class="sentiment-label">${item.label}</span>
+          <span class="sentiment-range">${item.range}</span>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 function renderRangeButtons() {
@@ -1033,7 +1107,7 @@ function renderChart() {
   const latest = points[points.length - 1];
   const first = points[0];
   const delta = latest && first ? latest.value - first.value : null;
-  const rating = series.id === "cnn_fear" ? classifyFearRating(getLatestValue(series)) : "";
+  const rating = getSeriesRating(series);
 
   refs.chartSymbol.textContent = series.symbol;
   refs.chartName.textContent = series.name;
@@ -1263,14 +1337,7 @@ function showTooltip(point, series, x, y, bounds, chartConfig) {
     <div class="tooltip-date">${formatDate(point.date)}</div>
     ${overlayLines}
   `;
-  const rect = refs.chartTooltip.getBoundingClientRect();
-  const left = clamp(x, rect.width / 2 + 12, bounds.width - rect.width / 2 - 12);
-  let top = y - rect.height - 16;
-  if (top < 12) {
-    top = Math.min(bounds.height - rect.height - 12, y + 16);
-  }
-  refs.chartTooltip.style.left = `${left}px`;
-  refs.chartTooltip.style.top = `${top}px`;
+  positionChartTooltip(refs.chartTooltip, x, y, bounds);
 }
 
 function hideTooltip() {
@@ -1279,23 +1346,112 @@ function hideTooltip() {
   renderChart();
 }
 
-function renderHomeRangeButtons() {
+function positionChartTooltip(tooltip, x, y, bounds, options = {}) {
+  const rect = tooltip.getBoundingClientRect();
+  const margin = 12;
+  const gap = 14;
+  const maxLeft = Math.max(margin, bounds.width - rect.width - margin);
+  let left = x + gap;
+
+  if (left + rect.width > bounds.width - margin) {
+    left = x - rect.width - gap;
+  }
+  left = clamp(left, margin, maxLeft);
+
+  let top = options.fixedTop ?? y - rect.height - gap;
+  if (options.fixedTop === undefined && top < margin) {
+    top = y + gap;
+  }
+  const maxTop = Math.max(margin, bounds.height - rect.height - margin);
+  top = clamp(top, margin, maxTop);
+
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${top}px`;
+}
+
+function renderHomeControls() {
   refs.homeRangeSwitcher.querySelectorAll("[data-home-range]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.homeRange === homeYieldState.range);
   });
+  refs.homeSeriesSwitcher.querySelectorAll("[data-home-series]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.homeSeries === homeYieldState.selectedSeries);
+  });
+  refs.homeAxisSwitcher.querySelectorAll("[data-home-axis]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.homeAxis === homeYieldState.axisMode);
+  });
+  refs.homeAxisSwitcher.classList.toggle("is-hidden", homeYieldState.selectedSeries !== "all");
 }
 
 function renderHomeYieldLegend() {
-  const seriesItems = homeYieldState.series.length
-    ? homeYieldState.series
-    : HOME_YIELD_DEFS.map((def) => ({ ...def, data: [] }));
+  const seriesItems = getVisibleHomeYieldSeries();
   refs.homeYieldLegend.innerHTML = buildLegendHtml(
     seriesItems.map((series) => ({
       color: series.color,
-      label: `${series.symbol}${series.data?.length ? ` ${formatValue(series, getLatestValue(series))}` : ""}`,
+      label: formatHomeYieldLegendLabel(series),
     })),
   );
   refs.homeYieldFooter.textContent = homeYieldState.message;
+}
+
+function getVisibleHomeYieldSeries() {
+  const source = homeYieldState.series.length
+    ? homeYieldState.series
+    : HOME_YIELD_DEFS.map((def) => ({ ...def, data: [] }));
+  if (homeYieldState.selectedSeries === "all") {
+    return source;
+  }
+  return source.filter((series) => series.id === homeYieldState.selectedSeries);
+}
+
+function getEffectiveHomeAxisMode() {
+  return homeYieldState.selectedSeries === "all" ? homeYieldState.axisMode : "absolute";
+}
+
+function isHomeYieldNormalized() {
+  return getEffectiveHomeAxisMode() === "normalized";
+}
+
+function formatHomeYieldLegendLabel(series) {
+  if (!series.data?.length) {
+    return series.symbol;
+  }
+  if (!isHomeYieldNormalized()) {
+    return `${series.symbol} ${formatValue(series, getLatestValue(series))}`;
+  }
+  const points = getHomeYieldWindowPoints(series);
+  const first = points[0]?.value;
+  const last = points[points.length - 1]?.value;
+  if (!Number.isFinite(first) || !Number.isFinite(last) || first === 0) {
+    return series.symbol;
+  }
+  const relativeChange = (last / first - 1) * 100;
+  return `${series.symbol} ${formatSignedPercent(relativeChange)}`;
+}
+
+function formatHomePlotValue(series, point) {
+  if (!point) {
+    return "无数据";
+  }
+  if (!isHomeYieldNormalized()) {
+    return formatValue(series, point.value);
+  }
+  return `${point.value.toFixed(1)} · ${formatValue(series, point.rawValue)}`;
+}
+
+function formatSignedPercent(value) {
+  if (!Number.isFinite(value)) {
+    return "无数据";
+  }
+  const sign = value > 0 ? "+" : "";
+  return `${sign}${value.toFixed(1)}%`;
+}
+
+function getHomeYieldWindowPoints(series) {
+  const rangeView = getHomeYieldRangeView();
+  return (series.data || []).filter((point) => {
+    const time = new Date(point.date).getTime();
+    return time >= rangeView.startTime && time <= rangeView.endTime;
+  });
 }
 
 function startHomeYieldAnimation() {
@@ -1333,17 +1489,23 @@ function drawHomeYieldChart(progress = 1) {
   const plotWidth = rect.width - padding.left - padding.right;
   const plotHeight = rect.height - padding.top - padding.bottom;
   const rangeView = getHomeYieldRangeView();
-  const seriesViews = homeYieldState.series.map((series) => ({
-    series,
-    points: series.data.filter((point) => {
+  const axisMode = getEffectiveHomeAxisMode();
+  const normalized = axisMode === "normalized";
+  const seriesViews = getVisibleHomeYieldSeries().map((series) => {
+    const rawPoints = (series.data || []).filter((point) => {
       const time = new Date(point.date).getTime();
       return time >= rangeView.startTime && time <= rangeView.endTime;
-    }),
-  }));
+    });
+    const baseValue = rawPoints.find((point) => Number.isFinite(point.value) && point.value !== 0)?.value;
+    const points = normalized && Number.isFinite(baseValue)
+      ? rawPoints.map((point) => ({ ...point, rawValue: point.value, value: (point.value / baseValue) * 100 }))
+      : rawPoints.map((point) => ({ ...point, rawValue: point.value }));
+    return { series, points, rawPoints, baseValue };
+  });
   const allValues = seriesViews.flatMap((view) => view.points.map((point) => point.value));
 
   if (!allValues.length) {
-    drawHomeYieldAxes(ctx, rect.width, rect.height, padding, 0, 1, rangeView);
+    drawHomeYieldAxes(ctx, rect.width, rect.height, padding, 0, 1, rangeView, axisMode);
     ctx.fillStyle = "#7d90a5";
     ctx.font = '14px "IBM Plex Mono"';
     ctx.fillText(homeYieldState.status === "loading" ? "Loading..." : "No data", padding.left, padding.top + 18);
@@ -1369,7 +1531,12 @@ function drawHomeYieldChart(progress = 1) {
     return padding.left + clamp(ratio, 0, 1) * plotWidth;
   };
 
-  drawHomeYieldAxes(ctx, rect.width, rect.height, padding, minValue, maxValue, rangeView);
+  drawHomeYieldAxes(ctx, rect.width, rect.height, padding, minValue, maxValue, rangeView, axisMode);
+  if (normalized) {
+    ctx.fillStyle = "rgba(184, 204, 225, 0.7)";
+    ctx.font = '11px "IBM Plex Mono"';
+    ctx.fillText("start = 100", rect.width - padding.right - 84, padding.top + 13);
+  }
   const cutoffX = padding.left + plotWidth * progress;
   const plotRecords = [];
 
@@ -1401,7 +1568,7 @@ function drawHomeYieldChart(progress = 1) {
   };
 }
 
-function drawHomeYieldAxes(ctx, width, height, padding, minValue, maxValue, rangeView) {
+function drawHomeYieldAxes(ctx, width, height, padding, minValue, maxValue, rangeView, axisMode = "absolute") {
   ctx.strokeStyle = "rgba(255,255,255,0.08)";
   ctx.lineWidth = 1;
   for (let i = 0; i <= 4; i += 1) {
@@ -1421,8 +1588,11 @@ function drawHomeYieldAxes(ctx, width, height, padding, minValue, maxValue, rang
 
   ctx.fillStyle = "#7d90a5";
   ctx.font = '11px "IBM Plex Mono"';
-  ctx.fillText(`${maxValue.toFixed(2)}%`, padding.left + 8, padding.top + 13);
-  ctx.fillText(`${minValue.toFixed(2)}%`, padding.left + 8, height - padding.bottom - 8);
+  const yFormatter = axisMode === "normalized"
+    ? (value) => value.toFixed(1)
+    : (value) => `${value.toFixed(2)}%`;
+  ctx.fillText(yFormatter(maxValue), padding.left + 8, padding.top + 13);
+  ctx.fillText(yFormatter(minValue), padding.left + 8, height - padding.bottom - 8);
 
   const startLabel = formatAxisDate(rangeView.startTime);
   const endLabel = formatAxisDate(rangeView.endTime);
@@ -1507,20 +1677,17 @@ function showHomeYieldTooltip(date, x, bounds, plot) {
     .map((view) => {
       const point = findNearestDatePoint(view.points, date);
       return point
-        ? `<div class="tooltip-date"><span style="color:${view.series.color}">${view.series.symbol}</span>: ${formatValue(view.series, point.value)}</div>`
+        ? `<div class="tooltip-value tooltip-value-row"><span style="color:${view.series.color}">${view.series.symbol}</span>: ${formatHomePlotValue(view.series, point)}</div>`
         : "";
     })
     .join("");
   refs.homeYieldTooltip.hidden = false;
   refs.homeYieldTooltip.innerHTML = `
-    <div class="tooltip-label">Treasury Yield</div>
-    <div class="tooltip-value">${formatDate(date)}</div>
+    <div class="tooltip-label">${isHomeYieldNormalized() ? "Treasury Yield · start=100" : "Treasury Yield"}</div>
     ${rows}
+    <div class="tooltip-date">${formatDate(date)}</div>
   `;
-  const rect = refs.homeYieldTooltip.getBoundingClientRect();
-  const left = clamp(x, rect.width / 2 + 12, bounds.width - rect.width / 2 - 12);
-  refs.homeYieldTooltip.style.left = `${left}px`;
-  refs.homeYieldTooltip.style.top = "16px";
+  positionChartTooltip(refs.homeYieldTooltip, x, 16, bounds, { fixedTop: 16 });
 }
 
 function hideHomeYieldTooltip() {
@@ -1670,6 +1837,19 @@ function getSourceLabel(series) {
   return "Live feed";
 }
 
+function formatCacheStatus(value) {
+  const status = String(value || "").toUpperCase();
+  const labels = {
+    MISS: "fresh fetch",
+    INCREMENTAL: "incremental",
+    HIT: "memory cache",
+    DISK: "local cache",
+    STALE: "stale cache",
+    BYPASS: "bypass",
+  };
+  return labels[status] || String(value || "unknown").toLowerCase();
+}
+
 function getChartConfig(series, days) {
   const overlays = [];
   if (series.id === "market_momentum_sp500") {
@@ -1763,7 +1943,7 @@ function normalizeExternalDate(rawDate) {
     return "";
   }
   if (typeof rawDate === "number") {
-    return new Date(rawDate).toISOString().slice(0, 10);
+    return new Date(rawDate < 1e12 ? rawDate * 1000 : rawDate).toISOString().slice(0, 10);
   }
   if (/^\d+$/.test(String(rawDate))) {
     const numeric = Number.parseInt(rawDate, 10);
@@ -1793,13 +1973,60 @@ function classifyFearRating(value) {
 }
 
 function fearRatingClass(rating) {
-  if (/greed/i.test(rating)) {
-    return "greedy";
+  const normalized = normalizeRating(rating);
+  if (normalized === "extreme-greed") {
+    return "extreme-greed";
   }
-  if (/neutral/i.test(rating)) {
+  if (normalized === "greed") {
+    return "greed";
+  }
+  if (normalized === "neutral") {
     return "neutral";
   }
+  if (normalized === "extreme-fear") {
+    return "extreme-fear";
+  }
   return "fear";
+}
+
+function getSeriesRating(series) {
+  if (!series || series.source !== "live") {
+    return "";
+  }
+  if (series.latestMeta?.rating) {
+    return series.latestMeta.rating;
+  }
+  return series.id === "cnn_fear" ? classifyFearRating(getLatestValue(series)) : "";
+}
+
+function normalizeRating(rating) {
+  const value = String(rating || "").trim().toLowerCase().replace(/[_\s]+/g, "-");
+  if (value.includes("extreme-greed")) {
+    return "extreme-greed";
+  }
+  if (value.includes("extreme-fear")) {
+    return "extreme-fear";
+  }
+  if (value.includes("greed")) {
+    return "greed";
+  }
+  if (value.includes("neutral")) {
+    return "neutral";
+  }
+  if (value.includes("fear")) {
+    return "fear";
+  }
+  return "";
+}
+
+function getFearRatingScale() {
+  return [
+    { key: "extreme-fear", label: "Extreme Fear", range: "0-25", className: "extreme-fear" },
+    { key: "fear", label: "Fear", range: "25-45", className: "fear" },
+    { key: "neutral", label: "Neutral", range: "45-55", className: "neutral" },
+    { key: "greed", label: "Greed", range: "55-75", className: "greed" },
+    { key: "extreme-greed", label: "Extreme Greed", range: "75-100", className: "extreme-greed" },
+  ];
 }
 
 function getFearBands() {

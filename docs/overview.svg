@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="620" viewBox="0 0 1180 620" role="img" aria-label="Macro Monitor UI overview">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07111b"/>
+      <stop offset="55%" stop-color="#0b1118"/>
+      <stop offset="100%" stop-color="#1a130f"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#111b27"/>
+      <stop offset="100%" stop-color="#090f16"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.05 0 0 0 0 0.42 0 0 0 0 0.72 0 0 0 .42 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+  </defs>
+
+  <rect width="1180" height="620" rx="28" fill="url(#bg)"/>
+  <g opacity=".2">
+    <path d="M0 96h1180M0 192h1180M0 288h1180M0 384h1180M0 480h1180M0 576h1180" stroke="#8bb7d8"/>
+    <path d="M100 0v620M220 0v620M340 0v620M460 0v620M580 0v620M700 0v620M820 0v620M940 0v620M1060 0v620" stroke="#8bb7d8"/>
+  </g>
+
+  <rect x="32" y="28" width="1116" height="110" rx="18" fill="url(#card)" stroke="#243445"/>
+  <text x="56" y="58" fill="#8aa1b8" font-family="IBM Plex Mono, Menlo, monospace" font-size="13" letter-spacing="3">INFLATION DRIFT MONITOR</text>
+  <text x="56" y="92" fill="#f4f8ff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="25" font-weight="700">盯住 survey 先抬头后，市场锚是否也开始漂。</text>
+  <rect x="640" y="45" width="150" height="62" rx="12" fill="#121922" stroke="#2b3948"/>
+  <rect x="806" y="45" width="150" height="62" rx="12" fill="#121922" stroke="#2b3948"/>
+  <rect x="972" y="45" width="150" height="62" rx="12" fill="#121922" stroke="#2b3948"/>
+  <text x="658" y="72" fill="#7fd1ff" font-family="IBM Plex Mono, Menlo, monospace" font-size="11">BASE CASE</text>
+  <text x="824" y="72" fill="#7fd1ff" font-family="IBM Plex Mono, Menlo, monospace" font-size="11">WATCH</text>
+  <text x="990" y="72" fill="#7fd1ff" font-family="IBM Plex Mono, Menlo, monospace" font-size="11">ESCALATION</text>
+  <text x="658" y="96" fill="#f4f8ff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13">survey up</text>
+  <text x="824" y="96" fill="#f4f8ff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13">T5YIE &gt; 2.75%</text>
+  <text x="990" y="96" fill="#f4f8ff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13">T5YIFR rises</text>
+
+  <rect x="32" y="158" width="760" height="360" rx="18" fill="url(#card)" stroke="#243445"/>
+  <text x="56" y="192" fill="#8aa1b8" font-family="IBM Plex Mono, Menlo, monospace" font-size="12" letter-spacing="3">TREASURY CURVE</text>
+  <text x="56" y="224" fill="#f4f8ff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="23" font-weight="700">US3Y / US10Y / US30Y</text>
+  <g font-family="IBM Plex Mono, Menlo, monospace" font-size="13" fill="#dce8f5">
+    <rect x="56" y="244" width="44" height="34" rx="10" fill="#173452" stroke="#4f83aa"/>
+    <text x="70" y="266">All</text>
+    <rect x="108" y="244" width="44" height="34" rx="10" fill="#161d26"/>
+    <text x="122" y="266">3y</text>
+    <rect x="160" y="244" width="52" height="34" rx="10" fill="#161d26"/>
+    <text x="174" y="266">10y</text>
+    <rect x="220" y="244" width="52" height="34" rx="10" fill="#161d26"/>
+    <text x="234" y="266">30y</text>
+  </g>
+  <rect x="56" y="306" width="700" height="172" rx="14" fill="#071018" stroke="#1c2a35"/>
+  <path d="M84 423 C144 360 184 451 244 405 S352 377 416 388 S510 440 590 362 S688 385 732 338" fill="none" stroke="#7fd1ff" stroke-width="3" filter="url(#glow)"/>
+  <path d="M84 386 C156 360 205 410 278 370 S406 372 466 354 S544 410 620 346 S692 332 732 310" fill="none" stroke="#8bf0c8" stroke-width="3"/>
+  <path d="M84 343 C152 328 212 354 288 314 S405 317 478 301 S560 348 634 292 S704 285 732 270" fill="none" stroke="#ffb864" stroke-width="3"/>
+  <circle cx="84" cy="500" r="5" fill="#7fd1ff"/>
+  <text x="100" y="505" fill="#cbd7e2" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13">US3Y</text>
+  <circle cx="152" cy="500" r="5" fill="#8bf0c8"/>
+  <text x="168" y="505" fill="#cbd7e2" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13">US10Y</text>
+  <circle cx="232" cy="500" r="5" fill="#ffb864"/>
+  <text x="248" y="505" fill="#cbd7e2" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13">US30Y</text>
+
+  <rect x="816" y="158" width="332" height="360" rx="18" fill="url(#card)" stroke="#243445"/>
+  <text x="840" y="192" fill="#8aa1b8" font-family="IBM Plex Mono, Menlo, monospace" font-size="12" letter-spacing="3">NOTES</text>
+  <g fill="#111922" stroke="#273747">
+    <rect x="840" y="212" width="284" height="68" rx="12"/>
+    <rect x="840" y="296" width="284" height="68" rx="12"/>
+    <rect x="840" y="380" width="284" height="68" rx="12"/>
+  </g>
+  <text x="858" y="240" fill="#7fd1ff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="14" font-weight="700">核心问题</text>
+  <text x="858" y="266" fill="#d6e1ec" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13">survey 抬头后，市场锚是否漂移</text>
+  <text x="858" y="324" fill="#7fd1ff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="14" font-weight="700">首页曲线</text>
+  <text x="858" y="350" fill="#d6e1ec" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13">短中长端 nominal yield 压力</text>
+  <text x="858" y="408" fill="#7fd1ff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="14" font-weight="700">页面分工</text>
+  <text x="858" y="434" fill="#d6e1ec" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13">Macro 通胀；Fear 风险情绪</text>
+
+  <rect x="0" y="548" width="1180" height="72" fill="#0c121a" stroke="#1b2936"/>
+  <circle cx="42" cy="584" r="18" fill="#1f6ca4"/>
+  <rect x="84" y="566" width="128" height="36" rx="15" fill="#111922" stroke="#273747"/>
+  <circle cx="102" cy="584" r="4" fill="#8bf0c8"/>
+  <text x="116" y="589" fill="#dce8f5" font-family="IBM Plex Sans, Arial, sans-serif" font-size="14">Macro Monitor</text>
+  <rect x="1028" y="566" width="66" height="36" rx="13" fill="#173452" stroke="#4f83aa"/>
+  <text x="1046" y="589" fill="#fff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="14">Macro</text>
+  <rect x="1102" y="566" width="54" height="36" rx="13" fill="#111922" stroke="#273747"/>
+  <text x="1118" y="589" fill="#fff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="14">Fear</text>
+</svg>

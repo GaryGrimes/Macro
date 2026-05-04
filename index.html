@@ -57,6 +57,18 @@
               <div>
                 <p class="panel-label">Treasury Curve</p>
                 <h2>US3Y / US10Y / US30Y</h2>
+                <div class="home-yield-controls" aria-label="Treasury curve display controls">
+                  <div class="range-switcher home-series-switcher" id="home-series-switcher">
+                    <button class="range-button is-active" data-home-series="all" type="button">All</button>
+                    <button class="range-button" data-home-series="us3y" type="button">3y</button>
+                    <button class="range-button" data-home-series="us10y" type="button">10y</button>
+                    <button class="range-button" data-home-series="us30y" type="button">30y</button>
+                  </div>
+                  <div class="range-switcher home-axis-switcher" id="home-axis-switcher">
+                    <button class="range-button is-active" data-home-axis="absolute" type="button">利率绝对值</button>
+                    <button class="range-button" data-home-axis="normalized" type="button">归一化</button>
+                  </div>
+                </div>
               </div>
 
               <div class="range-switcher home-range-switcher" id="home-range-switcher">
@@ -152,6 +164,8 @@
                 <span class="thesis-value" id="fear-source-note">Live first, otherwise no data</span>
               </div>
             </div>
+
+            <div class="fear-sentiment-strip" id="fear-sentiment-strip" aria-label="CNN fear and greed rating scale"></div>
 
             <section class="column-grid fear-grid" id="fear-grid" aria-label="Fear monitor columns"></section>
           </section>

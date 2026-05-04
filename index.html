@@ -42,6 +42,65 @@
               <span class="rule-value">T5YIE and T5YIFR rise together</span>
             </div>
           </div>
+
+          <div class="global-load-strip loading" id="global-load-status">
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <span class="global-load-title">加载中</span>
+            <span class="global-load-progress" id="global-load-progress">0 / 0</span>
+            <span class="global-load-detail" id="global-load-detail">优先读取本地缓存...</span>
+          </div>
+        </section>
+
+        <section class="home-dashboard" aria-label="Homepage market overview">
+          <section class="home-yield-card">
+            <div class="home-card-header">
+              <div>
+                <p class="panel-label">Treasury Curve</p>
+                <h2>US3Y / US10Y / US30Y</h2>
+              </div>
+
+              <div class="range-switcher home-range-switcher" id="home-range-switcher">
+                <button class="range-button" data-home-range="7D" type="button">7d</button>
+                <button class="range-button" data-home-range="30D" type="button">30d</button>
+                <button class="range-button is-active" data-home-range="6M" type="button">6m</button>
+                <button class="range-button" data-home-range="1Y" type="button">1y</button>
+                <button class="range-button" data-home-range="2Y" type="button">2y</button>
+              </div>
+            </div>
+
+            <div class="home-chart-stage">
+              <canvas id="home-yield-canvas" width="920" height="420"></canvas>
+              <div class="chart-tooltip" id="home-yield-tooltip" hidden></div>
+            </div>
+
+            <div class="chart-legend" id="home-yield-legend"></div>
+
+            <div class="home-chart-footer" id="home-yield-footer">
+              Loading US Treasury yield trends...
+            </div>
+          </section>
+
+          <aside class="home-notes-card">
+            <p class="panel-label">Notes</p>
+            <div class="note-stack">
+              <div class="note-item">
+                <span>核心问题</span>
+                <p>survey 预期已经抬头后，市场端 breakeven 与长端 forward 是否也跟着上漂。</p>
+              </div>
+              <div class="note-item">
+                <span>首页曲线</span>
+                <p>US3Y、US10Y、US30Y 用来先看 nominal yield 曲线的短中长端压力是否同步上行。</p>
+              </div>
+              <div class="note-item">
+                <span>触发信号</span>
+                <p>若 T5YIE 站上 2.75%，且 T5YIFR 同步抬升，说明“有条件冲击”开始向长期锚外溢。</p>
+              </div>
+              <div class="note-item">
+                <span>页面分工</span>
+                <p>Macro 看通胀补偿、利率与 survey；Fear 单独看 CNN Fear &amp; Greed、AHR999 与拆分压力项。</p>
+              </div>
+            </div>
+          </aside>
         </section>
 
         <div class="flyout-backdrop" id="flyout-backdrop" hidden></div>

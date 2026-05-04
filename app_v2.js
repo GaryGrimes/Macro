@@ -104,6 +104,8 @@ const state = {
   seriesMap: new Map(),
   lastRefreshAt: null,
   hoverIndex: null,
+  chartAnimationFrame: null,
+  chartAnimationStartedAt: 0,
   networkStatus: {
     fred: "pending",
     cnn: "pending",
@@ -233,6 +235,7 @@ function bindEvents() {
         state.selectedId = DEFAULT_PAGE_SERIES[state.activePage];
       }
       render();
+      startChartAnimation();
     });
   });
   refs.rangeSwitcher.addEventListener("click", (event) => {
@@ -243,6 +246,7 @@ function bindEvents() {
     state.range = button.dataset.range;
     renderRangeButtons();
     renderChart();
+    startChartAnimation();
   });
   refs.chartCanvas.addEventListener("mousemove", handleChartHover);
   refs.chartCanvas.addEventListener("mouseleave", hideTooltip);
@@ -1027,6 +1031,7 @@ function renderMetricRow(series) {
     state.selectedId = series.id;
     state.activePage = series.page;
     render();
+    startChartAnimation();
   });
   return row;
 }
@@ -1094,7 +1099,7 @@ function renderRangeButtons() {
   });
 }
 
-function renderChart() {
+function renderChart(progress = 1) {
   const series = getSeries(state.selectedId);
   if (!series) {
     return;
@@ -1135,10 +1140,29 @@ function renderChart() {
     ratingNode.hidden = true;
   }
 
-  drawChart(points, series, rangeView, chartConfig);
+  drawChart(points, series, rangeView, chartConfig, progress);
 }
 
-function drawChart(points, series, rangeView, chartConfig) {
+function startChartAnimation() {
+  if (state.chartAnimationFrame) {
+    cancelAnimationFrame(state.chartAnimationFrame);
+  }
+  state.hoverIndex = null;
+  refs.chartTooltip.hidden = true;
+  state.chartAnimationStartedAt = performance.now();
+  const step = (now) => {
+    const progress = clamp((now - state.chartAnimationStartedAt) / 850, 0, 1);
+    renderChart(progress);
+    if (progress < 1) {
+      state.chartAnimationFrame = requestAnimationFrame(step);
+    } else {
+      state.chartAnimationFrame = null;
+    }
+  };
+  state.chartAnimationFrame = requestAnimationFrame(step);
+}
+
+function drawChart(points, series, rangeView, chartConfig, progress = 1) {
   const canvas = refs.chartCanvas;
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
@@ -1192,14 +1216,15 @@ function drawChart(points, series, rangeView, chartConfig) {
     drawFearBands(ctx, rect.width, padding, yFor, sentimentBands, plotHeight);
   }
   drawAxes(ctx, rect.width, rect.height, padding, minValue, maxValue, series, rangeView);
-  drawLine(ctx, points, xPositions, yFor, rect.height - padding.bottom);
+  const cutoffX = padding.left + plotWidth * progress;
+  drawLine(ctx, points, xPositions, yFor, rect.height - padding.bottom, null, cutoffX);
   chartConfig.overlays.forEach((overlay) => {
     const overlayX = overlay.points.map((point) => {
       const time = new Date(point.date).getTime();
       const ratio = (time - rangeView.startTime) / Math.max(rangeView.endTime - rangeView.startTime, 1);
       return padding.left + clamp(ratio, 0, 1) * plotWidth;
     });
-    drawLine(ctx, overlay.points, overlayX, yFor, rect.height - padding.bottom, overlay.color);
+    drawLine(ctx, overlay.points, overlayX, yFor, rect.height - padding.bottom, overlay.color, cutoffX);
     overlay.xPositions = overlayX;
   });
 
@@ -1255,9 +1280,12 @@ function drawAxes(ctx, width, height, padding, minValue, maxValue, series, range
   ctx.fillText(endLabel, width - padding.right - endWidth, height - 8);
 }
 
-function drawLine(ctx, points, xPositions, yFor, baseline, strokeColor) {
+function drawLine(ctx, points, xPositions, yFor, baseline, strokeColor, cutoffX = Number.POSITIVE_INFINITY) {
   if (points.length === 1) {
     const x = xPositions[0];
+    if (x > cutoffX) {
+      return;
+    }
     const y = yFor(points[0].value);
     ctx.fillStyle = "#7fd1ff";
     ctx.beginPath();
@@ -1265,6 +1293,17 @@ function drawLine(ctx, points, xPositions, yFor, baseline, strokeColor) {
     ctx.fill();
     return;
   }
+
+  const firstX = xPositions[0] ?? 0;
+  const lastX = xPositions[xPositions.length - 1] ?? cutoffX;
+  if (cutoffX < firstX) {
+    return;
+  }
+  const clipRight = Math.min(cutoffX, lastX);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(firstX - 4, 0, Math.max(clipRight - firstX + 8, 0), baseline + 8);
+  ctx.clip();
 
   ctx.beginPath();
   points.forEach((point, index) => {
@@ -1286,6 +1325,7 @@ function drawLine(ctx, points, xPositions, yFor, baseline, strokeColor) {
   ctx.stroke();
 
   if (strokeColor) {
+    ctx.restore();
     return;
   }
 
@@ -1307,6 +1347,7 @@ function drawLine(ctx, points, xPositions, yFor, baseline, strokeColor) {
   fill.addColorStop(1, "rgba(127, 209, 255, 0)");
   ctx.fillStyle = fill;
   ctx.fill(fillPath);
+  ctx.restore();
 }
 function handleChartHover(event) {
   const plot = refs.chartCanvas._plot;
@@ -1761,22 +1802,23 @@ function formatValue(series, value) {
   if (!Number.isFinite(value)) {
     return "无数据";
   }
+  const decimals = getDisplayDecimals(series, value);
   if (series?.unit === "bp") {
     return `${Math.round(value)}bp`;
   }
   if (series?.unit === "index") {
-    return `${value.toFixed(series.decimals ?? 0)}`;
+    return `${value.toFixed(decimals)}`;
   }
   if (series?.unit === "ratio") {
-    return `${value.toFixed(series.decimals ?? 2)}`;
+    return `${value.toFixed(decimals)}`;
   }
   if (series?.unit === "number") {
-    return `${value.toFixed(series.decimals ?? 2)}`;
+    return `${value.toFixed(decimals)}`;
   }
   if (series?.unit === "pp") {
-    return `${value.toFixed(series.decimals ?? 2)}pp`;
+    return `${value.toFixed(decimals)}pp`;
   }
-  return `${value.toFixed(series?.decimals ?? 2)}%`;
+  return `${value.toFixed(decimals)}%`;
 }
 
 function formatDelta(series, value) {
@@ -1784,19 +1826,88 @@ function formatDelta(series, value) {
     return "无数据";
   }
   const sign = value > 0 ? "+" : "";
+  const decimals = getDisplayDecimals(series, value, { delta: true });
   if (series?.unit === "bp") {
     return `${sign}${Math.round(value)}bp`;
   }
   if (series?.unit === "index") {
-    return `${sign}${value.toFixed(1)}`;
+    return `${sign}${value.toFixed(decimals)}`;
   }
   if (series?.unit === "ratio") {
-    return `${sign}${value.toFixed(series.decimals ?? 2)}`;
+    return `${sign}${value.toFixed(decimals)}`;
   }
   if (series?.unit === "number") {
-    return `${sign}${value.toFixed(series.decimals ?? 2)}`;
+    return `${sign}${value.toFixed(decimals)}`;
+  }
+  if (series?.unit === "pp") {
+    return `${sign}${value.toFixed(decimals)}pp`;
   }
   return `${sign}${Math.round(value * 100)}bp`;
+}
+
+function getDisplayDecimals(series, value, options = {}) {
+  const base = series?.decimals ?? 2;
+  if (series?.unit === "bp") {
+    return 0;
+  }
+  if (!series?.data?.length) {
+    return base;
+  }
+
+  const maxDecimals = getMaxDisplayDecimals(series);
+  if (maxDecimals <= base) {
+    return base;
+  }
+
+  const sample = series.data.slice(-260).map((point) => point.value).filter(Number.isFinite);
+  if (Number.isFinite(value)) {
+    sample.push(Math.abs(value));
+  }
+
+  const rawPrecision = Math.max(0, ...sample.map((item) => decimalPlaces(item, 6)));
+  const nonZeroDeltas = [];
+  for (let index = 1; index < sample.length; index += 1) {
+    const delta = Math.abs(sample[index] - sample[index - 1]);
+    if (delta > 0 && Number.isFinite(delta)) {
+      nonZeroDeltas.push(delta);
+    }
+  }
+  const minDelta = nonZeroDeltas.length ? Math.min(...nonZeroDeltas) : null;
+  const deltaPrecision = minDelta ? clamp(Math.ceil(-Math.log10(minDelta)) + 1, base, maxDecimals) : base;
+  const inferred = clamp(Math.max(base, rawPrecision, deltaPrecision), base, maxDecimals);
+
+  if (!options.delta) {
+    return inferred;
+  }
+  return clamp(Math.max(inferred, decimalPlaces(value, 6)), base, maxDecimals);
+}
+
+function getMaxDisplayDecimals(series) {
+  if (series?.unit === "pct" && series?.live?.type === "fred") {
+    return series.decimals ?? 2;
+  }
+  if (series?.id === "cnn_fear" || series?.id === "panic_blend") {
+    return 1;
+  }
+  if (series?.unit === "ratio" || series?.unit === "number") {
+    return 4;
+  }
+  if (series?.unit === "index" && series?.live?.type === "cnn") {
+    return 2;
+  }
+  if (series?.unit === "pct" || series?.unit === "pp") {
+    return 3;
+  }
+  return series?.decimals ?? 2;
+}
+
+function decimalPlaces(value, cap = 6) {
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+  const text = Math.abs(value).toFixed(cap).replace(/0+$/, "");
+  const dotIndex = text.indexOf(".");
+  return dotIndex >= 0 ? text.length - dotIndex - 1 : 0;
 }
 
 function classifyDelta(series, value) {

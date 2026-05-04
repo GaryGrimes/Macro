@@ -38,16 +38,19 @@ http
       const url = new URL(req.url, `http://${req.headers.host || `${HOST}:${PORT}`}`);
 
       if (url.pathname === "/api/cnn-fear") {
-        return proxyCnn(res);
+        const mode = String(url.searchParams.get("mode") || "").trim().toLowerCase();
+        return proxyCnn(res, mode);
       }
 
       if (url.pathname === "/api/ahr999") {
-        return proxyAhr999(res);
+        const mode = String(url.searchParams.get("mode") || "").trim().toLowerCase();
+        return proxyAhr999(res, mode);
       }
 
       if (url.pathname === "/api/fred") {
         const seriesId = String(url.searchParams.get("id") || "").trim().toUpperCase();
-        return proxyFred(res, seriesId);
+        const mode = String(url.searchParams.get("mode") || "").trim().toLowerCase();
+        return proxyFred(res, seriesId, mode);
       }
 
       return serveStatic(url.pathname, res);
@@ -60,11 +63,19 @@ http
     process.stdout.write(`Serving on http://${HOST}:${PORT}\n`);
   });
 
-async function proxyCnn(res) {
+async function proxyCnn(res, mode = "") {
   const cacheKey = "cnn";
   const cached = CACHE.get(cacheKey);
+  const diskCached = cached || readDiskCache(cacheKey);
+  if (mode === "cache") {
+    if (diskCached) {
+      return respondJson(res, 200, diskCached.body, cached ? "HIT" : "DISK");
+    }
+    return respondJson(res, 404, JSON.stringify({ error: "No local CNN cache" }), "BYPASS");
+  }
+
   const isFresh = cached && Date.now() - cached.savedAt < TTL_MS[cacheKey];
-  if (isFresh) {
+  if (isFresh && mode !== "refresh") {
     return respondJson(res, 200, cached.body, "HIT");
   }
 
@@ -85,9 +96,8 @@ async function proxyCnn(res) {
       saveCache(cacheKey, body);
       return respondJson(res, 200, body, "MISS");
     } catch (httpsError) {
-      const stale = cached || readDiskCache(cacheKey);
-      if (stale) {
-        return respondJson(res, 200, stale.body, "STALE");
+      if (diskCached) {
+        return respondJson(res, 200, diskCached.body, "STALE");
       }
       return respondJson(
         res,
@@ -103,7 +113,7 @@ async function proxyCnn(res) {
   }
 }
 
-async function proxyFred(res, seriesId) {
+async function proxyFred(res, seriesId, mode = "") {
   if (!/^[A-Z0-9_]+$/.test(seriesId)) {
     return respondJson(
       res,
@@ -115,33 +125,44 @@ async function proxyFred(res, seriesId) {
 
   const cacheKey = `fred_${seriesId}`;
   const cached = CACHE.get(cacheKey);
+  const diskCached = cached || readDiskCache(cacheKey);
+  if (mode === "cache") {
+    if (diskCached) {
+      return respondCsv(res, 200, diskCached.body, cached ? "HIT" : "DISK");
+    }
+    return respondJson(
+      res,
+      404,
+      JSON.stringify({ error: "No local FRED cache", detail: seriesId }),
+      "BYPASS",
+    );
+  }
+
   const isFresh = cached && Date.now() - cached.savedAt < TTL_MS.fred;
-  if (isFresh) {
+  if (isFresh && mode !== "refresh") {
     return respondCsv(res, 200, cached.body, "HIT");
   }
 
   try {
-    const body = await fetchViaCurl(`${FRED_URL}${encodeURIComponent(seriesId)}`);
-    if (!body.startsWith("observation_date,")) {
-      throw new Error(`Unexpected FRED response: ${body.slice(0, 120)}`);
-    }
+    const body = await fetchFredCsvIncremental(seriesId, diskCached?.body || "");
     saveCache(cacheKey, body);
-    return respondCsv(res, 200, body, "MISS");
+    return respondCsv(res, 200, body, diskCached ? "INCREMENTAL" : "MISS");
   } catch (curlError) {
     try {
-      const body = await fetchRemoteJson(`${FRED_URL}${encodeURIComponent(seriesId)}`, {
+      const targetUrl = buildFredUrl(seriesId, diskCached?.body || "");
+      const fetchedBody = await fetchRemoteJson(targetUrl, {
         "User-Agent": "MacroMonitor/1.0",
         Accept: "text/csv,*/*",
       });
-      if (!body.startsWith("observation_date,")) {
-        throw new Error(`Unexpected FRED response: ${body.slice(0, 120)}`);
+      if (!fetchedBody.startsWith("observation_date,")) {
+        throw new Error(`Unexpected FRED response: ${fetchedBody.slice(0, 120)}`);
       }
+      const body = diskCached?.body ? mergeFredCsv(diskCached.body, fetchedBody) : fetchedBody;
       saveCache(cacheKey, body);
-      return respondCsv(res, 200, body, "MISS");
+      return respondCsv(res, 200, body, diskCached ? "INCREMENTAL" : "MISS");
     } catch (httpsError) {
-      const stale = cached || readDiskCache(cacheKey);
-      if (stale) {
-        return respondCsv(res, 200, stale.body, "STALE");
+      if (diskCached) {
+        return respondCsv(res, 200, diskCached.body, "STALE");
       }
       return respondJson(
         res,
@@ -157,11 +178,19 @@ async function proxyFred(res, seriesId) {
   }
 }
 
-async function proxyAhr999(res) {
+async function proxyAhr999(res, mode = "") {
   const cacheKey = "ahr";
   const cached = CACHE.get(cacheKey);
+  const diskCached = cached || readDiskCache(cacheKey);
+  if (mode === "cache") {
+    if (diskCached) {
+      return respondJson(res, 200, diskCached.body, cached ? "HIT" : "DISK");
+    }
+    return respondJson(res, 404, JSON.stringify({ error: "No local AHR999 cache" }), "BYPASS");
+  }
+
   const isFresh = cached && Date.now() - cached.savedAt < TTL_MS.ahr;
-  if (isFresh) {
+  if (isFresh && mode !== "refresh") {
     return respondJson(res, 200, cached.body, "HIT");
   }
 
@@ -171,9 +200,8 @@ async function proxyAhr999(res) {
     saveCache(cacheKey, body);
     return respondJson(res, 200, body, "MISS");
   } catch (error) {
-    const stale = cached || readDiskCache(cacheKey);
-    if (stale) {
-      return respondJson(res, 200, stale.body, "STALE");
+    if (diskCached) {
+      return respondJson(res, 200, diskCached.body, "STALE");
     }
     return respondJson(
       res,
@@ -251,25 +279,82 @@ function proxyJson(res, cacheKey, targetUrl, headers) {
 async function getFredCsv(seriesId) {
   const cacheKey = `fred_${seriesId}`;
   const cached = CACHE.get(cacheKey);
+  const diskCached = cached || readDiskCache(cacheKey);
   const isFresh = cached && Date.now() - cached.savedAt < TTL_MS.fred;
   if (isFresh) {
     return cached.body;
   }
 
   try {
-    const body = await fetchViaCurl(`${FRED_URL}${encodeURIComponent(seriesId)}`);
-    if (!body.startsWith("observation_date,")) {
-      throw new Error(`Unexpected FRED response: ${body.slice(0, 120)}`);
-    }
+    const body = await fetchFredCsvIncremental(seriesId, diskCached?.body || "");
     saveCache(cacheKey, body);
     return body;
   } catch (curlError) {
-    const stale = cached || readDiskCache(cacheKey);
-    if (stale) {
-      return stale.body;
+    if (diskCached) {
+      return diskCached.body;
     }
     throw curlError;
   }
+}
+
+async function fetchFredCsvIncremental(seriesId, cachedCsv = "") {
+  const targetUrl = buildFredUrl(seriesId, cachedCsv);
+  const fetchedBody = await fetchViaCurl(targetUrl);
+  if (!fetchedBody.startsWith("observation_date,")) {
+    throw new Error(`Unexpected FRED response: ${fetchedBody.slice(0, 120)}`);
+  }
+  return cachedCsv ? mergeFredCsv(cachedCsv, fetchedBody) : fetchedBody;
+}
+
+function buildFredUrl(seriesId, cachedCsv = "") {
+  const url = `${FRED_URL}${encodeURIComponent(seriesId)}`;
+  const lastDate = getLastValuedFredDate(cachedCsv);
+  if (!lastDate) {
+    return url;
+  }
+  const startDate = shiftIsoDate(lastDate, -7);
+  return `${url}&observation_start=${encodeURIComponent(startDate)}`;
+}
+
+function getLastValuedFredDate(csvText) {
+  if (!csvText) {
+    return "";
+  }
+  const rows = csvText.trim().split(/\r?\n/).slice(1);
+  for (let index = rows.length - 1; index >= 0; index -= 1) {
+    const [date, valueText] = rows[index].split(",");
+    if (date && Number.isFinite(Number.parseFloat(valueText))) {
+      return date;
+    }
+  }
+  return "";
+}
+
+function shiftIsoDate(dateString, days) {
+  const date = new Date(`${dateString}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+}
+
+function mergeFredCsv(baseCsv, nextCsv) {
+  const rowsByDate = new Map();
+  [baseCsv, nextCsv].forEach((csvText) => {
+    csvText
+      .trim()
+      .split(/\r?\n/)
+      .slice(1)
+      .forEach((row) => {
+        const [date] = row.split(",");
+        if (date) {
+          rowsByDate.set(date, row);
+        }
+      });
+  });
+  const rows = Array.from(rowsByDate.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, row]) => row);
+  const header = nextCsv.trim().split(/\r?\n/)[0] || baseCsv.trim().split(/\r?\n/)[0];
+  return `${header}\n${rows.join("\n")}\n`;
 }
 
 function parseFredCsv(csvText) {

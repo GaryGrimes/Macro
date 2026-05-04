@@ -8,10 +8,16 @@ const RANGE_CONFIG = {
 };
 
 const API_ROUTES = {
-  cnn: "/api/cnn-fear",
-  ahr: "/api/ahr999",
-  fred: (id) => `/api/fred?id=${encodeURIComponent(id)}`,
+  cnn: (mode) => `/api/cnn-fear${mode ? `?mode=${encodeURIComponent(mode)}` : ""}`,
+  ahr: (mode) => `/api/ahr999${mode ? `?mode=${encodeURIComponent(mode)}` : ""}`,
+  fred: (id, mode) => `/api/fred?id=${encodeURIComponent(id)}${mode ? `&mode=${encodeURIComponent(mode)}` : ""}`,
 };
+
+const HOME_YIELD_DEFS = [
+  { id: "us3y", symbol: "US3Y", name: "3Y Treasury Yield", fredId: "DGS3", unit: "pct", decimals: 2, color: "#7fd1ff" },
+  { id: "us10y", symbol: "US10Y", name: "10Y Treasury Yield", fredId: "DGS10", unit: "pct", decimals: 2, color: "#8bf0c8" },
+  { id: "us30y", symbol: "US30Y", name: "30Y Treasury Yield", fredId: "DGS30", unit: "pct", decimals: 2, color: "#ffb864" },
+];
 
 const MACRO_COLUMNS = [
   {
@@ -111,6 +117,22 @@ const state = {
     feeds: {},
   },
   refreshSeq: 0,
+  loadProgress: {
+    total: 0,
+    completed: 0,
+    phase: "idle",
+    detail: "尚未开始获取数据。",
+  },
+};
+
+const homeYieldState = {
+  range: "6M",
+  series: [],
+  status: "loading",
+  message: "Loading US Treasury yield trends...",
+  hoverDate: null,
+  animationFrame: null,
+  animationStartedAt: 0,
 };
 
 const refs = {};
@@ -122,7 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
   tickClock();
   window.setInterval(tickClock, 1000);
   render();
-  refreshDashboard();
+  loadCachedSnapshot().finally(() => {
+    beginLoadProgress();
+    refreshHomeYieldChart("refresh");
+    refreshDashboard("refresh");
+  });
 });
 
 function cacheRefs() {
@@ -155,6 +181,14 @@ function cacheRefs() {
   refs.fearSummary = document.getElementById("fear-summary");
   refs.fearReading = document.getElementById("fear-reading");
   refs.fearSourceNote = document.getElementById("fear-source-note");
+  refs.globalLoadStatus = document.getElementById("global-load-status");
+  refs.globalLoadProgress = document.getElementById("global-load-progress");
+  refs.globalLoadDetail = document.getElementById("global-load-detail");
+  refs.homeRangeSwitcher = document.getElementById("home-range-switcher");
+  refs.homeYieldCanvas = document.getElementById("home-yield-canvas");
+  refs.homeYieldTooltip = document.getElementById("home-yield-tooltip");
+  refs.homeYieldLegend = document.getElementById("home-yield-legend");
+  refs.homeYieldFooter = document.getElementById("home-yield-footer");
 }
 
 function bindEvents() {
@@ -180,7 +214,11 @@ function bindEvents() {
       renderFlyoutState();
     }
   });
-  refs.refreshButton.addEventListener("click", () => refreshDashboard());
+  refs.refreshButton.addEventListener("click", () => {
+    beginLoadProgress();
+    refreshDashboard("refresh");
+    refreshHomeYieldChart("refresh");
+  });
   refs.tabs.forEach((tab) => {
     tab.addEventListener("click", (event) => {
       event.stopPropagation();
@@ -203,7 +241,21 @@ function bindEvents() {
   });
   refs.chartCanvas.addEventListener("mousemove", handleChartHover);
   refs.chartCanvas.addEventListener("mouseleave", hideTooltip);
-  window.addEventListener("resize", renderChart);
+  refs.homeRangeSwitcher.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-home-range]");
+    if (!button) {
+      return;
+    }
+    homeYieldState.range = button.dataset.homeRange;
+    renderHomeRangeButtons();
+    startHomeYieldAnimation();
+  });
+  refs.homeYieldCanvas.addEventListener("mousemove", handleHomeYieldHover);
+  refs.homeYieldCanvas.addEventListener("mouseleave", hideHomeYieldTooltip);
+  window.addEventListener("resize", () => {
+    renderChart();
+    drawHomeYieldChart(1);
+  });
 }
 
 function initializeEmptyState() {
@@ -213,7 +265,56 @@ function initializeEmptyState() {
   state.seriesMap = map;
 }
 
-async function refreshDashboard() {
+async function loadCachedSnapshot() {
+  updateLoadProgress({
+    phase: "loading",
+    detail: "优先读取本地缓存...",
+    completed: 0,
+    total: getTotalRefreshUnits(),
+  });
+  await Promise.all([loadCachedDashboard(), refreshHomeYieldChart("cache")]);
+  updateLoadProgress({
+    phase: "loading",
+    detail: "本地缓存已载入，开始增量更新远端数据...",
+    completed: 0,
+    total: getTotalRefreshUnits(),
+  });
+}
+
+async function loadCachedDashboard() {
+  const fredDefs = SERIES_DEFS.filter((def) => def.live?.type === "fred");
+  const [fredResults, cnnBundle, ahrSeries] = await Promise.all([
+    Promise.all(fredDefs.map((def) => fetchFredSeries(def, "cache"))),
+    fetchCnnBundle("cache"),
+    fetchAhrSeries("cache"),
+  ]);
+  const fredMap = new Map(fredResults.filter((result) => result.ok).map((result) => [result.series.id, result.series]));
+  const seriesMap = new Map();
+
+  for (const def of SERIES_DEFS) {
+    if (def.live?.type === "fred") {
+      seriesMap.set(def.id, fredMap.get(def.id) ?? makeEmptySeries(def));
+    } else if (def.live?.type === "cnn") {
+      seriesMap.set(def.id, buildCnnSeries(def, cnnBundle));
+    } else if (def.live?.type === "ahr") {
+      seriesMap.set(def.id, ahrSeries ?? makeEmptySeries(def));
+    } else {
+      seriesMap.set(def.id, makeEmptySeries(def));
+    }
+  }
+
+  buildDerivedSeries(seriesMap);
+  state.seriesMap = seriesMap;
+  state.lastRefreshAt = getLatestDataDate(seriesMap) ? new Date() : state.lastRefreshAt;
+  state.networkStatus = {
+    fred: summarizeFredStatus(fredResults),
+    cnn: cnnBundle.ok ? `cnn ${cnnBundle.cacheStatus.toLowerCase()}` : `cnn ${cnnBundle.reason}`,
+    ahr: ahrSeries?.source === "live" ? `ahr ${ahrSeries.cacheStatus.toLowerCase()}` : "ahr unavailable",
+  };
+  render();
+}
+
+async function refreshDashboard(mode = "refresh") {
   const refreshStartedAt = new Date();
   const refreshSeq = state.refreshSeq + 1;
   state.refreshSeq = refreshSeq;
@@ -232,10 +333,11 @@ async function refreshDashboard() {
   refs.refreshButton.disabled = true;
 
   const fredDefs = SERIES_DEFS.filter((def) => def.live?.type === "fred");
+  const cnnSeriesCount = SERIES_DEFS.filter((def) => def.live?.type === "cnn").length;
   const [initialFredResults, initialCnnBundle, initialAhrSeries] = await Promise.all([
-    Promise.all(fredDefs.map((def) => fetchFredSeries(def))),
-    fetchCnnBundle(),
-    fetchAhrSeries(),
+    Promise.all(fredDefs.map((def) => trackRefreshUnit(fetchFredSeries(def, mode), def.symbol))),
+    trackRefreshUnit(fetchCnnBundle(mode), `CNN x${cnnSeriesCount}`, cnnSeriesCount),
+    trackRefreshUnit(fetchAhrSeries(mode), "AHR999"),
   ]);
   let fredResults = initialFredResults;
   let cnnBundle = initialCnnBundle;
@@ -251,9 +353,9 @@ async function refreshDashboard() {
     });
     const retryFredDefs = fredDefs.filter((def) => !fredResults.find((result) => result.id === def.id && result.ok));
     const [retryFredResults, retryCnnBundle, retryAhrSeries] = await Promise.all([
-      Promise.all(retryFredDefs.map((def) => fetchFredSeries(def))),
-      cnnBundle.ok ? Promise.resolve(cnnBundle) : fetchCnnBundle(),
-      ahrSeries?.source === "live" ? Promise.resolve(ahrSeries) : fetchAhrSeries(),
+      Promise.all(retryFredDefs.map((def) => fetchFredSeries(def, mode))),
+      cnnBundle.ok ? Promise.resolve(cnnBundle) : fetchCnnBundle(mode),
+      ahrSeries?.source === "live" ? Promise.resolve(ahrSeries) : fetchAhrSeries(mode),
     ]);
     fredResults = mergeFredResults(fredResults, retryFredResults);
     cnnBundle = retryCnnBundle;
@@ -295,24 +397,18 @@ async function refreshDashboard() {
     feeds: buildFeedHealth(fredResults, cnnBundle, ahrSeries),
   });
   render();
+  maybeFinishLoadProgress();
 }
-async function fetchFredSeries(def) {
+
+async function fetchFredSeries(def, mode = "") {
   try {
-    const response = await fetch(API_ROUTES.fred(def.live.id), { cache: "no-store" });
+    const response = await fetch(API_ROUTES.fred(def.live.id, mode), { cache: "no-store" });
     if (!response.ok) {
       const detail = await safeJson(response);
       return { ok: false, id: def.id, reason: detail?.error || `HTTP ${response.status}` };
     }
     const text = await response.text();
-    const data = text
-      .trim()
-      .split(/\r?\n/)
-      .slice(1)
-      .map((row) => {
-        const [date, valueText] = row.split(",");
-        return { date, value: Number.parseFloat(valueText) };
-      })
-      .filter((point) => point.date && Number.isFinite(point.value));
+    const data = parseFredCsvText(text);
 
     return data.length
       ? {
@@ -332,9 +428,78 @@ async function fetchFredSeries(def) {
   }
 }
 
-async function fetchCnnBundle() {
+async function refreshHomeYieldChart(mode = "refresh") {
+  renderHomeRangeButtons();
+  homeYieldState.status = "loading";
+  homeYieldState.message = mode === "cache" ? "Loading local US Treasury yield cache..." : "Incrementally updating US3Y / US10Y / US30Y from FRED...";
+  renderHomeYieldLegend();
+  drawHomeYieldChart(1);
+
+  const results = await Promise.all(
+    HOME_YIELD_DEFS.map((def) => {
+      const task = fetchHomeYieldSeries(def, mode);
+      return mode === "refresh" ? trackRefreshUnit(task, def.symbol) : task;
+    }),
+  );
+  homeYieldState.series = results.filter((result) => result.ok).map((result) => result.series);
+  const errors = results.filter((result) => !result.ok);
+
+  if (homeYieldState.series.length) {
+    const latestDate = getLatestHomeYieldDate();
+    const errorText = errors.length ? ` · ${errors.length} feed unavailable` : "";
+    homeYieldState.status = errors.length ? "partial" : "ready";
+    homeYieldState.message = `Updated ${latestDate ? formatDate(latestDate) : "--"} · Source: FRED${errorText}`;
+  } else {
+    homeYieldState.status = "error";
+    homeYieldState.message = errors.map((result) => `${result.symbol}: ${result.reason}`).join(" · ") || "No data";
+  }
+
+  renderHomeYieldLegend();
+  startHomeYieldAnimation();
+  if (mode === "refresh") {
+    maybeFinishLoadProgress();
+  }
+}
+
+async function fetchHomeYieldSeries(def, mode = "") {
   try {
-    const response = await fetch(API_ROUTES.cnn, { cache: "no-store" });
+    const response = await fetch(API_ROUTES.fred(def.fredId, mode), { cache: "no-store" });
+    if (!response.ok) {
+      const detail = await safeJson(response);
+      return { ok: false, symbol: def.symbol, reason: detail?.error || `HTTP ${response.status}` };
+    }
+    const data = parseFredCsvText(await response.text());
+    return data.length
+      ? {
+          ok: true,
+          series: {
+            ...def,
+            source: "live",
+            data,
+            updatedAt: data[data.length - 1].date,
+          },
+        }
+      : { ok: false, symbol: def.symbol, reason: "empty response" };
+  } catch (error) {
+    return { ok: false, symbol: def.symbol, reason: error?.message || "request failed" };
+  }
+}
+
+function parseFredCsvText(text) {
+  return text
+    .trim()
+    .split(/\r?\n/)
+    .slice(1)
+    .map((row) => {
+      const [date, valueText] = row.split(",");
+      return { date, value: Number.parseFloat(valueText) };
+    })
+    .filter((point) => point.date && Number.isFinite(point.value));
+}
+
+async function fetchCnnBundle(mode = "") {
+  try {
+    const response = await fetch(API_ROUTES.cnn(mode), { cache: "no-store" });
     if (!response.ok) {
       const detail = await safeJson(response);
       return {
@@ -351,10 +516,10 @@ async function fetchCnnBundle() {
   }
 }
 
-async function fetchAhrSeries() {
+async function fetchAhrSeries(mode = "") {
   const def = SERIES_DEFS.find((item) => item.id === "ahr999");
   try {
-    const response = await fetch(API_ROUTES.ahr, { cache: "no-store" });
+    const response = await fetch(API_ROUTES.ahr(mode), { cache: "no-store" });
     if (!response.ok) {
       const detail = await safeJson(response);
       return {
@@ -409,9 +574,86 @@ function setFeedHealth(nextHealth) {
   renderFeedHealth();
 }
 
+function beginLoadProgress() {
+  updateLoadProgress({
+    phase: "loading",
+    total: getTotalRefreshUnits(),
+    completed: 0,
+    detail: "加载中，正在按系列增量更新...",
+  });
+}
+
+function getTotalRefreshUnits() {
+  const dashboardUnits = SERIES_DEFS.filter((def) => def.live?.type === "fred" || def.live?.type === "ahr").length;
+  const cnnUnits = SERIES_DEFS.filter((def) => def.live?.type === "cnn").length;
+  return dashboardUnits + cnnUnits + HOME_YIELD_DEFS.length;
+}
+
+async function trackRefreshUnit(promise, label, units = 1) {
+  try {
+    return await promise;
+  } finally {
+    advanceLoadProgress(label, units);
+  }
+}
+
+function advanceLoadProgress(label, units = 1) {
+  const nextCompleted = Math.min(state.loadProgress.total, state.loadProgress.completed + units);
+  updateLoadProgress({
+    ...state.loadProgress,
+    phase: "loading",
+    completed: nextCompleted,
+    detail: `${label} 已更新`,
+  });
+}
+
+function maybeFinishLoadProgress() {
+  if (!state.loadProgress.total || state.loadProgress.completed < state.loadProgress.total) {
+    return;
+  }
+  const finalPhase =
+    state.feedHealth.tone === "error" ? "error" : state.feedHealth.tone === "warning" ? "warning" : "ok";
+  updateLoadProgress({
+    ...state.loadProgress,
+    phase: finalPhase,
+    detail: `全部 ${state.loadProgress.total} 个系列已完成增量更新`,
+  });
+}
+
+function updateLoadProgress(nextProgress) {
+  state.loadProgress = {
+    ...state.loadProgress,
+    ...nextProgress,
+  };
+  renderLoadProgress();
+}
+
+function renderLoadProgress() {
+  const progress = state.loadProgress;
+  const total = progress.total || 0;
+  const completed = progress.completed || 0;
+  const phase = progress.phase || "idle";
+  const titleMap = {
+    idle: "等待",
+    loading: "加载中",
+    ok: "已完成",
+    warning: "部分完成",
+    error: "错误",
+  };
+  if (refs.globalLoadStatus) {
+    refs.globalLoadStatus.className = `global-load-strip ${phase}`;
+    refs.globalLoadStatus.querySelector(".global-load-title").textContent = titleMap[phase] || "加载中";
+    refs.globalLoadProgress.textContent = `${completed} / ${total}`;
+    refs.globalLoadDetail.textContent = progress.detail || "";
+  }
+  renderFeedHealth();
+}
+
 function renderFeedHealth() {
   const health = state.feedHealth;
   refs.statusStrip.className = `status-strip ${health.tone || "idle"}`;
+  const progress = state.loadProgress;
+  const progressText = progress.total ? `${progress.completed || 0} / ${progress.total}` : "";
   const feeds = Object.entries(health.feeds || {})
     .map(([key, feed]) => {
       const stateClass = feed.state || "idle";
@@ -430,7 +672,7 @@ function renderFeedHealth() {
       <span class="status-icon" aria-hidden="true"></span>
       <div>
         <div class="status-title">${escapeHtml(health.title || "状态未知")}</div>
-        <div class="status-detail">${escapeHtml(health.detail || "")}</div>
+        <div class="status-detail">${escapeHtml([progress.phase === "loading" ? `加载中 ${progressText}` : "", health.detail || progress.detail || ""].filter(Boolean).join(" · "))}</div>
       </div>
     </div>
     <div class="feed-chip-row">${feeds}</div>
@@ -1035,6 +1277,294 @@ function hideTooltip() {
   state.hoverIndex = null;
   refs.chartTooltip.hidden = true;
   renderChart();
+}
+
+function renderHomeRangeButtons() {
+  refs.homeRangeSwitcher.querySelectorAll("[data-home-range]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.homeRange === homeYieldState.range);
+  });
+}
+
+function renderHomeYieldLegend() {
+  const seriesItems = homeYieldState.series.length
+    ? homeYieldState.series
+    : HOME_YIELD_DEFS.map((def) => ({ ...def, data: [] }));
+  refs.homeYieldLegend.innerHTML = buildLegendHtml(
+    seriesItems.map((series) => ({
+      color: series.color,
+      label: `${series.symbol}${series.data?.length ? ` ${formatValue(series, getLatestValue(series))}` : ""}`,
+    })),
+  );
+  refs.homeYieldFooter.textContent = homeYieldState.message;
+}
+
+function startHomeYieldAnimation() {
+  if (homeYieldState.animationFrame) {
+    cancelAnimationFrame(homeYieldState.animationFrame);
+  }
+  homeYieldState.animationStartedAt = performance.now();
+  const step = (now) => {
+    const progress = clamp((now - homeYieldState.animationStartedAt) / 850, 0, 1);
+    drawHomeYieldChart(progress);
+    if (progress < 1) {
+      homeYieldState.animationFrame = requestAnimationFrame(step);
+    } else {
+      homeYieldState.animationFrame = null;
+    }
+  };
+  homeYieldState.animationFrame = requestAnimationFrame(step);
+}
+
+function drawHomeYieldChart(progress = 1) {
+  const canvas = refs.homeYieldCanvas;
+  if (!canvas) {
+    return;
+  }
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, rect.width, rect.height);
+
+  const padding = { top: 22, right: 24, bottom: 34, left: 38 };
+  const plotWidth = rect.width - padding.left - padding.right;
+  const plotHeight = rect.height - padding.top - padding.bottom;
+  const rangeView = getHomeYieldRangeView();
+  const seriesViews = homeYieldState.series.map((series) => ({
+    series,
+    points: series.data.filter((point) => {
+      const time = new Date(point.date).getTime();
+      return time >= rangeView.startTime && time <= rangeView.endTime;
+    }),
+  }));
+  const allValues = seriesViews.flatMap((view) => view.points.map((point) => point.value));
+
+  if (!allValues.length) {
+    drawHomeYieldAxes(ctx, rect.width, rect.height, padding, 0, 1, rangeView);
+    ctx.fillStyle = "#7d90a5";
+    ctx.font = '14px "IBM Plex Mono"';
+    ctx.fillText(homeYieldState.status === "loading" ? "Loading..." : "No data", padding.left, padding.top + 18);
+    refs.homeYieldFooter.textContent = homeYieldState.message;
+    canvas._homePlot = null;
+    return;
+  }
+
+  let minValue = Math.min(...allValues);
+  let maxValue = Math.max(...allValues);
+  if (minValue === maxValue) {
+    minValue -= Math.abs(minValue || 1) * 0.05;
+    maxValue += Math.abs(maxValue || 1) * 0.05;
+  }
+  const pad = (maxValue - minValue || 1) * 0.1;
+  minValue -= pad;
+  maxValue += pad;
+
+  const yFor = (value) => padding.top + (1 - (value - minValue) / Math.max(maxValue - minValue, 1e-9)) * plotHeight;
+  const xFor = (date) => {
+    const time = new Date(date).getTime();
+    const ratio = (time - rangeView.startTime) / Math.max(rangeView.endTime - rangeView.startTime, 1);
+    return padding.left + clamp(ratio, 0, 1) * plotWidth;
+  };
+
+  drawHomeYieldAxes(ctx, rect.width, rect.height, padding, minValue, maxValue, rangeView);
+  const cutoffX = padding.left + plotWidth * progress;
+  const plotRecords = [];
+
+  seriesViews.forEach((view) => {
+    const xPositions = view.points.map((point) => xFor(point.date));
+    drawHomeYieldLine(ctx, view.points, xPositions, yFor, view.series.color, cutoffX);
+    view.points.forEach((point, index) => {
+      plotRecords.push({ date: point.date, x: xPositions[index] });
+    });
+  });
+
+  if (homeYieldState.hoverDate) {
+    const markerX = xFor(homeYieldState.hoverDate);
+    ctx.strokeStyle = "rgba(173, 216, 255, 0.3)";
+    ctx.beginPath();
+    ctx.moveTo(markerX, padding.top);
+    ctx.lineTo(markerX, rect.height - padding.bottom);
+    ctx.stroke();
+  }
+
+  refs.homeYieldFooter.textContent = homeYieldState.message;
+  canvas._homePlot = {
+    bounds: rect,
+    rangeView,
+    seriesViews,
+    records: collapsePlotRecords(plotRecords),
+    xFor,
+    yFor,
+  };
+}
+
+function drawHomeYieldAxes(ctx, width, height, padding, minValue, maxValue, rangeView) {
+  ctx.strokeStyle = "rgba(255,255,255,0.08)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i += 1) {
+    const y = padding.top + ((height - padding.top - padding.bottom) / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(width - padding.right, y);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+  ctx.beginPath();
+  ctx.moveTo(padding.left, padding.top);
+  ctx.lineTo(padding.left, height - padding.bottom);
+  ctx.lineTo(width - padding.right, height - padding.bottom);
+  ctx.stroke();
+
+  ctx.fillStyle = "#7d90a5";
+  ctx.font = '11px "IBM Plex Mono"';
+  ctx.fillText(`${maxValue.toFixed(2)}%`, padding.left + 8, padding.top + 13);
+  ctx.fillText(`${minValue.toFixed(2)}%`, padding.left + 8, height - padding.bottom - 8);
+
+  const startLabel = formatAxisDate(rangeView.startTime);
+  const endLabel = formatAxisDate(rangeView.endTime);
+  ctx.fillText(startLabel, padding.left, height - 10);
+  const endWidth = ctx.measureText(endLabel).width;
+  ctx.fillText(endLabel, width - padding.right - endWidth, height - 10);
+}
+
+function drawHomeYieldLine(ctx, points, xPositions, yFor, color, cutoffX) {
+  if (!points.length) {
+    return;
+  }
+  if (points.length === 1) {
+    const x = xPositions[0];
+    if (x <= cutoffX) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, yFor(points[0].value), 3.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    return;
+  }
+
+  ctx.beginPath();
+  let hasSegment = false;
+  points.forEach((point, index) => {
+    const x = xPositions[index];
+    const y = yFor(point.value);
+    if (index === 0) {
+      if (x <= cutoffX) {
+        ctx.moveTo(x, y);
+        hasSegment = true;
+      }
+      return;
+    }
+
+    const previousX = xPositions[index - 1];
+    const previousY = yFor(points[index - 1].value);
+    if (previousX <= cutoffX && !hasSegment) {
+      ctx.moveTo(previousX, previousY);
+      hasSegment = true;
+    }
+    if (x <= cutoffX) {
+      ctx.lineTo(x, y);
+      return;
+    }
+    if (previousX < cutoffX && x > cutoffX) {
+      const ratio = (cutoffX - previousX) / Math.max(x - previousX, 1e-9);
+      ctx.lineTo(cutoffX, previousY + (y - previousY) * ratio);
+    }
+  });
+
+  if (!hasSegment) {
+    return;
+  }
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.2;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  ctx.stroke();
+}
+
+function handleHomeYieldHover(event) {
+  const plot = refs.homeYieldCanvas._homePlot;
+  if (!plot || !plot.records.length) {
+    return;
+  }
+  const bounds = refs.homeYieldCanvas.getBoundingClientRect();
+  const x = event.clientX - bounds.left;
+  const index = nearestIndex(
+    plot.records.map((record) => record.x),
+    x,
+  );
+  const record = plot.records[index];
+  homeYieldState.hoverDate = record.date;
+  drawHomeYieldChart(1);
+  showHomeYieldTooltip(record.date, record.x, bounds, plot);
+}
+
+function showHomeYieldTooltip(date, x, bounds, plot) {
+  const rows = plot.seriesViews
+    .map((view) => {
+      const point = findNearestDatePoint(view.points, date);
+      return point
+        ? `<div class="tooltip-date"><span style="color:${view.series.color}">${view.series.symbol}</span>: ${formatValue(view.series, point.value)}</div>`
+        : "";
+    })
+    .join("");
+  refs.homeYieldTooltip.hidden = false;
+  refs.homeYieldTooltip.innerHTML = `
+    <div class="tooltip-label">Treasury Yield</div>
+    <div class="tooltip-value">${formatDate(date)}</div>
+    ${rows}
+  `;
+  const rect = refs.homeYieldTooltip.getBoundingClientRect();
+  const left = clamp(x, rect.width / 2 + 12, bounds.width - rect.width / 2 - 12);
+  refs.homeYieldTooltip.style.left = `${left}px`;
+  refs.homeYieldTooltip.style.top = "16px";
+}
+
+function hideHomeYieldTooltip() {
+  homeYieldState.hoverDate = null;
+  refs.homeYieldTooltip.hidden = true;
+  drawHomeYieldChart(1);
+}
+
+function getHomeYieldRangeView() {
+  const range = RANGE_CONFIG[homeYieldState.range] || RANGE_CONFIG["6M"];
+  const latest = getLatestHomeYieldDate();
+  const endTime = latest ? new Date(latest).getTime() : Date.now();
+  const startTime = endTime - range.days * 24 * 60 * 60 * 1000;
+  return { startTime, endTime };
+}
+
+function getLatestHomeYieldDate() {
+  const dates = homeYieldState.series
+    .map((series) => series.data?.[series.data.length - 1]?.date)
+    .filter(Boolean)
+    .sort();
+  return dates[dates.length - 1] || null;
+}
+
+function collapsePlotRecords(records) {
+  const byDate = new Map();
+  records.forEach((record) => {
+    if (!byDate.has(record.date)) {
+      byDate.set(record.date, record);
+    }
+  });
+  return Array.from(byDate.values()).sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+function findNearestDatePoint(points, date) {
+  if (!points.length) {
+    return null;
+  }
+  const target = new Date(date).getTime();
+  return points.reduce((winner, point) => {
+    const distance = Math.abs(new Date(point.date).getTime() - target);
+    const bestDistance = Math.abs(new Date(winner.date).getTime() - target);
+    return distance < bestDistance ? point : winner;
+  }, points[0]);
 }
 
 function getSeries(id) {

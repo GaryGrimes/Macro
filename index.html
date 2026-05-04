@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inflation Expectation Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles_v2.css" />
+  </head>
+  <body>
+    <div class="desktop-shell">
+      <div class="desktop-glow glow-a"></div>
+      <div class="desktop-glow glow-b"></div>
+
+      <main class="desktop-stage">
+        <section class="hero-card">
+          <div class="hero-copy">
+            <p class="eyebrow">Inflation Drift Monitor</p>
+            <h1>盯住 survey 先抬头后，市场锚是否也开始漂。</h1>
+            <p class="hero-text">
+              托盘式实时监控壳。Macro 页看 breakeven、利率与 survey；Fear 页单独看
+              CNN Fear &amp; Greed 与相关拆分指标。
+            </p>
+          </div>
+
+          <div class="hero-rulebook">
+            <div class="rule-chip">
+              <span class="rule-label">Base Case</span>
+              <span class="rule-value" id="hero-base-case">Survey up / market still anchored</span>
+            </div>
+            <div class="rule-chip">
+              <span class="rule-label">Watch</span>
+              <span class="rule-value">T5YIE holds above 2.75%</span>
+            </div>
+            <div class="rule-chip">
+              <span class="rule-label">Escalation</span>
+              <span class="rule-value">T5YIE and T5YIFR rise together</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="flyout-backdrop" id="flyout-backdrop" hidden></div>
+
+        <aside class="inflation-flyout" id="inflation-flyout" aria-hidden="true">
+          <div class="flyout-header">
+            <div>
+              <p class="panel-label">Local Time</p>
+              <div class="panel-time" id="panel-time">--:--:--</div>
+            </div>
+
+            <div class="flyout-actions">
+              <div class="status-strip" id="status-strip">Preparing feed...</div>
+              <button class="refresh-button" id="refresh-button" type="button">Refresh</button>
+            </div>
+          </div>
+
+          <section class="page-panel is-active" id="macro-page" data-page-panel="macro">
+            <div class="thesis-band">
+              <div class="thesis-item">
+                <span class="thesis-label">Question</span>
+                <span class="thesis-value">通胀预期是否继续上飘，而不是回落？</span>
+              </div>
+              <div class="thesis-item">
+                <span class="thesis-label">Anchor</span>
+                <span class="thesis-value" id="anchor-summary">5Y breakeven around 2.58%</span>
+              </div>
+              <div class="thesis-item">
+                <span class="thesis-label">Read</span>
+                <span class="thesis-value" id="read-summary">Still looks conditional, not de-anchored</span>
+              </div>
+            </div>
+
+            <section class="column-grid macro-grid" id="macro-grid" aria-label="Macro monitor columns"></section>
+          </section>
+
+          <section class="page-panel" id="fear-page" data-page-panel="fear">
+            <div class="thesis-band fear-band">
+              <div class="thesis-item">
+                <span class="thesis-label">Index</span>
+                <span class="thesis-value" id="fear-summary">CNN Fear &amp; Greed</span>
+              </div>
+              <div class="thesis-item">
+                <span class="thesis-label">Reading</span>
+                <span class="thesis-value" id="fear-reading">No data</span>
+              </div>
+              <div class="thesis-item">
+                <span class="thesis-label">Data</span>
+                <span class="thesis-value" id="fear-source-note">Live first, otherwise no data</span>
+              </div>
+            </div>
+
+            <section class="column-grid fear-grid" id="fear-grid" aria-label="Fear monitor columns"></section>
+          </section>
+
+          <section class="chart-card">
+            <div class="chart-header">
+              <div>
+                <p class="panel-label">Trend</p>
+                <div class="chart-title-line">
+                  <h2 id="chart-symbol">T5YIE</h2>
+                  <span id="chart-name">5Y Breakeven Inflation</span>
+                  <span class="locked-flag" id="locked-flag" hidden>LOCKED</span>
+                </div>
+                <div class="chart-change-line">
+                  <span id="chart-change">+0bp</span>
+                  <span id="chart-context">Watching market compensation vs survey drift.</span>
+                </div>
+              </div>
+
+              <div class="range-switcher" id="range-switcher">
+                <button class="range-button" data-range="7D" type="button">7d</button>
+                <button class="range-button" data-range="30D" type="button">30d</button>
+                <button class="range-button is-active" data-range="6M" type="button">6m</button>
+                <button class="range-button" data-range="1Y" type="button">1y</button>
+                <button class="range-button" data-range="2Y" type="button">2y</button>
+              </div>
+            </div>
+
+            <div class="chart-stage">
+              <canvas id="trend-canvas" width="1120" height="420"></canvas>
+              <div class="chart-tooltip" id="chart-tooltip" hidden></div>
+            </div>
+
+            <div class="chart-legend" id="chart-legend"></div>
+
+            <section class="chart-note-card">
+              <p class="panel-label">注释</p>
+              <div class="chart-note" id="chart-note">选择指标后显示说明。</div>
+            </section>
+
+            <div class="chart-footer">
+              <div class="footer-item">
+                <span class="footer-label">Mode</span>
+                <span id="chart-mode">7-day range</span>
+              </div>
+              <div class="footer-item">
+                <span class="footer-label">Updated</span>
+                <span id="chart-updated">--</span>
+              </div>
+              <div class="footer-item">
+                <span class="footer-label">Source</span>
+                <span id="chart-source">No data</span>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="taskbar">
+        <div class="taskbar-left">
+          <div class="start-orb"></div>
+          <div class="taskbar-window">
+            <span class="window-dot"></span>
+            <span>Macro Monitor</span>
+          </div>
+        </div>
+
+        <div class="taskbar-right">
+          <div class="taskbar-clock" id="taskbar-clock">--:--</div>
+          <div class="taskbar-tabs" id="taskbar-tabs">
+            <button class="tab-button is-active" data-page="macro" type="button">Macro</button>
+            <button class="tab-button" data-page="fear" type="button">Fear</button>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="./app_v2.js"></script>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "range_requested": {
+    "start": "2025-10-25",
+    "end": "2026-04-25"
+  },
+  "range_available": {
+    "start": "2025-10-27",
+    "end": "2026-04-24"
+  },
+  "rows": 120,
+  "formula": "1321_t_close_usd = 1321_t_close_jpy / usd_jpy",
+  "first": {
+    "date": "2025-10-27",
+    "1321_t_close_jpy": 52440.0,
+    "usd_jpy": 153.061005,
+    "1321_t_close_usd": 342.608492,
+    "check_jpy_from_usd": 52440.0,
+    "1321_t_volume": 313992
+  },
+  "last": {
+    "date": "2026-04-24",
+    "1321_t_close_jpy": 62390.0,
+    "usd_jpy": 159.332993,
+    "1321_t_close_usd": 391.569875,
+    "check_jpy_from_usd": 62390.0,
+    "1321_t_volume": 234459
+  },
+  "jpy_return_pct": 18.9741,
+  "usd_return_pct": 14.2908,
+  "usd_jpy_change_pct": 4.0977,
+  "jpy_min": 50440.0,
+  "jpy_max": 62390.0,
+  "usd_min": 321.156002,
+  "usd_max": 392.861851,
+  "usd_jpy_min": 151.731003,
+  "usd_jpy_max": 160.233994,
+  "max_reconstruction_error_jpy": 0.0,
+  "source_meta": {
+    "etf": {
+      "symbol": "1321.T",
+      "name": "NEXT FUNDS Nikkei 225 Exchange Traded Fund",
+      "currency": "JPY",
+      "last_price": 62390.0,
+      "last_time": 1777012200
+    },
+    "fx": {
+      "symbol": "JPY=X",
+      "name": "USD/JPY",
+      "currency": "JPY",
+      "last_price": 159.333,
+      "last_time": 1777064399
+    }
+  }
+}

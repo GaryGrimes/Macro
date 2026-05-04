@@ -535,6 +535,9 @@ function fetchRemoteJson(targetUrl, headers) {
     );
 
     request.on("error", (error) => reject(error));
+    request.setTimeout(30000, () => {
+      request.destroy(new Error("request timed out"));
+    });
     request.end();
   });
 }

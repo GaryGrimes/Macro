@@ -23,6 +23,10 @@ const MIME_TYPES = {
 
 const CNN_URL = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata";
 const FRED_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=";
+const TREASURY_YIELD_URL =
+  "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value=";
+const TREASURY_REAL_YIELD_URL =
+  "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=";
 const DISK_CACHE_DIR = path.join(ROOT, ".cache");
 const AHR_STATE_FILE = path.join(DISK_CACHE_DIR, "ahr_state.json");
 const CACHE = new Map();
@@ -32,6 +36,7 @@ const TTL_MS = {
   cnn: 5 * 60 * 1000,
   ahr: 60 * 1000,
   fred: 15 * 60 * 1000,
+  treasury: 15 * 60 * 1000,
 };
 
 http
@@ -53,6 +58,11 @@ http
         const seriesId = String(url.searchParams.get("id") || "").trim().toUpperCase();
         const mode = String(url.searchParams.get("mode") || "").trim().toLowerCase();
         return proxyFred(res, seriesId, mode);
+      }
+
+      if (url.pathname === "/api/treasury-yields") {
+        const mode = String(url.searchParams.get("mode") || "").trim().toLowerCase();
+        return proxyTreasuryYields(res, mode);
       }
 
       return serveStatic(url.pathname, res);
@@ -177,6 +187,43 @@ async function proxyFred(res, seriesId, mode = "") {
         "BYPASS",
       );
     }
+  }
+}
+
+async function proxyTreasuryYields(res, mode = "") {
+  const cacheKey = "treasury_yield_curve";
+  const cached = CACHE.get(cacheKey);
+  const diskCached = cached || readDiskCache(cacheKey);
+  if (mode === "cache") {
+    if (diskCached) {
+      return respondJson(res, 200, diskCached.body, cached ? "HIT" : "DISK");
+    }
+    return respondJson(res, 404, JSON.stringify({ error: "No local Treasury yield cache" }), "BYPASS");
+  }
+
+  const isFresh = cached && Date.now() - cached.savedAt < TTL_MS.treasury;
+  if (isFresh && mode !== "refresh") {
+    return respondJson(res, 200, cached.body, "HIT");
+  }
+
+  try {
+    const payload = await buildTreasuryYieldPayload();
+    const body = JSON.stringify(payload);
+    saveCache(cacheKey, body);
+    return respondJson(res, 200, body, diskCached ? "INCREMENTAL" : "MISS");
+  } catch (error) {
+    if (diskCached) {
+      return respondJson(res, 200, diskCached.body, "STALE");
+    }
+    return respondJson(
+      res,
+      502,
+      JSON.stringify({
+        error: "Treasury yield curve request failed",
+        detail: error.message,
+      }),
+      "BYPASS",
+    );
   }
 }
 
@@ -369,6 +416,157 @@ function parseFredCsv(csvText) {
       return { date, value: Number.parseFloat(valueText) };
     })
     .filter((point) => point.date && Number.isFinite(point.value) && point.value > 0);
+}
+
+async function buildTreasuryYieldPayload() {
+  const currentYear = new Date().getUTCFullYear();
+  const years = [currentYear - 2, currentYear - 1, currentYear];
+  const [nominalBodies, realBodies] = await Promise.all([
+    Promise.all(years.map((year) => fetchTreasuryYear(TREASURY_YIELD_URL, year, "nominal"))),
+    Promise.all(years.map((year) => fetchTreasuryYear(TREASURY_REAL_YIELD_URL, year, "real"))),
+  ]);
+  const nominalRows = uniqueTreasuryRows(nominalBodies.flatMap((body) => parseTreasuryNominalXml(body.xml)));
+  const realRows = uniqueTreasuryRows(realBodies.flatMap((body) => parseTreasuryRealXml(body.xml)));
+
+  if (!nominalRows.length) {
+    throw new Error("Treasury nominal yield curve returned no rows");
+  }
+
+  const filledNominalRows = fillDailyTreasuryRows(nominalRows);
+  const filledRealRows = fillDailyTreasuryRows(realRows);
+  const realByDate = new Map(filledRealRows.map((row) => [row.date, row]));
+  const componentRows = filledNominalRows
+    .map((nominal) => {
+      const real = realByDate.get(nominal.date);
+      if (!real) {
+        return null;
+      }
+      return {
+        date: nominal.date,
+        dgs5: nominal.dgs5,
+        dgs10: nominal.us10y,
+        dfii5: real.dfii5,
+        t5yie: nominal.dgs5 - real.dfii5,
+        t10yie: nominal.us10y - real.dfii10,
+        filled: nominal.filled || real.filled,
+      };
+    })
+    .filter(Boolean);
+
+  const latest = nominalRows[nominalRows.length - 1];
+  return {
+    source: "U.S. Treasury Daily Treasury Yield Curve + Real Yield Curve",
+    frequency: "business-day source, calendar-filled",
+    updatedAt: latest.date,
+    fetchedAt: new Date().toISOString(),
+    series: {
+      us3y: filledNominalRows.map((row) => ({ date: row.date, value: row.us3y, filled: row.filled })),
+      us10y: filledNominalRows.map((row) => ({ date: row.date, value: row.us10y, filled: row.filled })),
+      us30y: filledNominalRows.map((row) => ({ date: row.date, value: row.us30y, filled: row.filled })),
+      dgs5: componentRows.map((row) => ({ date: row.date, value: row.dgs5, filled: row.filled })),
+      dgs10: componentRows.map((row) => ({ date: row.date, value: row.dgs10, filled: row.filled })),
+      dfii5: componentRows.map((row) => ({ date: row.date, value: row.dfii5, filled: row.filled })),
+      t5yie: componentRows.map((row) => ({ date: row.date, value: row.t5yie, filled: row.filled })),
+      t10yie: componentRows.map((row) => ({ date: row.date, value: row.t10yie, filled: row.filled })),
+    },
+  };
+}
+
+function uniqueTreasuryRows(rows) {
+  return Array.from(
+    rows
+      .reduce((byDate, row) => {
+        byDate.set(row.date, row);
+        return byDate;
+      }, new Map())
+      .values(),
+  ).sort((a, b) => a.date.localeCompare(b.date));
+}
+
+async function fetchTreasuryYear(baseUrl, year, label) {
+  const targetUrl = `${baseUrl}${encodeURIComponent(String(year))}`;
+  try {
+    return { year, xml: await fetchViaCurl(targetUrl) };
+  } catch (curlError) {
+    try {
+      return {
+        year,
+        xml: await fetchRemoteJson(targetUrl, {
+          "User-Agent": "MacroMonitor/1.0",
+          Accept: "application/xml,text/xml,*/*",
+        }),
+      };
+    } catch (httpsError) {
+      throw new Error(`Treasury ${label} ${year} failed: ${curlError.message}; ${httpsError.message}`);
+    }
+  }
+}
+
+function parseTreasuryNominalXml(xmlText) {
+  const rows = [];
+  const entryPattern = /<m:properties>([\s\S]*?)<\/m:properties>/g;
+  let match;
+  while ((match = entryPattern.exec(xmlText))) {
+    const body = match[1];
+    const date = extractXmlTag(body, "NEW_DATE")?.slice(0, 10);
+    const dgs5 = Number.parseFloat(extractXmlTag(body, "BC_5YEAR"));
+    const us3y = Number.parseFloat(extractXmlTag(body, "BC_3YEAR"));
+    const us10y = Number.parseFloat(extractXmlTag(body, "BC_10YEAR"));
+    const us30y = Number.parseFloat(extractXmlTag(body, "BC_30YEAR"));
+    if (
+      date &&
+      Number.isFinite(dgs5) &&
+      Number.isFinite(us3y) &&
+      Number.isFinite(us10y) &&
+      Number.isFinite(us30y)
+    ) {
+      rows.push({ date, dgs5, us3y, us10y, us30y, filled: false });
+    }
+  }
+  return rows;
+}
+
+function parseTreasuryRealXml(xmlText) {
+  const rows = [];
+  const entryPattern = /<m:properties>([\s\S]*?)<\/m:properties>/g;
+  let match;
+  while ((match = entryPattern.exec(xmlText))) {
+    const body = match[1];
+    const date = extractXmlTag(body, "NEW_DATE")?.slice(0, 10);
+    const dfii5 = Number.parseFloat(extractXmlTag(body, "TC_5YEAR"));
+    const dfii10 = Number.parseFloat(extractXmlTag(body, "TC_10YEAR"));
+    if (date && Number.isFinite(dfii5) && Number.isFinite(dfii10)) {
+      rows.push({ date, dfii5, dfii10, filled: false });
+    }
+  }
+  return rows;
+}
+
+function extractXmlTag(xmlText, tagName) {
+  const match = new RegExp(`<d:${tagName}(?:\\s[^>]*)?>([^<]*)<\\/d:${tagName}>`).exec(xmlText);
+  return match ? match[1] : "";
+}
+
+function fillDailyTreasuryRows(rows) {
+  const byDate = new Map(rows.map((row) => [row.date, row]));
+  const filledRows = [];
+  let cursor = new Date(`${rows[0].date}T00:00:00Z`);
+  const end = new Date(`${rows[rows.length - 1].date}T00:00:00Z`);
+  let lastRow = null;
+
+  while (cursor <= end) {
+    const date = cursor.toISOString().slice(0, 10);
+    const current = byDate.get(date);
+    if (current) {
+      lastRow = current;
+      filledRows.push(current);
+    } else if (lastRow) {
+      filledRows.push({ ...lastRow, date, filled: true });
+    }
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+
+  return filledRows;
 }
 
 async function buildAhr999PayloadIncremental() {

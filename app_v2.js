@@ -11,6 +11,7 @@ const API_ROUTES = {
   cnn: (mode) => `/api/cnn-fear${mode ? `?mode=${encodeURIComponent(mode)}` : ""}`,
   ahr: (mode) => `/api/ahr999${mode ? `?mode=${encodeURIComponent(mode)}` : ""}`,
   fred: (id, mode) => `/api/fred?id=${encodeURIComponent(id)}${mode ? `&mode=${encodeURIComponent(mode)}` : ""}`,
+  treasuryYields: (mode) => `/api/treasury-yields${mode ? `?mode=${encodeURIComponent(mode)}` : ""}`,
 };
 
 const HOME_YIELD_DEFS = [
@@ -66,17 +67,17 @@ const FEAR_COLUMNS = [
 ];
 
 const SERIES_DEFS = [
-  { id: "t5yie", symbol: "T5YIE", name: "5Y Breakeven Inflation", unit: "pct", decimals: 2, note: "Primary watch item.", live: { type: "fred", id: "T5YIE" }, page: "macro" },
-  { id: "t10yie", symbol: "T10YIE", name: "10Y Breakeven Inflation", unit: "pct", decimals: 2, note: "Longer horizon compensation.", live: { type: "fred", id: "T10YIE" }, page: "macro" },
+  { id: "t5yie", symbol: "T5YIE", name: "5Y Breakeven Inflation", unit: "pct", decimals: 2, note: "Treasury nominal 5Y minus real 5Y.", live: { type: "treasury", key: "t5yie" }, page: "macro" },
+  { id: "t10yie", symbol: "T10YIE", name: "10Y Breakeven Inflation", unit: "pct", decimals: 2, note: "Treasury nominal 10Y minus real 10Y.", live: { type: "treasury", key: "t10yie" }, page: "macro" },
   { id: "swap5y", symbol: "SWAP5Y", name: "5Y Inflation Swap", unit: "pct", decimals: 2, note: "Live source not wired yet.", page: "macro" },
   { id: "t5yifr", symbol: "T5YIFR", name: "5Y5Y Forward Inflation", unit: "pct", decimals: 2, note: "Long-end anchor check.", live: { type: "fred", id: "T5YIFR" }, page: "macro" },
   { id: "clev5y", symbol: "CLEV5Y", name: "Cleveland 5Y Exp.", unit: "pct", decimals: 2, note: "No stable free CSV source wired yet.", page: "macro" },
   { id: "umich1", symbol: "UMICH1", name: "Michigan 1Y Survey", unit: "pct", decimals: 1, note: "Short-end survey expectations.", live: { type: "fred", id: "MICH" }, page: "macro" },
   { id: "umich5", symbol: "UMICH5", name: "Michigan 5Y Survey", unit: "pct", decimals: 1, note: "No stable free CSV source wired yet.", page: "macro" },
   { id: "nyfed3", symbol: "NYFED3", name: "NY Fed 3Y Survey", unit: "pct", decimals: 1, note: "No stable free CSV source wired yet.", page: "macro" },
-  { id: "dgs5", symbol: "DGS5", name: "5Y Treasury Nominal", unit: "pct", decimals: 2, note: "Nominal leg for breakeven.", live: { type: "fred", id: "DGS5" }, page: "macro" },
-  { id: "dfii5", symbol: "DFII5", name: "5Y TIPS Real Yield", unit: "pct", decimals: 2, note: "Real leg for breakeven.", live: { type: "fred", id: "DFII5" }, page: "macro" },
-  { id: "dgs10", symbol: "DGS10", name: "10Y Treasury Nominal", unit: "pct", decimals: 2, note: "Long nominal cross-check.", live: { type: "fred", id: "DGS10" }, page: "macro" },
+  { id: "dgs5", symbol: "DGS5", name: "5Y Treasury Nominal", unit: "pct", decimals: 2, note: "Treasury nominal curve, 5Y point.", live: { type: "treasury", key: "dgs5" }, page: "macro" },
+  { id: "dfii5", symbol: "DFII5", name: "5Y TIPS Real Yield", unit: "pct", decimals: 2, note: "Treasury real yield curve, 5Y point.", live: { type: "treasury", key: "dfii5" }, page: "macro" },
+  { id: "dgs10", symbol: "DGS10", name: "10Y Treasury Nominal", unit: "pct", decimals: 2, note: "Treasury nominal curve, 10Y point.", live: { type: "treasury", key: "dgs10" }, page: "macro" },
   { id: "cpi3m", symbol: "CORE3M", name: "Core CPI 3M Ann.", unit: "pct", decimals: 1, note: "Inflation momentum context.", live: { type: "fred", id: "CORESTICKM679SFRBATL" }, page: "macro" },
   { id: "cnn_fear", symbol: "CNN-FGI", name: "CNN Fear & Greed", unit: "index", decimals: 0, note: "Headline fear gauge.", live: { type: "cnn", key: "fear_and_greed", historyKey: "fear_and_greed_historical" }, page: "fear" },
   { id: "ahr999", symbol: "AHR999", name: "Bitcoin AHR999", unit: "ratio", decimals: 2, note: "BTC valuation heat proxy.", live: { type: "ahr" }, page: "fear" },
@@ -107,6 +108,7 @@ const state = {
   chartAnimationFrame: null,
   chartAnimationStartedAt: 0,
   networkStatus: {
+    treasury: "pending",
     fred: "pending",
     cnn: "pending",
     ahr: "pending",
@@ -316,17 +318,22 @@ async function loadCachedSnapshot() {
 
 async function loadCachedDashboard() {
   const fredDefs = SERIES_DEFS.filter((def) => def.live?.type === "fred");
-  const [fredResults, cnnBundle, ahrSeries] = await Promise.all([
+  const treasuryDefs = SERIES_DEFS.filter((def) => def.live?.type === "treasury");
+  const [fredResults, treasuryResults, cnnBundle, ahrSeries] = await Promise.all([
     Promise.all(fredDefs.map((def) => fetchFredSeries(def, "cache"))),
+    fetchTreasurySeriesBundle(treasuryDefs, "cache"),
     fetchCnnBundle("cache"),
     fetchAhrSeries("cache"),
   ]);
   const fredMap = new Map(fredResults.filter((result) => result.ok).map((result) => [result.series.id, result.series]));
+  const treasuryMap = new Map(treasuryResults.filter((result) => result.ok).map((result) => [result.series.id, result.series]));
   const seriesMap = new Map();
 
   for (const def of SERIES_DEFS) {
     if (def.live?.type === "fred") {
       seriesMap.set(def.id, fredMap.get(def.id) ?? makeEmptySeries(def));
+    } else if (def.live?.type === "treasury") {
+      seriesMap.set(def.id, treasuryMap.get(def.id) ?? makeEmptySeries(def));
     } else if (def.live?.type === "cnn") {
       seriesMap.set(def.id, buildCnnSeries(def, cnnBundle));
     } else if (def.live?.type === "ahr") {
@@ -341,6 +348,7 @@ async function loadCachedDashboard() {
   state.lastRefreshAt = getLatestDataDate(seriesMap) ? new Date() : state.lastRefreshAt;
   state.networkStatus = {
     fred: summarizeFredStatus(fredResults),
+    treasury: summarizeTreasuryStatus(treasuryResults),
     cnn: cnnBundle.ok ? `cnn ${formatCacheStatus(cnnBundle.cacheStatus)}` : `cnn ${cnnBundle.reason}`,
     ahr: ahrSeries?.source === "live" ? `ahr ${formatCacheStatus(ahrSeries.cacheStatus)}` : "ahr unavailable",
   };
@@ -356,8 +364,9 @@ async function refreshDashboard(mode = "refresh") {
     phase: "loading",
     tone: "loading",
     title: "数据获取中",
-    detail: "正在连接 FRED、CNN 和 AHR999。",
+    detail: "正在连接 Treasury、FRED、CNN 和 AHR999。",
     feeds: {
+      treasury: { state: "loading", label: "Treasury", detail: "连接中" },
       fred: { state: "loading", label: "FRED", detail: "连接中" },
       cnn: { state: "loading", label: "CNN", detail: "连接中" },
       ahr: { state: "loading", label: "AHR999", detail: "连接中" },
@@ -366,41 +375,50 @@ async function refreshDashboard(mode = "refresh") {
   refs.refreshButton.disabled = true;
 
   const fredDefs = SERIES_DEFS.filter((def) => def.live?.type === "fred");
+  const treasuryDefs = SERIES_DEFS.filter((def) => def.live?.type === "treasury");
   const cnnSeriesCount = SERIES_DEFS.filter((def) => def.live?.type === "cnn").length;
-  const [initialFredResults, initialCnnBundle, initialAhrSeries] = await Promise.all([
+  const [initialFredResults, initialTreasuryResults, initialCnnBundle, initialAhrSeries] = await Promise.all([
     Promise.all(fredDefs.map((def) => trackRefreshUnit(fetchFredSeries(def, mode), def.symbol))),
+    trackRefreshUnit(fetchTreasurySeriesBundle(treasuryDefs, mode), `Treasury x${treasuryDefs.length}`, treasuryDefs.length),
     trackRefreshUnit(fetchCnnBundle(mode), `CNN x${cnnSeriesCount}`, cnnSeriesCount),
     trackRefreshUnit(fetchAhrSeries(mode), "AHR999"),
   ]);
   let fredResults = initialFredResults;
+  let treasuryResults = initialTreasuryResults;
   let cnnBundle = initialCnnBundle;
   let ahrSeries = initialAhrSeries;
 
-  if (needsRetry(fredResults, cnnBundle, ahrSeries)) {
+  if (needsRetry(fredResults, treasuryResults, cnnBundle, ahrSeries)) {
     setFeedHealth({
       phase: "retrying",
       tone: "warning",
       title: "重新尝试连接中",
       detail: "部分数据源第一次连接失败，正在再试一次。",
-      feeds: buildFeedHealth(fredResults, cnnBundle, ahrSeries),
+      feeds: buildFeedHealth(fredResults, treasuryResults, cnnBundle, ahrSeries),
     });
     const retryFredDefs = fredDefs.filter((def) => !fredResults.find((result) => result.id === def.id && result.ok));
-    const [retryFredResults, retryCnnBundle, retryAhrSeries] = await Promise.all([
+    const retryTreasuryDefs = treasuryDefs.filter((def) => !treasuryResults.find((result) => result.id === def.id && result.ok));
+    const [retryFredResults, retryTreasuryResults, retryCnnBundle, retryAhrSeries] = await Promise.all([
       Promise.all(retryFredDefs.map((def) => fetchFredSeries(def, mode))),
+      retryTreasuryDefs.length ? fetchTreasurySeriesBundle(retryTreasuryDefs, mode) : Promise.resolve([]),
       cnnBundle.ok ? Promise.resolve(cnnBundle) : fetchCnnBundle(mode),
       ahrSeries?.source === "live" ? Promise.resolve(ahrSeries) : fetchAhrSeries(mode),
     ]);
     fredResults = mergeFredResults(fredResults, retryFredResults);
+    treasuryResults = mergeFredResults(treasuryResults, retryTreasuryResults);
     cnnBundle = retryCnnBundle;
     ahrSeries = retryAhrSeries;
   }
 
   const fredMap = new Map(fredResults.filter((result) => result.ok).map((result) => [result.series.id, result.series]));
+  const treasuryMap = new Map(treasuryResults.filter((result) => result.ok).map((result) => [result.series.id, result.series]));
   const seriesMap = new Map();
 
   for (const def of SERIES_DEFS) {
     if (def.live?.type === "fred") {
       seriesMap.set(def.id, fredMap.get(def.id) ?? makeEmptySeries(def));
+    } else if (def.live?.type === "treasury") {
+      seriesMap.set(def.id, treasuryMap.get(def.id) ?? makeEmptySeries(def));
     } else if (def.live?.type === "cnn") {
       seriesMap.set(def.id, buildCnnSeries(def, cnnBundle));
     } else if (def.live?.type === "ahr") {
@@ -418,17 +436,18 @@ async function refreshDashboard(mode = "refresh") {
   state.lastRefreshAt = new Date();
   state.networkStatus = {
     fred: summarizeFredStatus(fredResults),
+    treasury: summarizeTreasuryStatus(treasuryResults),
     cnn: cnnBundle.ok ? `cnn ${formatCacheStatus(cnnBundle.cacheStatus)}` : `cnn ${cnnBundle.reason}`,
     ahr: ahrSeries?.source === "live" ? `ahr ${formatCacheStatus(ahrSeries.cacheStatus)}` : "ahr unavailable",
   };
   refs.refreshButton.disabled = false;
-  const hasWarning = hasAnyWarning(fredResults, cnnBundle, ahrSeries);
+  const hasWarning = hasAnyWarning(fredResults, treasuryResults, cnnBundle, ahrSeries);
   setFeedHealth({
-    phase: hasAnyError(fredResults, cnnBundle, ahrSeries) || hasWarning ? "partial" : "ready",
-    tone: hasAnyLive(seriesMap) ? (hasAnyError(fredResults, cnnBundle, ahrSeries) || hasWarning ? "warning" : "ok") : "error",
+    phase: hasAnyError(fredResults, treasuryResults, cnnBundle, ahrSeries) || hasWarning ? "partial" : "ready",
+    tone: hasAnyLive(seriesMap) ? (hasAnyError(fredResults, treasuryResults, cnnBundle, ahrSeries) || hasWarning ? "warning" : "ok") : "error",
     title: hasAnyLive(seriesMap) ? "数据已更新" : "数据获取失败",
     detail: formatStatus(cnnBundle, seriesMap, { changedCount, latestDataDate, refreshStartedAt, refreshSeq }),
-    feeds: buildFeedHealth(fredResults, cnnBundle, ahrSeries),
+    feeds: buildFeedHealth(fredResults, treasuryResults, cnnBundle, ahrSeries),
   });
   render();
   maybeFinishLoadProgress();
@@ -462,31 +481,67 @@ async function fetchFredSeries(def, mode = "") {
   }
 }
 
+async function fetchTreasurySeriesBundle(defs, mode = "") {
+  if (!defs.length) {
+    return [];
+  }
+  try {
+    const response = await fetch(API_ROUTES.treasuryYields(mode), { cache: "no-store" });
+    if (!response.ok) {
+      const detail = await safeJson(response);
+      return defs.map((def) => ({ ok: false, id: def.id, reason: detail?.error || `HTTP ${response.status}` }));
+    }
+    const payload = await response.json();
+    const cacheStatus = response.headers.get("X-Proxy-Cache") || "MISS";
+    return defs.map((def) => {
+      const data = normalizeHomeYieldPoints(payload.series?.[def.live.key || def.id]);
+      return data.length
+        ? {
+            ok: true,
+            id: def.id,
+            series: {
+              ...def,
+              source: "live",
+              data,
+              updatedAt: data[data.length - 1].date,
+              cacheStatus,
+              latestMeta: {
+                source: payload.source,
+                frequency: payload.frequency,
+              },
+            },
+          }
+        : { ok: false, id: def.id, reason: "empty Treasury response" };
+    });
+  } catch (error) {
+    return defs.map((def) => ({ ok: false, id: def.id, reason: error?.message || "Treasury request failed" }));
+  }
+}
+
 async function refreshHomeYieldChart(mode = "refresh") {
   renderHomeControls();
   homeYieldState.status = "loading";
-  homeYieldState.message = mode === "cache" ? "Loading local US Treasury yield cache..." : "Incrementally updating US3Y / US10Y / US30Y from FRED...";
+  homeYieldState.message =
+    mode === "cache"
+      ? "Loading local Treasury curve cache..."
+      : "Updating US3Y / US10Y / US30Y from Treasury daily curve...";
   renderHomeYieldLegend();
   drawHomeYieldChart(1);
 
-  const results = await Promise.all(
-    HOME_YIELD_DEFS.map((def) => {
-      const task = fetchHomeYieldSeries(def, mode);
-      return mode === "refresh" ? trackRefreshUnit(task, def.symbol) : task;
-    }),
-  );
-  homeYieldState.series = results.filter((result) => result.ok).map((result) => result.series);
-  const errors = results.filter((result) => !result.ok);
+  const task = fetchHomeYieldBundle(mode);
+  const result = mode === "refresh" ? await trackRefreshUnit(task, "Treasury curve", HOME_YIELD_DEFS.length) : await task;
+  homeYieldState.series = result.series || [];
+  const errors = result.errors || [];
 
   if (homeYieldState.series.length) {
     const latestDate = getLatestHomeYieldDate();
     const errorText = errors.length ? ` · ${errors.length} feed unavailable` : "";
     const staleText = homeYieldState.series.some((series) => series.cacheStatus === "STALE") ? " · using stale local cache" : "";
     homeYieldState.status = errors.length ? "partial" : "ready";
-    homeYieldState.message = `Updated ${latestDate ? formatDate(latestDate) : "--"} · Source: FRED${errorText}${staleText}`;
+    homeYieldState.message = `Updated ${latestDate ? formatDate(latestDate) : "--"} · Source: ${result.sourceLabel || "Treasury daily curve"}${errorText}${staleText}`;
   } else {
     homeYieldState.status = "error";
-    homeYieldState.message = errors.map((result) => `${result.symbol}: ${result.reason}`).join(" · ") || "No data";
+    homeYieldState.message = errors.map((error) => `${error.symbol || "Treasury"}: ${error.reason}`).join(" · ") || "No data";
   }
 
   renderHomeYieldLegend();
@@ -494,6 +549,72 @@ async function refreshHomeYieldChart(mode = "refresh") {
   if (mode === "refresh") {
     maybeFinishLoadProgress();
   }
+}
+
+async function fetchHomeYieldBundle(mode = "") {
+  try {
+    const response = await fetch(API_ROUTES.treasuryYields(mode), { cache: "no-store" });
+    if (!response.ok) {
+      const detail = await safeJson(response);
+      return fetchHomeYieldFredFallback(mode, detail?.error || `HTTP ${response.status}`);
+    }
+    const payload = await response.json();
+    const cacheStatus = response.headers.get("X-Proxy-Cache") || "MISS";
+    const series = HOME_YIELD_DEFS.map((def) => {
+      const data = normalizeHomeYieldPoints(payload.series?.[def.id]);
+      return data.length
+        ? {
+            ok: true,
+            series: {
+              ...def,
+              source: "live",
+              data,
+              updatedAt: data[data.length - 1].date,
+              cacheStatus,
+              latestMeta: {
+                source: payload.source,
+                frequency: payload.frequency,
+              },
+            },
+          }
+        : { ok: false, symbol: def.symbol, reason: "empty Treasury response" };
+    });
+    return {
+      series: series.filter((result) => result.ok).map((result) => result.series),
+      errors: series.filter((result) => !result.ok),
+      sourceLabel: payload.frequency ? `${payload.source} (${payload.frequency})` : payload.source,
+    };
+  } catch (error) {
+    return fetchHomeYieldFredFallback(mode, error?.message || "Treasury request failed");
+  }
+}
+
+async function fetchHomeYieldFredFallback(mode, reason) {
+  const results = await Promise.all(HOME_YIELD_DEFS.map((def) => fetchHomeYieldSeries(def, mode)));
+  const errors = results
+    .filter((result) => !result.ok)
+    .concat([{ symbol: "Treasury", reason }]);
+  return {
+    series: results.filter((result) => result.ok).map((result) => ({
+      ...result.series,
+      latestMeta: {
+        ...(result.series.latestMeta || {}),
+        fallbackReason: reason,
+      },
+    })),
+    errors,
+    sourceLabel: "FRED fallback",
+  };
+}
+
+function normalizeHomeYieldPoints(points) {
+  return (Array.isArray(points) ? points : [])
+    .map((point) => ({
+      date: point.date,
+      value: Number.parseFloat(point.value),
+      filled: Boolean(point.filled),
+    }))
+    .filter((point) => point.date && Number.isFinite(point.value));
 }
 
 async function fetchHomeYieldSeries(def, mode = "") {
@@ -627,7 +748,7 @@ function beginLoadProgress() {
 }
 
 function getTotalRefreshUnits() {
-  const dashboardUnits = SERIES_DEFS.filter((def) => def.live?.type === "fred" || def.live?.type === "ahr").length;
+  const dashboardUnits = SERIES_DEFS.filter((def) => def.live?.type === "fred" || def.live?.type === "treasury" || def.live?.type === "ahr").length;
   const cnnUnits = SERIES_DEFS.filter((def) => def.live?.type === "cnn").length;
   return dashboardUnits + cnnUnits + HOME_YIELD_DEFS.length;
 }
@@ -722,17 +843,18 @@ function renderFeedHealth() {
   `;
 }
 
-function needsRetry(fredResults, cnnBundle, ahrSeries) {
-  return fredResults.some((result) => !result.ok) || !cnnBundle.ok || ahrSeries?.source !== "live";
+function needsRetry(fredResults, treasuryResults, cnnBundle, ahrSeries) {
+  return fredResults.some((result) => !result.ok) || treasuryResults.some((result) => !result.ok) || !cnnBundle.ok || ahrSeries?.source !== "live";
 }
 
-function hasAnyError(fredResults, cnnBundle, ahrSeries) {
-  return needsRetry(fredResults, cnnBundle, ahrSeries);
+function hasAnyError(fredResults, treasuryResults, cnnBundle, ahrSeries) {
+  return needsRetry(fredResults, treasuryResults, cnnBundle, ahrSeries);
 }
 
-function hasAnyWarning(fredResults, cnnBundle, ahrSeries) {
+function hasAnyWarning(fredResults, treasuryResults, cnnBundle, ahrSeries) {
   return (
     fredResults.some((result) => result.ok && result.series?.cacheStatus === "STALE") ||
+    treasuryResults.some((result) => result.ok && result.series?.cacheStatus === "STALE") ||
     cnnBundle.cacheStatus === "STALE" ||
     ahrSeries?.cacheStatus === "STALE"
   );
@@ -792,15 +914,39 @@ function summarizeFredStatus(fredResults) {
   return `fred error: ${failed?.reason || "unavailable"}`;
 }
 
-function buildFeedHealth(fredResults, cnnBundle, ahrSeries) {
+function summarizeTreasuryStatus(treasuryResults) {
+  const liveCount = treasuryResults.filter((result) => result.ok).length;
+  const staleCount = treasuryResults.filter((result) => result.ok && result.series?.cacheStatus === "STALE").length;
+  const failed = treasuryResults.find((result) => !result.ok);
+  if (liveCount === treasuryResults.length) {
+    return staleCount
+      ? `treasury ${liveCount}/${treasuryResults.length} live · ${staleCount} stale`
+      : `treasury ${liveCount}/${treasuryResults.length} live`;
+  }
+  if (liveCount > 0) {
+    return `treasury partial ${liveCount}/${treasuryResults.length}: ${failed?.reason || "unknown"}`;
+  }
+  return `treasury error: ${failed?.reason || "unavailable"}`;
+}
+
+function buildFeedHealth(fredResults, treasuryResults, cnnBundle, ahrSeries) {
   const fredLive = fredResults.filter((result) => result.ok).length;
   const fredStale = fredResults.filter((result) => result.ok && result.series?.cacheStatus === "STALE").length;
   const fredFailed = fredResults.find((result) => !result.ok);
-  const fredState = fredLive === fredResults.length && !fredStale ? "ok" : fredLive > 0 ? "warning" : "error";
+  const fredState = !fredResults.length ? "ok" : fredLive === fredResults.length && !fredStale ? "ok" : fredLive > 0 ? "warning" : "error";
+  const treasuryLive = treasuryResults.filter((result) => result.ok).length;
+  const treasuryStale = treasuryResults.filter((result) => result.ok && result.series?.cacheStatus === "STALE").length;
+  const treasuryFailed = treasuryResults.find((result) => !result.ok);
+  const treasuryState = treasuryLive === treasuryResults.length && !treasuryStale ? "ok" : treasuryLive > 0 ? "warning" : "error";
   const cnnState = cnnBundle.ok ? (cnnBundle.cacheStatus === "STALE" ? "warning" : "ok") : "error";
   const ahrState = ahrSeries?.source === "live" ? (ahrSeries.cacheStatus === "STALE" ? "warning" : "ok") : "error";
 
   return {
+    treasury: {
+      state: treasuryState,
+      label: "Treasury",
+      detail: treasuryState === "ok" ? `${treasuryLive}/${treasuryResults.length} live` : treasuryStale ? `${treasuryStale} stale cache` : treasuryFailed?.reason || "unavailable",
+    },
     fred: {
       state: fredState,
       label: "FRED",
@@ -1939,6 +2085,9 @@ function getSourceLabel(series) {
   if (series.live?.type === "fred") {
     return "FRED public CSV";
   }
+  if (series.live?.type === "treasury") {
+    return "U.S. Treasury daily curve";
+  }
   if (series.live?.type === "cnn") {
     return "CNN graphdata endpoint";
   }
@@ -2161,7 +2310,7 @@ function formatStatus(cnnBundle, seriesMap, meta = {}) {
   const noDataCount = Array.from(seriesMap.values()).filter((series) => series.source === "empty").length;
   const proxyStatus = window.location.protocol === "file:"
     ? "Use node server.js and open localhost"
-    : `${state.networkStatus.fred} / ${state.networkStatus.cnn} / ${state.networkStatus.ahr}`;
+    : `${state.networkStatus.treasury} / ${state.networkStatus.fred} / ${state.networkStatus.cnn} / ${state.networkStatus.ahr}`;
   const changedText = Number.isFinite(meta.changedCount) ? `changed ${meta.changedCount}` : "changed --";
   const latestText = meta.latestDataDate ? `latest ${meta.latestDataDate}` : "latest --";
   return `Refresh #${meta.refreshSeq || state.refreshSeq} · ${changedText} · ${latestText} · Live ${liveCount} / No data ${noDataCount} · ${proxyStatus} · ${formatDateTime(new Date())}`;

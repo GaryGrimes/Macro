@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>美股早报 | 2026-05-05</title>
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #66645f;
+      --line: #d9d2c3;
+      --paper: #f7f3eb;
+      --panel: #fffdf8;
+      --panel-2: #f0eadf;
+      --accent: #b3312c;
+      --accent-2: #126a65;
+      --gold: #a4762a;
+      --green: #147b45;
+      --red: #b3312c;
+      --blue: #244f8f;
+      --shadow: 0 14px 40px rgba(37, 31, 21, .10);
+      font-family: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 24px 52px;
+    }
+
+    header {
+      border-top: 7px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      padding: 22px 0 20px;
+      display: grid;
+      grid-template-columns: 1.4fr .8fr;
+      gap: 24px;
+      align-items: end;
+    }
+
+    .kicker {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--accent);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 4.6vw, 54px);
+      line-height: 1;
+      margin: 0;
+      letter-spacing: 0;
+      max-width: 980px;
+    }
+
+    .deck {
+      font-size: 16px;
+      color: #2a2926;
+      margin-top: 16px;
+      max-width: 980px;
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+    }
+
+    .meta {
+      justify-self: end;
+      text-align: right;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .meta strong {
+      color: var(--ink);
+      display: block;
+      font-size: 15px;
+    }
+
+    .ticker-strip {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 0;
+      background: rgba(247, 243, 235, .94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .ticker {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      min-width: 118px;
+      padding: 8px 10px;
+      cursor: pointer;
+      display: grid;
+      gap: 2px;
+      text-align: left;
+      border-radius: 3px;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+
+    .ticker.active {
+      border-color: var(--ink);
+      box-shadow: inset 0 -3px 0 var(--accent);
+    }
+
+    .ticker .sym { font-weight: 800; font-size: 12px; }
+    .ticker .val { font-variant-numeric: tabular-nums; font-size: 14px; }
+    .ticker .chg { font-variant-numeric: tabular-nums; font-size: 11px; }
+    .up { color: var(--red); }
+    .down { color: var(--green); }
+    .flat { color: var(--muted); }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    section {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 27px;
+      line-height: 1.1;
+      margin: 0 0 16px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 22px 0 8px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    p { margin: 0 0 12px; }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: -8px;
+      margin-bottom: 16px;
+    }
+
+    .lead-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .chart-panel,
+    .side-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      position: relative;
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .chart-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .range-control {
+      display: flex;
+      gap: 3px;
+      border: 1px solid var(--line);
+      background: #f7f2e9;
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+    .range-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 6px;
+      border-radius: 3px;
+    }
+
+    .range-btn.active {
+      background: var(--ink);
+      color: #fffdf8;
+    }
+
+    .data-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-left: 8px;
+      color: var(--accent-2);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .data-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      display: inline-block;
+    }
+
+    .curve-panel {
+      overflow: visible;
+    }
+
+    .curve-toggle {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 4px 7px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .curve-toggle:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .curve-detail {
+      border-top: 1px solid var(--line);
+      display: none;
+      margin-top: 14px;
+      padding: 12px 0 18px;
+      color: #2b2924;
+      font-size: 13px;
+    }
+
+    .curve-panel.open .curve-detail { display: block; }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 2px 0 8px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .legend-swatch {
+      width: 18px;
+      height: 3px;
+      border-radius: 99px;
+      display: inline-block;
+    }
+
+    .chart-caption {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 8px 0 0;
+    }
+
+    .bond-move-chart {
+      margin: 4px 0 18px;
+    }
+
+    .chart-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .chart-value {
+      font-size: 20px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    svg { max-width: 100%; display: block; }
+
+    .chart-tooltip {
+      position: fixed;
+      z-index: 1000;
+      min-width: 150px;
+      max-width: 250px;
+      padding: 9px 10px;
+      border: 1px solid #2c2924;
+      background: #fffdf8;
+      color: var(--ink);
+      box-shadow: 0 12px 26px rgba(20, 18, 15, .20);
+      border-radius: 3px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-9999px, -9999px);
+      transition: opacity .08s ease;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .chart-tooltip.visible { opacity: 1; }
+
+    .chart-tooltip b {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border-top: 2px solid var(--ink);
+      font-size: 13px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 9px;
+      vertical-align: top;
+    }
+
+    th {
+      text-align: left;
+      color: #2d2b27;
+      background: var(--panel-2);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    td.num, th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .weight {
+      font-weight: 800;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      background: #fbf7ef;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .callout {
+      margin: 16px 0;
+      padding: 15px 17px;
+      background: #fff8eb;
+      border-left: 4px solid var(--gold);
+      color: #2b2924;
+    }
+
+    .chain {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .chain div {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 12px;
+      min-height: 90px;
+      position: relative;
+    }
+
+    .chain div::after {
+      content: ">";
+      position: absolute;
+      right: -9px;
+      top: 36px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .chain div:last-child::after { content: ""; }
+    .chain strong { display: block; margin-bottom: 4px; }
+    .chain span { color: var(--muted); font-size: 13px; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mini-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 13px;
+    }
+
+    .mini-card b { display: block; margin-bottom: 5px; }
+    .mini-card span { color: var(--muted); font-size: 13px; }
+
+    aside {
+      position: sticky;
+      top: 76px;
+      align-self: start;
+    }
+
+    .brief-box {
+      background: #1f1e1a;
+      color: #f7f3eb;
+      padding: 18px;
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+    }
+
+    .brief-box h2 {
+      color: #f7f3eb;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .brief-box ol {
+      margin: 0;
+      padding-left: 20px;
+      color: #e1d8c6;
+      font-size: 14px;
+    }
+
+    .brief-box li { margin-bottom: 8px; }
+
+    .source-list {
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 16px;
+    }
+
+    .source-list a { color: var(--blue); }
+
+    .mobile-only { display: none; }
+
+    @media (max-width: 980px) {
+      header, main, .lead-grid, .split {
+        grid-template-columns: 1fr;
+      }
+      .meta {
+        justify-self: start;
+        text-align: left;
+      }
+      aside {
+        position: static;
+      }
+      .chain, .cards {
+        grid-template-columns: 1fr;
+      }
+      .chain div::after { content: ""; }
+      table { font-size: 13px; }
+      th, td { padding: 8px 7px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <div class="kicker">Daily U.S. Market Brief · May 5, 2026</div>
+        <h1>美股早报 | 油价冲击压制美债久期；指数高位再定价；AMD、SMCI、MSTR 盘后验证高 beta</h1>
+        <div class="deck">
+          昨天美股不是崩盘，而是高位风险再定价：指数从纪录高位温和回落，但内部结构明显转弱；真正主线在债市。油价因 Hormuz / Iran-UAE 冲突风险再度跳升，市场将其交易为通胀冲击 + Fed 降息预期撤退 + 美债供给压力，所以美债没有获得避险买盘，反而被抛售、收益率爆冲。
+        </div>
+      </div>
+      <div class="meta">
+        <strong>覆盖交易日：2026-05-04</strong>
+        生成时间：2026-05-05 · Asia/Hong Kong<br>
+        页面类型：独立 HTML 早报，不接入 Macro 看板
+      </div>
+    </header>
+
+    <nav class="ticker-strip" aria-label="interactive ticker strip" id="tickerStrip"></nav>
+
+    <main>
+      <div>
+        <section id="dashboard">
+          <h2>固定市场仪表盘</h2>
+          <p class="section-note">读法：权重不是涨跌幅大小，而是它对今日定价主线的解释力。当前权重最高的是油、breakeven、10Y/30Y 美债。<span class="data-status" id="dataStatus">数据校验中</span></p>
+          <div class="lead-grid">
+            <div class="chart-panel">
+              <div class="chart-head">
+                <div>
+                  <div class="chart-title" id="activeName">S&P 500</div>
+                  <div class="chart-value" id="activeValue">7,200.75</div>
+                </div>
+                <div class="chart-actions">
+                  <div id="activeChange" class="down">-0.42%</div>
+                  <div class="range-control" id="rangeControl" aria-label="ticker range"></div>
+                </div>
+              </div>
+              <svg id="sparkChart" viewBox="0 0 640 260" role="img" aria-label="Selected ticker chart"></svg>
+              <p id="activeNote" class="section-note" style="margin:10px 0 0;">指数跌幅温和，但和宽度一起看，风险偏好已经从“指数强”转成“内部转弱”。</p>
+            </div>
+            <div class="chart-panel curve-panel" id="curvePanel">
+              <button class="curve-toggle" id="curveToggle" type="button" aria-expanded="false">展开</button>
+              <div class="chart-head">
+                <div>
+                  <div class="chart-title">Treasury Curve</div>
+                  <div class="chart-value">Bear steepening</div>
+                </div>
+                <div class="up">10Y +8bp · 30Y +6bp</div>
+              </div>
+              <div class="legend-row" id="curveLegend"></div>
+              <svg id="curveChart" viewBox="0 0 640 260" role="img" aria-label="Treasury yield curve"></svg>
+              <p class="section-note" style="margin:10px 0 0;">5Y breakeven 约 2.72%，较前一交易日上行约 3bp；名义收益率上行幅度大于通胀补偿，说明 real yield / term premium 也在贡献压力。</p>
+              <div class="curve-detail">
+                <p><strong>为什么是 bear steepening：</strong>“bear”指收益率上行、债券价格下跌；“steepening”指长端上行不弱于短中端，曲线更陡。昨晚的组合不是典型避险买债，而是油价冲击推升通胀补偿，Fed path 被重新上移，同时长端还要消化供给和期限溢价。</p>
+                <p>从 30d、7d、1d 到当前，整条曲线不是单点跳动，而是逐步向上平移并在 10Y/30Y 区域保持压力。这意味着权益端要同时面对更高折现率和更高能源成本，长债端则需要油价回落、Fed 鸽派解释或 auction 需求强，才更容易 sign-flip。</p>
+              </div>
+            </div>
+          </div>
+
+          <table style="margin-top:16px;">
+            <thead>
+              <tr>
+                <th>资产/指标</th>
+                <th class="num">最新/收盘</th>
+                <th class="num">变化</th>
+                <th class="num">权重</th>
+                <th>解释</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Dow Jones</td><td class="num">48,941.90</td><td class="num down">-1.13%</td><td class="num weight">4/5</td><td>三大指数里跌幅最大，压力更集中在工业、材料、金融和运输链；这说明昨晚不是 Nasdaq 权重科技全面失守，而是油价和利率对周期/价值链条的冲击更明显。</td></tr>
+              <tr><td>S&P 500</td><td class="num">7,200.75</td><td class="num down">-0.41%</td><td class="num weight">4/5</td><td>指数跌幅温和，但需要结合宽度判断风险偏好是否恶化；昨晚不是崩盘，而是高位估值开始重新计入利率压力。</td></tr>
+              <tr><td>Nasdaq Composite</td><td class="num">25,067.80</td><td class="num down">-0.19%</td><td class="num weight">4/5</td><td>三大指数里跌幅最窄，说明 mega-cap / AI 仍在提供相对支撑；真正需要验证的是 semis 与云资本开支能否继续托住 Nasdaq 内部结构。</td></tr>
+              <tr><td>Russell 2000</td><td class="num">2,796.00</td><td class="num down">-0.60%</td><td class="num weight">3/5</td><td>小盘对融资成本和内需预期更敏感；跌幅大于 Nasdaq，说明长端利率上行时小盘很难成为主线承接资产。</td></tr>
+              <tr><td>10Y UST</td><td class="num">4.45%</td><td class="num up">+8bp</td><td class="num weight">5/5</td><td>折现率核心锚；昨晚收益率上行与油价、降息预期撤退、供给压力共振，是权益估值压力的主因。</td></tr>
+              <tr><td>30Y UST</td><td class="num">5.01%</td><td class="num up">+6bp</td><td class="num weight">5/5</td><td>最敏感地反映 term premium / 财政供给压力；30Y 重新逼近 5% 区域会直接压制 TLT 和长久期成长股。</td></tr>
+              <tr><td>5Y Breakeven</td><td class="num">2.72%</td><td class="num up">+3bp</td><td class="num weight">5/5</td><td>判断冲击是否来自通胀补偿。昨晚 breakeven 上行确认油价被交易成 inflation shock，但名义端上行更大，说明 real yield 也在上行。</td></tr>
+              <tr><td>5Y Real Yield</td><td class="num">1.36%</td><td class="num up">+3bp</td><td class="num weight">5/5</td><td>实际利率是成长股和黄金共同面对的“真实折现率”。若 breakeven 与 real yield 同时上行，说明市场既担心通胀，又要求更高实际回报率，这比单纯通胀补偿上行更压制长久期资产。</td></tr>
+              <tr><td>Brent / WTI</td><td class="num">$114.44 / $106.42</td><td class="num up">+5.8% / +4.4%</td><td class="num weight">5/5</td><td>当前债市冲击源头。只要 Brent 站稳 110 上方，市场就会继续把地缘风险翻译成通胀补偿和 Fed path 压力。</td></tr>
+              <tr><td>DXY</td><td class="num">98.30</td><td class="num up">小幅上行</td><td class="num weight">3/5</td><td>美元不是主线起点，但会放大或缓和全球风险资产压力；若美元与 real yield 同上，成长股承压更清晰。</td></tr>
+              <tr><td>Gold</td><td class="num">$4,527.00</td><td class="num up">偏强</td><td class="num weight">3/5</td><td>黄金同时受两股力量拉扯：地缘和通胀尾部风险会推升避险/抗通胀需求，但实际利率上行会提高持有无息资产的机会成本。昨晚金价仍偏强，说明市场对油价和地缘风险的对冲需求暂时压过了实际利率压力。</td></tr>
+              <tr><td>BTC</td><td class="num">$80,013.30</td><td class="num up">+1.9%</td><td class="num weight">3/5</td><td>高 beta 流动性资产。BTC 昨晚回到 80k 附近，说明风险偏好没有全面转坏；但若美元与 real yield 继续上行，加密资产仍容易从“强势修复”转回“流动性压力测试”。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="equity-review">
+          <h2>美股复盘主线</h2>
+          <h3>3.1 指数表现</h3>
+          <p>三大指数小幅收跌，但结构不是“纳指最弱”：Dow 跌 1.13%，S&P 500 跌 0.41%，Nasdaq Composite 仅跌 0.19%，纳指反而是三大里跌幅最窄。价格动作的重点不是“风险资产全面崩”，而是油价与利率上行让周期、运输、小盘和部分价值链条承压，mega-cap / AI 仍在托住 Nasdaq。</p>
+
+          <h3>3.2 市场宽度</h3>
+          <p>宽度弱于指数表面：NYSE 与 Nasdaq 下跌家数均多于上涨家数。这个结构说明指数仍有 mega-cap 支撑，但个股层面的风险承接已经变差。</p>
+
+          <h3>3.3 板块表现</h3>
+          <p>能源相对强，运输、部分消费链和高估值成长相对弱。工业/材料受油价和增长预期双重牵引，金融需要看曲线陡峭化到底是“利差改善”还是“信用风险压力”。</p>
+
+          <h3>3.4 权重股/主题股</h3>
+          <p>Mega-cap 仍是指数防线；AI infra 和 semis 的主线需要 AMD、SMCI 财报继续验证订单、毛利率和资本开支；crypto 线需要 MSTR / BTC 对美元和 real yield 的敏感度来判断风险偏好。</p>
+
+          <h3>3.5 个股事件</h3>
+          <div class="cards">
+            <div class="mini-card"><b>Amazon 物流冲击</b><span>ASCS / 低价电商物流能力若扩大，会重估 UPS、FDX、运输经纪和履约利润池，不只是油价成本问题。</span></div>
+            <div class="mini-card"><b>AI 财报验证</b><span>AMD 与 SMCI 盘后结果会影响 AI server、GPU 供需和 capex 信心；它们是主题验证点，不只是单股财报。</span></div>
+            <div class="mini-card"><b>BTC proxy</b><span>MSTR 盘后放榜，重点不是会计利润，而是高 beta 资产在 real yield 上行环境下能否维持风险溢价。</span></div>
+          </div>
+        </section>
+
+        <section id="catalysts">
+          <h2>今日催化与事件分层</h2>
+          <p class="section-note">排序依据：官方/高置信信息优先；每条都给标签、来源层级、信息权重和传导逻辑，避免把所有新闻并列。</p>
+          <table>
+            <thead>
+              <tr>
+                <th>时间/状态</th>
+                <th>事件</th>
+                <th>标签</th>
+                <th>来源层级</th>
+                <th class="num">权重</th>
+                <th>影响资产</th>
+                <th>传导逻辑</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>盘前/盘中</td><td>ISM Services / JOLTS 等增长与劳动力数据</td><td><span class="tag">宏观数据</span></td><td>官方/高置信</td><td class="num weight">4/5</td><td>UST、美元、股指</td><td>改变 Fed path / growth pricing；若服务业价格分项强，会强化油价带来的通胀担忧。</td></tr>
+              <tr><td>盘中</td><td>Fed 官员对油价冲击的表态</td><td><span class="tag">央行反应函数</span></td><td>官方/高置信</td><td class="num weight">5/5</td><td>UST、Nasdaq、美元</td><td>关键是 Fed 是否把油价视为一次性冲击，还是担心二轮通胀；后者会推高 real yield 压力。</td></tr>
+              <tr><td>盘中/本周</td><td>Treasury refunding / auction 需求</td><td><span class="tag">国债供给</span></td><td>官方/高置信</td><td class="num weight">5/5</td><td>10Y/30Y、TLT、银行</td><td>供给预期影响 term premium 和曲线形态；若需求弱，长端可能继续 bear steepen。</td></tr>
+              <tr><td>盘后</td><td>AMD / SMCI / MSTR 财报</td><td><span class="tag">财报/主题验证</span></td><td>公司公告</td><td class="num weight">4/5</td><td>AI infra、semis、BTC proxy</td><td>验证 AI capex、server 需求和高 beta 风险偏好；结果会反馈到 Nasdaq 内部强弱。</td></tr>
+              <tr><td>全天</td><td>中东局势与 Hormuz 风险</td><td><span class="tag">地缘/能源</span></td><td>多源交叉</td><td class="num weight">5/5</td><td>油、UST、能源、运输</td><td>油价 → breakeven → Fed path → duration；如果油价不回落，债市很难自然止血。</td></tr>
+              <tr><td>全天</td><td>Amazon ASCS / 物流网络外溢影响</td><td><span class="tag">行业结构</span></td><td>公司/Reuters</td><td class="num weight">3/5</td><td>UPS、FDX、运输链</td><td>物流利润池重估，叠加燃油成本，运输股弱势可能不是一天事件。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="bonds">
+          <h2>美债市场专栏</h2>
+          <div class="chart-panel bond-move-chart">
+            <div class="chart-head">
+              <div>
+                <div class="chart-title">Treasury Curve Move</div>
+                <div class="chart-value">2Y / 5Y / 10Y / 30Y 同步上移</div>
+              </div>
+              <div class="up">2Y +7bp · 5Y +6bp · 10Y +8bp · 30Y +6bp</div>
+            </div>
+            <svg id="bondMoveChart" viewBox="0 0 760 310" role="img" aria-label="Treasury 2Y 5Y 10Y 30Y curve move"></svg>
+            <p class="chart-caption">比较 2026-05-01 与 2026-05-04 的 2Y/5Y/10Y/30Y 收益率；hover 可查看每个期限的前后值和 bp 变化。</p>
+          </div>
+          <h3>5.1 曲线变化</h3>
+          <table>
+            <thead><tr><th>期限</th><th class="num">2026-05-01</th><th class="num">2026-05-04</th><th class="num">变化</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td>2Y</td><td class="num">3.89%</td><td class="num">3.96%</td><td class="num down">+7bp</td><td>Fed path 重新上移，降息预期撤退。</td></tr>
+              <tr><td>5Y</td><td class="num">4.02%</td><td class="num">4.08%</td><td class="num down">+6bp</td><td>通胀补偿与 real yield 双重压力。</td></tr>
+              <tr><td>10Y</td><td class="num">4.37%</td><td class="num">4.45%</td><td class="num down">+8bp</td><td>权益折现率核心压力点。</td></tr>
+              <tr><td>30Y</td><td class="num">4.95%</td><td class="num">5.01%</td><td class="num down">+6bp</td><td>term premium / 财政供给压力最敏感。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>5.2 驱动拆分</h3>
+          <div class="chain">
+            <div><strong>Breakeven</strong><span>油价上行推升通胀补偿，5Y breakeven 约 +3bp。</span></div>
+            <div><strong>Real yield</strong><span>名义收益率上行超过 breakeven，实际利率压力同步上来。</span></div>
+            <div><strong>Term premium</strong><span>30Y 逼近 5%，说明长端供给/期限溢价仍是市场痛点。</span></div>
+            <div><strong>Fed path</strong><span>通胀风险削弱降息确定性，短中端被重新定价。</span></div>
+            <div><strong>Treasury supply</strong><span>refunding / auction 是今天验证 term premium 的核心。</span></div>
+          </div>
+
+          <h3>5.3 昨天发生了什么</h3>
+          <div class="callout">
+            第一脚：油价冲击推升通胀补偿；第二脚：Fed 降息预期撤退推升实际利率压力；第三脚：财政供给和拍卖担忧推升长端期限溢价。结果是债市没有走传统避险逻辑，而是被通胀和供给主线主导。
+          </div>
+
+          <h3>5.4 对工具的含义</h3>
+          <table>
+            <thead><tr><th>工具/方向</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td>名义债</td><td>若 oil + supply 双压不退，长久期名义债仍容易被动承压。</td></tr>
+              <tr><td>TIPS</td><td>breakeven 上行阶段相对名义债有保护，但 real yield 上行会压 TIPS 价格。</td></tr>
+              <tr><td>TLT</td><td>term premium 上行时不宜裸多长久期，反弹需要 auction 强或 Fed 鸽派确认。</td></tr>
+              <tr><td>短票/SGOV</td><td>短端仍是防守仓，久期风险低，但无法捕捉长债反弹。</td></tr>
+              <tr><td>VGSH</td><td>比 TLT 更稳，但若 Fed path 继续上移，短中端也会受压。</td></tr>
+              <tr><td>曲线交易</td><td>关注 10Y/30Y 是否继续 bear steepen；若油价回落，曲线可能快速修复。</td></tr>
+              <tr><td>Inflation hedge</td><td>能源、部分商品和通胀保护工具仍有相对价值，但需防 real yield 反噬。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>5.5 Sign-flip 条件</h3>
+          <div class="cards">
+            <div class="mini-card"><b>油价回落</b><span>Brent 跌回 110 下方，inflation shock 主线弱化。</span></div>
+            <div class="mini-card"><b>Fed 鸽派解释</b><span>若官员淡化油价二轮效应，real yield 压力缓和。</span></div>
+            <div class="mini-card"><b>供给压力不实锤</b><span>refunding 没有上调 coupon，或 auction 需求强。</span></div>
+            <div class="mini-card"><b>经济数据恶化</b><span>增长风险压过通胀风险，债市才可能重新获得避险买盘。</span></div>
+            <div class="mini-card"><b>美元回落</b><span>美元与 real yield 同时回落，有利于 Nasdaq 和高 beta 修复。</span></div>
+            <div class="mini-card"><b>Mega-cap 托底</b><span>若权重股继续抗跌，指数层面可能比宽度更稳。</span></div>
+          </div>
+        </section>
+
+        <section id="verify">
+          <h2>今天该验证什么</h2>
+          <table>
+            <thead><tr><th>需要验证的变量</th><th>观察阈值/方向</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td>Brent 是否站稳 110</td><td>站稳则 inflation shock 延续</td><td>breakeven 和 Fed path 压力继续存在。</td></tr>
+              <tr><td>5Y breakeven 是否继续上行</td><td>上行说明市场交易通胀补偿</td><td>TIPS 相对名义债可能跑赢，但不代表债券总回报安全。</td></tr>
+              <tr><td>10Y/30Y 是否 bear steepen</td><td>长端更弱说明 term premium 上行</td><td>长久期风险增加，TLT 反弹难度大。</td></tr>
+              <tr><td>Fed 官员是否淡化油价冲击</td><td>淡化则 real yield 压力缓和</td><td>Nasdaq 估值压力下降，高 beta 有修复窗口。</td></tr>
+              <tr><td>Treasury refunding 是否增加 coupon</td><td>增加则供给压力实锤</td><td>长端继续承压，曲线陡峭化延续。</td></tr>
+              <tr><td>Mega-cap 是否继续托住指数</td><td>托住则指数抗跌</td><td>内部结构仍需看宽度，不能只看 S&P 500。</td></tr>
+              <tr><td>运输股是否继续弱于大盘</td><td>继续走弱说明 Amazon 冲击未消化</td><td>行业结构重估延续，不只是燃油成本。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="themes">
+          <h2>板块和主题异动</h2>
+          <table>
+            <thead><tr><th>主题</th><th class="num">昨日表现</th><th>催化</th><th>判断</th></tr></thead>
+            <tbody>
+              <tr><td>能源</td><td class="num up">强</td><td>油价上行</td><td>地缘风险未缓和前仍是相对强势，但若需求担忧升温会削弱持续性。</td></tr>
+              <tr><td>运输</td><td class="num down">弱</td><td>Amazon ASCS + 燃油成本</td><td>不只是油价，是物流利润池重估；UPS/FDX 需要看价量和成本转嫁。</td></tr>
+              <tr><td>存储/AI server</td><td class="num up">偏强</td><td>AI capex / 供需周期</td><td>需验证价格周期和财报指引，AMD/SMCI 是今日核心样本。</td></tr>
+              <tr><td>加密股</td><td class="num flat">分化</td><td>风险偏好与 BTC</td><td>高 beta，不等同于基本面改善；美元和 real yield 是关键约束。</td></tr>
+              <tr><td>中概</td><td class="num flat">分化</td><td>个股和流动性</td><td>不是昨晚主线资产，除非美元/利率组合明显转向。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="portfolio">
+          <h2>对重点持仓/关注资产的影响</h2>
+          <table>
+            <thead><tr><th>资产/方向</th><th>影响</th></tr></thead>
+            <tbody>
+              <tr><td>NVDA / AI infra</td><td>earnings 支撑仍在，但 real yield 上行会压估值；更适合等待财报链验证而不是只看指数。</td></tr>
+              <tr><td>TSM / semis</td><td>受 AI capex 支撑，但对全球风险偏好和美元流动性敏感。</td></tr>
+              <tr><td>META / mega-cap</td><td>若 Nasdaq 由 mega-cap 托住，仍是防守型成长；但估值仍受 10Y real yield 约束。</td></tr>
+              <tr><td>MSTR / BTC</td><td>受流动性和风险偏好影响大，需看美元与 real yield；盘后财报是高 beta 情绪测试。</td></tr>
+              <tr><td>SGOV / VGSH</td><td>利率冲击下短端仍是防守仓；VGSH 会比 SGOV 多承担 Fed path 波动。</td></tr>
+              <tr><td>长债 / TLT</td><td>若 term premium 上行，不宜裸多长久期；需要等待油价、Fed 或 auction 给出反转信号。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="source-list">
+          <strong>数据与来源说明：</strong>
+          指数、VIX、油价、美元、黄金和个股催化参考 Investing.com、Reuters/Bloomberg/AP/WSJ 类市场报道及交易所行情摘要；美债名义曲线与 TIPS 实际收益率使用 U.S. Treasury Daily Treasury Rates / Real Yield Curve，并据 5Y nominal - 5Y real 估算 5Y breakeven。若正式投研发布，应在开盘前用 Bloomberg/FactSet/Refinitiv 或券商终端刷新一次收盘价和盘前报价。
+          <br>
+          参考入口：
+          <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve">U.S. Treasury Daily Treasury Rates</a> ·
+          <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_real_yield_curve">U.S. Treasury Real Yield Curve</a> ·
+          <a href="https://www.investing.com/news/stock-market-news/us-stocks-lower-at-close-of-trade-dow-jones-industrial-average-down-113-4657342">Investing.com U.S. market close</a>
+        </section>
+      </div>
+
+      <aside>
+        <div class="brief-box">
+          <h2>今日导航</h2>
+          <ol>
+            <li>主线不是股市崩盘，而是油价冲击让美债从避险资产变成被抛售资产。</li>
+            <li>今天先看 Brent 110、5Y breakeven、10Y/30Y 曲线，再看 Nasdaq 是否由 mega-cap 托住。</li>
+            <li>AMD / SMCI / MSTR 盘后不是普通财报，是 AI capex 与高 beta 风险偏好的验证器。</li>
+            <li>运输股弱势要拆成两层：燃油成本 + Amazon 物流利润池冲击。</li>
+          </ol>
+        </div>
+        <div class="side-panel" style="margin-top:16px;">
+          <div class="chart-title">Market Regime</div>
+          <svg id="regimeChart" viewBox="0 0 320 210" role="img" aria-label="regime map"></svg>
+          <p class="section-note" style="margin:10px 0 0;">横轴：左侧代表增长/风险偏好承压，右侧代表增长/风险偏好仍有韧性；纵轴：越上方代表通胀压力越强。右上象限的含义是“增长还没坏，但通胀/利率压力在升”。</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div class="chart-tooltip" id="chartTooltip" role="tooltip"></div>
+  <script src="data/2026-05-05_market_data.js"></script>
+  <script>
+    const DATA = window.MORNING_BRIEF_DATA;
+    let activeTickerIndex = 0;
+    let activeRange = "7d";
+    const strip = document.getElementById("tickerStrip");
+    const tooltip = document.getElementById("chartTooltip");
+
+    function validateData(data) {
+      if (!data || !Array.isArray(data.tickers) || !data.tickers.length) throw new Error("ticker data missing");
+      if (!Array.isArray(data.ranges) || !data.ranges.includes("1d")) throw new Error("range data missing");
+      data.tickers.forEach(t => {
+        data.ranges.forEach(range => {
+          if (!Array.isArray(t.ranges?.[range]) || t.ranges[range].length < 2) {
+            throw new Error(`${t.sym} ${range} series invalid`);
+          }
+          t.ranges[range].forEach(value => {
+            if (!Number.isFinite(value)) throw new Error(`${t.sym} ${range} contains non numeric value`);
+          });
+        });
+        if (!Array.isArray(t.history) || t.history.length < 365) {
+          throw new Error(`${t.sym} daily history missing`);
+        }
+        t.history.forEach(point => {
+          if (!point.date || !Number.isFinite(point.value)) throw new Error(`${t.sym} daily history invalid`);
+        });
+      });
+      if (!data.treasury?.labels?.length || !Array.isArray(data.treasury.curves)) throw new Error("treasury data missing");
+      data.treasury.curves.forEach(curve => {
+        if (curve.values.length !== data.treasury.labels.length) throw new Error(`${curve.label} curve length mismatch`);
+      });
+      if (!Array.isArray(data.regime) || data.regime.length < 4) throw new Error("regime data missing");
+    }
+
+    function setStatus(text, ok = true) {
+      const status = document.getElementById("dataStatus");
+      status.textContent = text;
+      status.style.color = ok ? "var(--accent-2)" : "var(--red)";
+    }
+
+    function marketClass(direction) {
+      if (direction === "up") return "up";
+      if (direction === "down") return "down";
+      return "flat";
+    }
+
+    function marketColor(direction) {
+      if (direction === "up") return "#b3312c";
+      if (direction === "down") return "#147b45";
+      return "#66645f";
+    }
+
+    try {
+      validateData(DATA);
+      const days = Math.min(...DATA.tickers.map(t => t.history.length));
+      setStatus(`本地日频缓存已加载并校验 · ${days}天 · ${DATA.asOf}`);
+    } catch (error) {
+      setStatus(`数据校验失败：${error.message}`, false);
+      throw error;
+    }
+
+    DATA.tickers.forEach((t, index) => {
+      const button = document.createElement("button");
+      button.className = "ticker" + (index === activeTickerIndex ? " active" : "");
+      button.innerHTML = `<span class="sym">${t.sym}</span><span class="val">${t.value}</span><span class="chg ${marketClass(t.direction)}">${t.change}</span>`;
+      button.addEventListener("click", () => selectTicker(index));
+      strip.appendChild(button);
+    });
+
+    const rangeControl = document.getElementById("rangeControl");
+    DATA.ranges.forEach(range => {
+      const button = document.createElement("button");
+      button.className = "range-btn" + (range === activeRange ? " active" : "");
+      button.textContent = range;
+      button.addEventListener("click", event => {
+        event.stopPropagation();
+        activeRange = range;
+        document.querySelectorAll(".range-btn").forEach(btn => btn.classList.toggle("active", btn.textContent === range));
+        drawSpark(DATA.tickers[activeTickerIndex]);
+      });
+      rangeControl.appendChild(button);
+    });
+
+    document.getElementById("curveToggle").addEventListener("click", event => {
+      event.stopPropagation();
+      const panel = document.getElementById("curvePanel");
+      const open = panel.classList.toggle("open");
+      event.currentTarget.textContent = open ? "收起" : "展开";
+      event.currentTarget.setAttribute("aria-expanded", String(open));
+    });
+
+    function scale(values, minPix, maxPix) {
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const span = max - min || 1;
+      return v => maxPix - ((v - min) / span) * (maxPix - minPix);
+    }
+
+    function showTooltip(event, html) {
+      tooltip.innerHTML = html;
+      tooltip.classList.add("visible");
+      const margin = 14;
+      const rect = tooltip.getBoundingClientRect();
+      let x = event.clientX + 14;
+      let y = event.clientY + 14;
+      if (x + rect.width + margin > window.innerWidth) x = event.clientX - rect.width - 14;
+      if (y + rect.height + margin > window.innerHeight) y = event.clientY - rect.height - 14;
+      tooltip.style.transform = `translate(${Math.max(margin, x)}px, ${Math.max(margin, y)}px)`;
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove("visible");
+      tooltip.style.transform = "translate(-9999px, -9999px)";
+    }
+
+    function addHoverHandlers(svg) {
+      svg.querySelectorAll("[data-tip]").forEach(el => {
+        el.addEventListener("mouseenter", event => showTooltip(event, el.dataset.tip));
+        el.addEventListener("mousemove", event => showTooltip(event, el.dataset.tip));
+        el.addEventListener("mouseleave", hideTooltip);
+      });
+    }
+
+    function bindSvgHover(svg, hitBox, resolver) {
+      const viewBox = svg.viewBox.baseVal;
+      const width = viewBox && viewBox.width ? viewBox.width : 640;
+      const height = viewBox && viewBox.height ? viewBox.height : 260;
+      const move = event => {
+        const rect = svg.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width * width;
+        const y = (event.clientY - rect.top) / rect.height * height;
+        if (x < hitBox.x1 || x > hitBox.x2 || y < hitBox.y1 || y > hitBox.y2) {
+          hideTooltip();
+          return;
+        }
+        showTooltip(event, resolver(x, y));
+      };
+      svg.onmousemove = move;
+      svg.onpointermove = move;
+      svg.onmouseleave = hideTooltip;
+      svg.onpointerleave = hideTooltip;
+    }
+
+    function parseChange(change) {
+      return Number(String(change).replace("%", ""));
+    }
+
+    function rangeDays(range) {
+      return { "1d": 1, "7d": 7, "30d": 30, "6m": 183, "1y": 366 }[range] || 7;
+    }
+
+    function historyForRange(ticker) {
+      const days = rangeDays(activeRange);
+      const count = Math.min(ticker.history.length, days + 1);
+      return ticker.history.slice(-count);
+    }
+
+    function fmtDateLabel(date) {
+      const [year, month, day] = date.split("-");
+      return `${month}/${day}/${year.slice(2)}`;
+    }
+
+    function drawSpark(ticker) {
+      const svg = document.getElementById("sparkChart");
+      const w = 640, h = 260, pad = 34;
+      const series = historyForRange(ticker);
+      const values = series.map(point => point.value);
+      const xs = values.map((_, i) => pad + i * ((w - pad * 2) / (values.length - 1 || 1)));
+      const y = scale(values, pad, h - pad);
+      const points = values.map((v, i) => `${xs[i]},${y(v)}`).join(" ");
+      const area = `${pad},${h-pad} ${points} ${w-pad},${h-pad}`;
+      const color = marketColor(ticker.direction);
+      const markers = series.filter((_, i) => i === 0 || i === series.length - 1 || i % Math.ceil(series.length / 6) === 0);
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${pad}" y1="${pad+i*(h-pad*2)/3}" x2="${w-pad}" y2="${pad+i*(h-pad*2)/3}"></line>`).join("")}</g>
+        <polygon points="${area}" fill="${color}" opacity=".10"></polygon>
+        ${values.map((v, i) => `<circle cx="${xs[i]}" cy="${y(v)}" r="${activeRange === "1y" ? .65 : activeRange === "6m" ? .8 : 1}" fill="${color}" opacity=".36"></circle>`).join("")}
+        <polyline points="${points}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        ${markers.map(point => {
+          const i = series.indexOf(point);
+          return `<circle cx="${xs[i]}" cy="${y(point.value)}" r="${i === values.length-1 ? 4 : 2.5}" fill="${color}"></circle>`;
+        }).join("")}
+        <rect x="${pad}" y="${pad}" width="${w - pad * 2}" height="${h - pad * 2}" fill="transparent" pointer-events="all"></rect>
+        <text x="${pad}" y="${h-10}" fill="#66645f" font-size="11">${activeRange} · 日频缓存 · 含周末前值延续</text>
+      `;
+      bindSvgHover(svg, { x1: pad, x2: w - pad, y1: pad, y2: h - pad }, x => {
+        const idx = Math.max(0, Math.min(series.length - 1, Math.round((x - pad) / ((w - pad * 2) / (series.length - 1 || 1)))));
+        const point = series[idx];
+        return `<b>${ticker.sym} · ${fmtDateLabel(point.date)}</b>${ticker.name}<br>数值：${point.value.toLocaleString(undefined, { maximumFractionDigits: 2 })}<br>区间：${activeRange}`;
+      });
+    }
+
+    function selectTicker(index) {
+      activeTickerIndex = index;
+      const ticker = DATA.tickers[index];
+      document.querySelectorAll(".ticker").forEach((el, i) => el.classList.toggle("active", i === index));
+      document.getElementById("activeName").textContent = ticker.name;
+      document.getElementById("activeValue").textContent = ticker.value;
+      const change = document.getElementById("activeChange");
+      change.textContent = ticker.change;
+      change.className = marketClass(ticker.direction);
+      document.getElementById("activeNote").textContent = ticker.note;
+      drawSpark(ticker);
+    }
+
+    function drawCurve() {
+      const svg = document.getElementById("curveChart");
+      const w = 640, h = 260, pad = 38;
+      const labels = DATA.treasury.labels;
+      const curves = DATA.treasury.curves;
+      const all = curves.flatMap(curve => curve.values);
+      const y = scale(all, pad, h - pad);
+      const xs = labels.map((_, i) => pad + i * ((w - pad * 2) / (labels.length - 1)));
+      function path(vals) { return vals.map((v,i) => `${xs[i]},${y(v)}`).join(" "); }
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${pad}" y1="${pad+i*(h-pad*2)/3}" x2="${w-pad}" y2="${pad+i*(h-pad*2)/3}"></line>`).join("")}</g>
+        ${curves.map(curve => `<polyline points="${path(curve.values)}" fill="none" stroke="${curve.color}" stroke-width="${curve.width}" stroke-linecap="round" stroke-linejoin="round"></polyline>`).join("")}
+        ${curves.map(curve => curve.values.map((v,i) => `<circle cx="${xs[i]}" cy="${y(v)}" r="${curve.key === "current" ? 4 : 3}" fill="${curve.color}"></circle>`).join("")).join("")}
+        ${labels.map((label,i) => `<text x="${xs[i]}" y="${h-12}" text-anchor="middle" fill="#66645f" font-size="11">${label}</text>`).join("")}
+        <rect x="${pad}" y="${pad}" width="${w - pad * 2}" height="${h - pad * 2}" fill="transparent" pointer-events="all"></rect>
+        <text x="${w-pad}" y="20" text-anchor="end" fill="#66645f" font-size="11">Daily Treasury par yield curve · local</text>
+      `;
+      document.getElementById("curveLegend").innerHTML = curves.map(curve => `<span class="legend-item"><span class="legend-swatch" style="background:${curve.color}; height:${Math.max(2, curve.width)}px"></span>${curve.label}</span>`).join("");
+      bindSvgHover(svg, { x1: pad, x2: w - pad, y1: pad, y2: h - pad }, x => {
+        const idx = Math.max(0, Math.min(labels.length - 1, Math.round((x - pad) / ((w - pad * 2) / (labels.length - 1)))));
+        return `<b>美债曲线 · ${labels[idx]}</b>${curves.map(curve => `${curve.label}：${curve.values[idx].toFixed(2)}%`).join("<br>")}`;
+      });
+    }
+
+    function drawBondMoveChart() {
+      const svg = document.getElementById("bondMoveChart");
+      const w = 760, h = 310;
+      const padLeft = 62, padRight = 36, padTop = 38, padBottom = 44;
+      const tenors = ["2Y", "5Y", "10Y", "30Y"];
+      const may1 = [3.89, 4.02, 4.37, 4.95];
+      const may4 = [3.96, 4.08, 4.45, 5.01];
+      const bp = may4.map((v, i) => Math.round((v - may1[i]) * 100));
+      const all = may1.concat(may4);
+      const y = scale(all, padTop, h - padBottom);
+      const xs = tenors.map((_, i) => padLeft + i * ((w - padLeft - padRight) / (tenors.length - 1)));
+      const line = values => values.map((v, i) => `${xs[i]},${y(v)}`).join(" ");
+      svg.innerHTML = `
+        <rect width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${padLeft}" y1="${padTop+i*(h-padTop-padBottom)/3}" x2="${w-padRight}" y2="${padTop+i*(h-padTop-padBottom)/3}"></line>`).join("")}</g>
+        <polyline points="${line(may1)}" fill="none" stroke="#8a8172" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        <polyline points="${line(may4)}" fill="none" stroke="#b3312c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        ${tenors.map((tenor, i) => `
+          <line x1="${xs[i]}" y1="${y(may1[i])}" x2="${xs[i]}" y2="${y(may4[i])}" stroke="#b3312c" stroke-width="1.4" stroke-dasharray="3 3" opacity=".65"></line>
+          <circle cx="${xs[i]}" cy="${y(may1[i])}" r="5" fill="#8a8172"></circle>
+          <circle cx="${xs[i]}" cy="${y(may4[i])}" r="6" fill="#b3312c"></circle>
+          <text x="${xs[i]}" y="${h-18}" text-anchor="middle" fill="#171717" font-size="12" font-weight="800">${tenor}</text>
+          <text x="${xs[i]}" y="${Math.min(y(may1[i]), y(may4[i])) - 12}" text-anchor="middle" fill="#b3312c" font-size="12" font-weight="800">+${bp[i]}bp</text>
+        `).join("")}
+        <text x="${padLeft}" y="22" fill="#8a8172" font-size="12">2026-05-01</text>
+        <text x="${padLeft + 92}" y="22" fill="#b3312c" font-size="12">2026-05-04</text>
+        <text x="${w-padRight}" y="22" text-anchor="end" fill="#66645f" font-size="12">收益率，%</text>
+        <rect x="${padLeft}" y="${padTop}" width="${w - padLeft - padRight}" height="${h - padTop - padBottom}" fill="transparent" pointer-events="all"></rect>
+      `;
+      bindSvgHover(svg, { x1: padLeft, x2: w - padRight, y1: padTop, y2: h - padBottom }, x => {
+        const idx = Math.max(0, Math.min(tenors.length - 1, Math.round((x - padLeft) / ((w - padLeft - padRight) / (tenors.length - 1)))));
+        return `<b>${tenors[idx]} Treasury</b>2026-05-01：${may1[idx].toFixed(2)}%<br>2026-05-04：${may4[idx].toFixed(2)}%<br>变化：+${bp[idx]}bp`;
+      });
+    }
+
+    function drawRegime() {
+      const svg = document.getElementById("regimeChart");
+      const points = DATA.regime.map(point => {
+        const x = 42 + point.x * 236;
+        const y = 170 - point.y * 140;
+        return `<circle cx="${x}" cy="${y}" r="${point.key === "current" ? 9 : 7}" fill="${point.color}"></circle><text x="${x + 12}" y="${y + 4}" fill="#171717" font-size="11" font-weight="${point.key === "current" ? 800 : 600}">${point.label}</text>`;
+      }).join("");
+      svg.innerHTML = `
+        <rect width="320" height="210" fill="#fffdf8"></rect>
+        <line x1="160" y1="28" x2="160" y2="180" stroke="#d9d2c3"></line>
+        <line x1="35" y1="104" x2="288" y2="104" stroke="#d9d2c3"></line>
+        <text x="160" y="18" text-anchor="middle" fill="#66645f" font-size="11">通胀压力 ↑</text>
+        <text x="160" y="202" text-anchor="middle" fill="#66645f" font-size="11">通胀压力 ↓</text>
+        <text x="36" y="96" fill="#66645f" font-size="11">增长承压</text>
+        <text x="220" y="96" fill="#66645f" font-size="11">增长韧性</text>
+        ${points}
+      `;
+      bindSvgHover(svg, { x1: 35, x2: 288, y1: 28, y2: 180 }, (x, y) => {
+        let closest = DATA.regime[0];
+        let best = Infinity;
+        DATA.regime.forEach(point => {
+          const px = 42 + point.x * 236;
+          const py = 170 - point.y * 140;
+          const dist = Math.hypot(px - x, py - y);
+          if (dist < best) { best = dist; closest = point; }
+        });
+        return `<b>市场状态 · ${closest.label}</b>横轴：增长/风险偏好韧性 ${closest.x.toFixed(2)}<br>纵轴：通胀压力 ${closest.y.toFixed(2)}<br>读法：越右说明增长还没坏，越上说明通胀/利率压力更强。`;
+      });
+    }
+
+    drawSpark(DATA.tickers[0]);
+    drawBondMoveChart();
+    drawCurve();
+    drawRegime();
+  </script>
+</body>
+</html>

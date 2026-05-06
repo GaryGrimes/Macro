@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>美股早报 | 2026-05-06</title>
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #66645f;
+      --line: #d9d2c3;
+      --paper: #f7f3eb;
+      --panel: #fffdf8;
+      --panel-2: #f0eadf;
+      --accent: #b3312c;
+      --accent-2: #126a65;
+      --gold: #a4762a;
+      --green: #147b45;
+      --red: #b3312c;
+      --blue: #244f8f;
+      --shadow: 0 14px 40px rgba(37, 31, 21, .10);
+      font-family: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 24px 52px;
+    }
+
+    header {
+      border-top: 7px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      padding: 22px 0 20px;
+      display: grid;
+      grid-template-columns: 1.4fr .8fr;
+      gap: 24px;
+      align-items: end;
+    }
+
+    .kicker {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--accent);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 4.6vw, 54px);
+      line-height: 1;
+      margin: 0;
+      letter-spacing: 0;
+      max-width: 980px;
+    }
+
+    .deck {
+      font-size: 16px;
+      color: #2a2926;
+      margin-top: 16px;
+      max-width: 980px;
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+    }
+
+    .meta {
+      justify-self: end;
+      text-align: right;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .meta strong {
+      color: var(--ink);
+      display: block;
+      font-size: 15px;
+    }
+
+    .ticker-strip {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 0;
+      background: rgba(247, 243, 235, .94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .ticker {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      min-width: 118px;
+      padding: 8px 10px;
+      cursor: pointer;
+      display: grid;
+      gap: 2px;
+      text-align: left;
+      border-radius: 3px;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+
+    .ticker.active {
+      border-color: var(--ink);
+      box-shadow: inset 0 -3px 0 var(--accent);
+    }
+
+    .ticker .sym { font-weight: 800; font-size: 12px; }
+    .ticker .val { font-variant-numeric: tabular-nums; font-size: 14px; }
+    .ticker .chg { font-variant-numeric: tabular-nums; font-size: 11px; }
+    .up { color: var(--red); }
+    .down { color: var(--green); }
+    .flat { color: var(--muted); }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    section {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 27px;
+      line-height: 1.1;
+      margin: 0 0 16px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 22px 0 8px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    p { margin: 0 0 12px; }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: -8px;
+      margin-bottom: 16px;
+    }
+
+    .lead-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .chart-panel,
+    .side-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      position: relative;
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .chart-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .range-control {
+      display: flex;
+      gap: 3px;
+      border: 1px solid var(--line);
+      background: #f7f2e9;
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+    .range-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 6px;
+      border-radius: 3px;
+    }
+
+    .range-btn.active {
+      background: var(--ink);
+      color: #fffdf8;
+    }
+
+    .data-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-left: 8px;
+      color: var(--accent-2);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .data-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      display: inline-block;
+    }
+
+    .curve-panel {
+      overflow: visible;
+    }
+
+    .curve-toggle {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 4px 7px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .curve-toggle:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .curve-detail {
+      border-top: 1px solid var(--line);
+      display: none;
+      margin-top: 14px;
+      padding: 12px 0 18px;
+      color: #2b2924;
+      font-size: 13px;
+    }
+
+    .curve-panel.open .curve-detail { display: block; }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 2px 0 8px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .legend-swatch {
+      width: 18px;
+      height: 3px;
+      border-radius: 99px;
+      display: inline-block;
+    }
+
+    .chart-caption {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 8px 0 0;
+    }
+
+    .bond-move-chart {
+      margin: 4px 0 18px;
+    }
+
+    .chart-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .chart-value {
+      font-size: 20px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    svg { max-width: 100%; display: block; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border-top: 2px solid var(--ink);
+      font-size: 13px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 9px;
+      vertical-align: top;
+    }
+
+    th {
+      text-align: left;
+      color: #2d2b27;
+      background: var(--panel-2);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    td.num, th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .weight {
+      font-weight: 800;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      background: #fbf7ef;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .callout {
+      margin: 16px 0;
+      padding: 15px 17px;
+      background: #fff8eb;
+      border-left: 4px solid var(--gold);
+      color: #2b2924;
+    }
+
+    .chain {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .chain div {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 12px;
+      min-height: 90px;
+      position: relative;
+    }
+
+    .chain div::after {
+      content: ">";
+      position: absolute;
+      right: -9px;
+      top: 36px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .chain div:last-child::after { content: ""; }
+    .chain strong { display: block; margin-bottom: 4px; }
+    .chain span { color: var(--muted); font-size: 13px; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mini-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 13px;
+    }
+
+    .mini-card b { display: block; margin-bottom: 5px; }
+    .mini-card span { color: var(--muted); font-size: 13px; }
+
+    aside {
+      position: sticky;
+      top: 76px;
+      align-self: start;
+    }
+
+    .brief-box {
+      background: #1f1e1a;
+      color: #f7f3eb;
+      padding: 18px;
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+    }
+
+    .brief-box h2 {
+      color: #f7f3eb;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .brief-box ol {
+      margin: 0;
+      padding-left: 20px;
+      color: #e1d8c6;
+      font-size: 14px;
+    }
+
+    .brief-box li { margin-bottom: 8px; }
+
+    .source-list {
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 16px;
+    }
+
+    .source-list a { color: var(--blue); }
+
+    .mobile-only { display: none; }
+
+    @media (max-width: 980px) {
+      header, main, .lead-grid, .split {
+        grid-template-columns: 1fr;
+      }
+      .meta {
+        justify-self: start;
+        text-align: left;
+      }
+      aside {
+        position: static;
+      }
+      .chain, .cards {
+        grid-template-columns: 1fr;
+      }
+      .chain div::after { content: ""; }
+      table { font-size: 13px; }
+      th, td { padding: 8px 7px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <div class="kicker">Daily U.S. Market Brief · May 6, 2026</div>
+        <h1>美股早报 | 油价战争溢价回吐；科技股与小盘接棒；债市从冲击转入消化</h1>
+        <div class="deck">
+          昨晚的核心不是“利率问题消失”，而是前一日最痛的三条链同时缓和：油价从高位回落，10Y/30Y 名义收益率下行，VIX 回落。市场因此把交易重心从通胀冲击转回盈利和风险偏好，S&P 500、Nasdaq Composite 同创收盘新高，小盘和半导体补涨。但美债细节里，5Y real yield 仍上行、5Y breakeven 回落，说明修复来自战争溢价退潮和名义端 relief，不是货币环境全面宽松。
+        </div>
+      </div>
+      <div class="meta">
+        <strong>覆盖交易日：2026-05-05</strong>
+        生成时间：2026-05-06 · Asia/Hong Kong<br>
+        页面类型：独立 HTML 早报，不接入 Macro 看板
+      </div>
+    </header>
+
+    <nav class="ticker-strip" aria-label="interactive ticker strip" id="tickerStrip"></nav>
+
+    <main>
+      <div>
+        <section id="dashboard">
+          <h2>固定市场仪表盘</h2>
+          <p class="section-note">读法：权重不是涨跌幅大小，而是它对今日定价主线的解释力。当前权重最高的是油价回落、科技/半导体 earnings beta、10Y/30Y 名义收益率、5Y real yield。<span class="data-status" id="dataStatus">数据校验中</span></p>
+          <div class="lead-grid">
+            <div class="chart-panel">
+              <div class="chart-head">
+                <div>
+                  <div class="chart-title" id="activeName">S&P 500</div>
+                  <div class="chart-value" id="activeValue">7,259.22</div>
+                </div>
+                <div class="chart-actions">
+                  <div id="activeChange" class="up">+0.81%</div>
+                  <div class="range-control" id="rangeControl" aria-label="ticker range"></div>
+                </div>
+              </div>
+              <svg id="sparkChart" viewBox="0 0 640 260" role="img" aria-label="Selected ticker chart"></svg>
+              <p id="activeNote" class="section-note" style="margin:10px 0 0;">S&P 500 与 Nasdaq 同创收盘新高，说明油价回落和科技股强势重新压过了前一日的利率冲击。</p>
+            </div>
+            <div class="chart-panel curve-panel" id="curvePanel">
+              <button class="curve-toggle" id="curveToggle" type="button" aria-expanded="false">展开</button>
+              <div class="chart-head">
+                <div>
+                  <div class="chart-title">Treasury Curve</div>
+                  <div class="chart-value">Relief, not all-clear</div>
+                </div>
+                <div class="down">10Y -2bp · 30Y -4bp</div>
+              </div>
+              <div class="legend-row" id="curveLegend"></div>
+              <svg id="curveChart" viewBox="0 0 640 260" role="img" aria-label="Treasury yield curve"></svg>
+              <p class="section-note" style="margin:10px 0 0;">5Y breakeven 从约 2.72% 回落到约 2.67%，但 5Y real yield 从 1.36% 升到 1.41%。这说明通胀补偿降温，实际折现率却仍偏硬。</p>
+              <div class="curve-detail">
+                <p><strong>为什么不是简单的 bull rally：</strong>名义收益率下行确实给权益估值减压，但 5Y 实际利率上行表示市场并没有把政策路径重新宽松化。昨晚更像是油价战争溢价回吐带来的风险修复，而不是债市确认“通胀问题结束”。</p>
+                <p>曲线形态上，30Y 从 5% 上方退回 4.98%，长端压力短线缓和；但 5Y/10Y 区域仍保持高位，今天需要看 EIA 原油库存、Fed 表态和拍卖需求，判断这次回落是趋势反转还是一天 relief。</p>
+              </div>
+            </div>
+          </div>
+
+          <table style="margin-top:16px;">
+            <thead>
+              <tr><th>资产/指标</th><th class="num">最新/收盘</th><th class="num">变化</th><th class="num">权重</th><th>解释</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Dow Jones</td><td class="num">49,298.25</td><td class="num up">+0.73%</td><td class="num weight">4/5</td><td>Dow 反弹但不是最强，说明昨晚不是单纯周期价值修复，而是风险偏好全面好转后由科技和小盘带动。</td></tr>
+              <tr><td>S&P 500</td><td class="num">7,259.22</td><td class="num up">+0.81%</td><td class="num weight">5/5</td><td>刷新收盘新高，是整体风险偏好回升的核心价格确认；但要结合 real yield 看估值压力是否真正解除。</td></tr>
+              <tr><td>Nasdaq Composite</td><td class="num">25,326.13</td><td class="num up">+1.03%</td><td class="num weight">5/5</td><td>同创收盘新高，半导体和 AI 资本开支叙事继续承担指数上行动能。</td></tr>
+              <tr><td>Russell 2000</td><td class="num">2,845.00</td><td class="num up">+1.75%</td><td class="num weight">4/5</td><td>小盘领涨说明利率压力缓和后，融资成本敏感资产出现补涨，这是风险偏好修复质量的正面信号。</td></tr>
+              <tr><td>VIX</td><td class="num">17.38</td><td class="num down">-4.98%</td><td class="num weight">4/5</td><td>波动率回落确认市场从前一日冲击中恢复，不是只有指数表面上涨。</td></tr>
+              <tr><td>2Y / 5Y UST</td><td class="num">3.93% / 4.08%</td><td class="num down">-2bp / 0bp</td><td class="num weight">4/5</td><td>短中端没有大幅松动，说明 Fed path 并未被重新大幅转鸽。</td></tr>
+              <tr><td>10Y UST</td><td class="num">4.43%</td><td class="num down">-2bp</td><td class="num weight">5/5</td><td>权益折现率核心锚小幅回落，足以帮助高估值成长修复，但仍处高位。</td></tr>
+              <tr><td>30Y UST</td><td class="num">4.98%</td><td class="num down">-4bp</td><td class="num weight">5/5</td><td>长端从 5% 上方回落，term premium 压力暂缓；这对 TLT 和长久期成长是短线 relief。</td></tr>
+              <tr><td>5Y Breakeven</td><td class="num">2.67%</td><td class="num down">-5bp</td><td class="num weight">5/5</td><td>油价回落让通胀补偿降温，是昨晚风险修复的第一传导链。</td></tr>
+              <tr><td>5Y Real Yield</td><td class="num">1.41%</td><td class="num up">+5bp</td><td class="num weight">5/5</td><td>实际利率仍上行，说明黄金和成长股面对的真实折现率没有同步放松；这是今天最重要的反向验证点。</td></tr>
+              <tr><td>Brent / WTI</td><td class="num">$109.87 / $102.27</td><td class="num down">-3.99% / -3.90%</td><td class="num weight">5/5</td><td>前一日的地缘风险溢价回吐，通胀冲击链条从“加压”转成“缓和”；但 WTI 仍在 100 上方，不能解读成能源压力解除。</td></tr>
+              <tr><td>DXY</td><td class="num">约 98.4</td><td class="num flat">震荡</td><td class="num weight">3/5</td><td>美元没有给风险资产制造新的压力；若今天美元与 real yield 同升，昨晚修复会更脆。</td></tr>
+              <tr><td>Gold</td><td class="num">$4,555.80</td><td class="num up">+0.80%</td><td class="num weight">3/5</td><td>Comex front-month gold settled at 4,555.80，连续四个交易日里第三次上涨；但 real yield 上行仍会限制趋势外推。</td></tr>
+              <tr><td>BTC</td><td class="num">$80,913.00</td><td class="num up">+1.33%</td><td class="num weight">3/5</td><td>高 beta 资产跟随风险偏好修复，确认市场不是防御性上涨。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="equity-review">
+          <h2>美股复盘主线</h2>
+          <h3>3.1 指数表现</h3>
+          <p>三大指数全部上涨，S&P 500 收 7,259.22，Nasdaq Composite 收 25,326.13，两者均刷新收盘高点；Dow 收 49,298.25，涨幅较温和。真正有信息量的是 Russell 2000 涨 1.75%：这说明昨晚不是只有 mega-cap 把指数托起来，而是融资成本敏感资产也愿意补涨。</p>
+
+          <h3>3.2 市场宽度</h3>
+          <p>VIX 从 18.29 回落到 17.38，配合小盘领涨，说明宽度比前一日明显修复。这里的风险是：宽度改善建立在油价回落和名义长端收益率回落之上，如果今天油价重新上冲或 real yield 继续上行，修复质量会被重新测试。</p>
+
+          <h3>3.3 板块表现</h3>
+          <p>科技、半导体和高 beta 小盘领涨；能源因为油价回落转弱；运输和消费链从成本端获得缓和，但 Amazon 物流外溢带来的结构压力没有消失。昨晚市场从“能源通胀冲击”切换回“盈利和 AI capex 验证”。</p>
+
+          <h3>3.4 权重股/主题股</h3>
+          <p>AI 链条仍是风险偏好中心。AMD 盘后业绩超预期并上修全年展望，强化数据中心和 AI 芯片需求；这会直接反馈到今天 semis、AI server、云资本开支链条。SMCI 的指引和毛利率信号则更偏“服务器交付和利润率验证”。</p>
+
+          <h3>3.5 个股事件</h3>
+          <div class="cards">
+            <div class="mini-card"><b>AMD 盘后验证</b><span>收入和利润好于预期，全年收入展望上修；关键是数据中心 AI 需求是否足够抵消毛利率和竞争压力。</span></div>
+            <div class="mini-card"><b>SMCI 利润率测试</b><span>服务器需求仍强，但市场会更挑剔地看毛利率、库存和交付节奏。</span></div>
+            <div class="mini-card"><b>Oil unwind</b><span>油价从高位回落，运输、航空和消费链获得 relief；能源股相对强势可能降温。</span></div>
+          </div>
+        </section>
+
+        <section id="catalysts">
+          <h2>今日催化与事件分层</h2>
+          <p class="section-note">排序依据：官方/高置信信息优先；每条都给标签、来源层级、信息权重和传导逻辑，避免把所有新闻并列。</p>
+          <table>
+            <thead>
+              <tr><th>时间/状态</th><th>事件</th><th>标签</th><th>来源层级</th><th class="num">权重</th><th>影响资产</th><th>传导逻辑</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>盘前</td><td>ADP 就业、服务业/价格分项后续解读</td><td><span class="tag">宏观数据</span></td><td>官方/高置信</td><td class="num weight">4/5</td><td>UST、美元、股指</td><td>如果就业和服务价格仍强，5Y real yield 可能继续上行，压制昨晚的成长股修复。</td></tr>
+              <tr><td>全天</td><td>Fed 官员是否淡化油价冲击</td><td><span class="tag">央行反应函数</span></td><td>官方/高置信</td><td class="num weight">5/5</td><td>UST、Nasdaq、美元</td><td>核心是 Fed 是否把油价回落视作临时冲击消退；若仍强调通胀粘性，real yield 会保持压力。</td></tr>
+              <tr><td>盘中</td><td>EIA 原油库存与中东局势跟踪</td><td><span class="tag">能源/地缘</span></td><td>官方/多源交叉</td><td class="num weight">5/5</td><td>油、UST、能源、运输</td><td>油价能否守在 100/110 下方，决定 breakeven 是继续回落还是重新推升 Fed path。</td></tr>
+              <tr><td>盘中/本周</td><td>Treasury auction / refunding 需求</td><td><span class="tag">国债供给</span></td><td>官方/高置信</td><td class="num weight">5/5</td><td>10Y/30Y、TLT、银行</td><td>如果拍卖需求强，30Y 回落可延续；若需求弱，term premium 会重新压住长久期资产。</td></tr>
+              <tr><td>盘前/盘中</td><td>AMD 业绩消化、SMCI 指引定价</td><td><span class="tag">AI capex</span></td><td>公司公告</td><td class="num weight">4/5</td><td>semis、AI server、Nasdaq</td><td>验证 AI 数据中心需求能否继续抵消高 real yield 对估值的压力。</td></tr>
+              <tr><td>全天</td><td>BTC / MSTR 高 beta 反馈</td><td><span class="tag">流动性</span></td><td>市场价格</td><td class="num weight">3/5</td><td>BTC、MSTR、ARKK</td><td>BTC 站上 80,000 是风险偏好修复信号；若美元和 real yield 上行，高 beta 会最先被测试。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="bonds">
+          <h2>美债市场专栏</h2>
+          <div class="chart-panel bond-move-chart">
+            <div class="chart-head">
+              <div>
+                <div class="chart-title">Treasury Curve Move</div>
+                <div class="chart-value">名义端 relief，但 real yield 偏硬</div>
+              </div>
+              <div class="down">2Y -2bp · 5Y 0bp · 10Y -2bp · 30Y -4bp</div>
+            </div>
+            <svg id="bondMoveChart" viewBox="0 0 760 310" role="img" aria-label="Treasury 2Y 5Y 10Y 30Y curve move"></svg>
+            <p class="chart-caption">比较 2026-05-04 与 2026-05-05 的 2Y/5Y/10Y/30Y 收益率；图中标注为每个期限的 bp 变化。</p>
+          </div>
+          <h3>5.1 曲线变化</h3>
+          <table>
+            <thead><tr><th>期限</th><th class="num">2026-05-04</th><th class="num">2026-05-05</th><th class="num">变化</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td>2Y</td><td class="num">3.95%</td><td class="num">3.93%</td><td class="num down">-2bp</td><td>Fed path 小幅缓和，但短端没有给出强烈转鸽信号。</td></tr>
+              <tr><td>5Y</td><td class="num">4.08%</td><td class="num">4.08%</td><td class="num flat">0bp</td><td>名义 5Y 没有下行，说明中端政策/实际利率压力仍在。</td></tr>
+              <tr><td>10Y</td><td class="num">4.45%</td><td class="num">4.43%</td><td class="num down">-2bp</td><td>折现率核心锚缓和，帮助 Nasdaq 和小盘修复。</td></tr>
+              <tr><td>30Y</td><td class="num">5.02%</td><td class="num">4.98%</td><td class="num down">-4bp</td><td>长端从 5% 上方退回，term premium 压力短线降温。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>5.2 驱动拆分</h3>
+          <div class="chain">
+            <div><strong>Breakeven</strong><span>5Y breakeven 约从 2.72% 回落到 2.67%，油价战争溢价降温。</span></div>
+            <div><strong>Real yield</strong><span>5Y real yield 从 1.36% 升至 1.41%，实际折现率仍偏紧。</span></div>
+            <div><strong>Term premium</strong><span>30Y 回到 5% 下方，供给压力暂时被缓和交易覆盖。</span></div>
+            <div><strong>Fed path</strong><span>短端小幅回落但不大，市场没有把政策路径重新宽松化。</span></div>
+            <div><strong>Risk appetite</strong><span>名义端 relief 足以推动权益修复，但今天要看 real yield 是否反噬。</span></div>
+          </div>
+
+          <h3>5.3 昨天发生了什么</h3>
+          <div class="callout">
+            第一脚：油价从高位回落，通胀补偿降温；第二脚：长端收益率从 5% 区域退回，成长股折现率压力缓和；第三脚：AI/半导体盈利预期接住风险偏好。反向细节是 5Y real yield 上行，所以这不是债市全面转鸽，而是名义端 relief 叠加盈利叙事接力。
+          </div>
+
+          <h3>5.4 对工具的含义</h3>
+          <table>
+            <thead><tr><th>工具/方向</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td>名义债</td><td>长端获得 relief，但若 auction 需求弱或油价反弹，30Y 仍可能重新测试 5%。</td></tr>
+              <tr><td>TIPS</td><td>breakeven 回落而 real yield 上行，对 TIPS 不是单边利好；更像通胀补偿降温。</td></tr>
+              <tr><td>TLT</td><td>短线受益于 30Y 回落，但仍需要供给和 Fed 语言确认，不能只凭一天反弹追久期。</td></tr>
+              <tr><td>短票/SGOV</td><td>短端收益率仍高，防守仓逻辑未变。</td></tr>
+              <tr><td>VGSH</td><td>短中端没有明显转鸽，VGSH 仍会受 Fed path 波动影响。</td></tr>
+              <tr><td>曲线交易</td><td>关注 5Y real yield 与 30Y term premium 是否背离；这决定成长股修复能否延续。</td></tr>
+              <tr><td>Inflation hedge</td><td>油价回落降低短线冲击，但黄金仍强说明尾部风险还在。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>5.5 今日交易假设的失效条件</h3>
+          <p class="section-note">当前假设：油价回落 + 长端名义收益率 relief + AMD 业绩验证，足以让 Nasdaq、小盘和高 beta 延续修复。下面不是泛泛风险提示，而是这条假设被证伪时最先该看的触发器。</p>
+          <table>
+            <thead><tr><th>当前假设</th><th>失效触发器</th><th>先看资产</th><th>解读/动作含义</th></tr></thead>
+            <tbody>
+              <tr><td>油价回落压低通胀补偿</td><td>WTI 重新站上 $104 或 Brent 重新站上 $112，并持续到美股午盘</td><td>5Y breakeven、XLE、运输股</td><td>若 breakeven 同步上行，昨晚的债市 relief 失效；运输/航空修复应降权，能源重新获得相对优势。</td></tr>
+              <tr><td>长端收益率回落支撑成长估值</td><td>10Y 回到 4.45% 上方或 30Y 回到 5.00% 上方</td><td>Nasdaq、TLT、SMH、ARKK</td><td>这会直接压缩长久期估值弹性；Nasdaq 创新高后的追价性价比下降，TLT 反弹也不宜外推。</td></tr>
+              <tr><td>real yield 没有反噬风险资产</td><td>5Y real yield 继续上行并逼近/突破 1.45%</td><td>Gold、NVDA/AMD、BTC</td><td>如果黄金仍强但成长股转弱，说明市场买尾部风险同时提高真实折现率，成长股修复会变成窄幅拥挤交易。</td></tr>
+              <tr><td>AMD 业绩能扩散到 AI 链条</td><td>AMD 强但 SMH/NVDA/SMCI 不跟，或半导体开盘冲高后 2 小时内回落</td><td>SMH、NVDA、SMCI、云资本开支链</td><td>说明 AI capex 叙事只奖励单股业绩，不能扩散到板块 beta；Nasdaq 上涨质量下降。</td></tr>
+              <tr><td>风险偏好修复有宽度</td><td>Russell 跑输 S&P 500，VIX 回到 18 上方，BTC 跌回 $80,000 下方三者同时出现</td><td>RUT、VIX、BTC/MSTR</td><td>高 beta 先退潮，昨晚的宽度改善可能只是油价回落后的短线反弹，不是新一轮风险扩散。</td></tr>
+              <tr><td>长端供给压力暂缓</td><td>拍卖 tail 明显、bid-to-cover 偏弱，或 30Y 在拍卖后重新逼近 5%</td><td>30Y、TLT、银行股</td><td>term premium 回归会让债市从 relief 重新切回供给压力主线；曲线交易优先看长端，而不是短端 Fed path。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="verify">
+          <h2>今天该验证什么</h2>
+          <table>
+            <thead><tr><th>需要验证的变量</th><th>观察阈值/方向</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td>WTI 102 / Brent 110</td><td>重新站上则油价冲击回归</td><td>breakeven 会重新上行，债市 relief 可能失效。</td></tr>
+              <tr><td>5Y real yield</td><td>继续上行则成长股估值承压</td><td>这是昨晚修复中最不舒服的细节。</td></tr>
+              <tr><td>10Y/30Y 是否守住回落</td><td>10Y 低于 4.45、30Y 低于 5%</td><td>守住则 Nasdaq 和小盘修复有空间。</td></tr>
+              <tr><td>AMD 业绩扩散</td><td>semis 是否跟涨而不只 AMD 单股</td><td>判断 AI capex 叙事是否还能带动指数。</td></tr>
+              <tr><td>VIX 是否继续低于 18</td><td>低于 18 则风险偏好稳定</td><td>若 VIX 回到 18 上方，昨晚宽度改善可能只是短线反弹。</td></tr>
+              <tr><td>DXY 与 real yield 是否同升</td><td>同升则高 beta 先承压</td><td>BTC、MSTR、小盘和 ARKK 类资产会更敏感。</td></tr>
+              <tr><td>能源股是否从强势转弱</td><td>油价回落后能源跑输</td><td>确认市场从通胀冲击切回盈利/成长主线。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="themes">
+          <h2>板块和主题异动</h2>
+          <table>
+            <thead><tr><th>主题</th><th class="num">昨日表现</th><th>催化</th><th>判断</th></tr></thead>
+            <tbody>
+              <tr><td>半导体 / AI infra</td><td class="num up">强</td><td>AMD 盘后 beat、AI 数据中心需求</td><td>仍是指数上行动能核心；今天看扩散到 NVDA、SMCI、服务器链条的质量。</td></tr>
+              <tr><td>小盘 / 高 beta</td><td class="num up">强</td><td>名义利率回落、VIX 下行</td><td>Russell 领涨是风险偏好改善信号，但对 real yield 和美元很敏感。</td></tr>
+              <tr><td>能源</td><td class="num down">弱化</td><td>油价回吐战争溢价</td><td>前一日强势可能降温；若地缘风险重燃，能源会重新变成债市压力源。</td></tr>
+              <tr><td>运输 / 航空</td><td class="num up">修复</td><td>燃油成本缓和</td><td>成本端 relief 明确，但 Amazon 物流冲击仍限制包裹运输估值修复。</td></tr>
+              <tr><td>加密股</td><td class="num up">偏强</td><td>BTC 站上 80,000</td><td>跟随风险偏好修复；若美元或 real yield 反弹，会最先被验证。</td></tr>
+              <tr><td>黄金 / 防御</td><td class="num flat">偏强但分化</td><td>金价仍高、real yield 上行</td><td>避险和抗通胀需求仍在，但实际利率上行会压制持续性。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="portfolio">
+          <h2>对重点持仓/关注资产的影响</h2>
+          <table>
+            <thead><tr><th>资产/方向</th><th>影响</th></tr></thead>
+            <tbody>
+              <tr><td>NVDA / AI infra</td><td>AMD 强业绩有利于 AI capex 情绪扩散；但 real yield 上行意味着估值弹性仍需要盈利兑现支持。</td></tr>
+              <tr><td>TSM / semis</td><td>半导体链条受益于 AI 需求验证；美元和全球风险偏好仍是外部约束。</td></tr>
+              <tr><td>META / mega-cap</td><td>在 Nasdaq 新高里仍是核心稳定器；若 10Y 守住回落，mega-cap 成长继续占优。</td></tr>
+              <tr><td>MSTR / BTC</td><td>BTC 修复改善情绪，但这类资产对美元和 real yield 反弹最敏感，适合用作风险偏好温度计。</td></tr>
+              <tr><td>SGOV / VGSH</td><td>短端防守逻辑未变；VGSH 对 Fed path 更敏感，需看 2Y/5Y 是否真正下行。</td></tr>
+              <tr><td>长债 / TLT</td><td>30Y 回到 5% 下方是好信号，但不是 all-clear；需要 auction、油价和 Fed 共同确认。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="source-list">
+          <strong>数据与来源说明：</strong>
+          指数收盘与板块主线使用 AP 与 Yahoo Finance 市场收盘报道交叉；Nasdaq Composite 历史线使用 Nasdaq 官方 COMP historical 接口；油价使用 WSJ/Barron's/PFL Petroleum 结算价交叉；黄金使用 WSJ / Dow Jones Market Data 结算价；BTC 使用 MarketWatch / Dow Jones Market Data 的盘中高点，并参考 CoinCodex/CoinGecko 近期路径。美债名义曲线与 TIPS 实际收益率使用 U.S. Treasury Daily Treasury Rates / Real Yield Curve，并据 5Y nominal - 5Y real 估算 5Y breakeven。Stooq CSV 当前要求 API key，本页顶部图表使用本地一年日频缓存并追加已核验的 2026-05-05 收盘点；非加密资产周末点以前值延续，历史缓存用于图表连续性，非终端逐点复核；1d 使用按开盘到收盘关键时段重建的日内路径。正式投研发布前仍建议用 Bloomberg/FactSet/Refinitiv 或券商终端刷新一次。
+          <br>
+          参考入口：
+          <a href="https://apnews.com/article/91988a57e184ec1538ecbe94fc1af022">AP U.S. market close</a> ·
+          <a href="https://uk.finance.yahoo.com/news/stock-market-today-sp-500-nasdaq-dow-rise-as-tech-stocks-gain-oil-slides-233125796.html">Yahoo Finance market close</a> ·
+          <a href="https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-05-05-2026/card/oil-prices-fall-roughly-4-as-hegseth-says-cease-fire-holds-t6MwxZdZqFiV4cow7XCh">WSJ oil settlement</a> ·
+          <a href="https://www.marketwatch.com/livecoverage/stock-market-today-dow-sp500-nasdaq-higher-oil-dips-amd-earnings-on-tap/card/bitcoin-tops-81-000-reaching-its-highest-level-since-january-zmwRKbTyay6BniPTgYRC">MarketWatch BTC</a> ·
+          <a href="https://www.wsj.com/finance/commodities-futures/gold-steady-amid-likely-technical-recovery-8b97323c">WSJ gold settlement</a> ·
+          <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve">U.S. Treasury Daily Treasury Rates</a> ·
+          <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_real_yield_curve">U.S. Treasury Real Yield Curve</a> ·
+          <a href="https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results">AMD earnings release</a>
+        </section>
+      </div>
+
+      <aside>
+        <div class="brief-box">
+          <h2>今日导航</h2>
+          <ol>
+            <li>主线从“油价通胀冲击”切回“油价回落 + 科技盈利 + 风险偏好修复”。</li>
+            <li>今天先看 WTI 102 / Brent 110、5Y real yield、10Y/30Y 是否守住回落。</li>
+            <li>AMD 盘后是 AI capex 验证点；关键不是单股，而是 semis 能否扩散。</li>
+            <li>小盘领涨是好信号，但如果美元与 real yield 同升，高 beta 会先回撤。</li>
+          </ol>
+        </div>
+        <div class="side-panel" style="margin-top:16px;">
+          <div class="chart-title">Market Regime</div>
+          <svg id="regimeChart" viewBox="0 0 320 210" role="img" aria-label="regime map"></svg>
+          <p class="section-note" style="margin:10px 0 0;">横轴：左侧代表增长/风险偏好承压，右侧代表增长/风险偏好仍有韧性；纵轴：越上方代表通胀压力越强。当前位置从右上向右中移动：风险偏好改善，通胀压力边际降温，但 real yield 仍偏硬。</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="data/2026-05-06_market_data.js?v=20260506-ixic-official"></script>
+  <script>
+    const DATA = window.MORNING_BRIEF_DATA;
+    let activeTickerIndex = 0;
+    let activeRange = "7d";
+    const strip = document.getElementById("tickerStrip");
+
+    function validateData(data) {
+      if (!data || !Array.isArray(data.tickers) || !data.tickers.length) throw new Error("ticker data missing");
+      if (!Array.isArray(data.ranges) || !data.ranges.includes("1d")) throw new Error("range data missing");
+      data.tickers.forEach(t => {
+        data.ranges.forEach(range => {
+          if (!Array.isArray(t.ranges?.[range]) || t.ranges[range].length < 2) {
+            throw new Error(`${t.sym} ${range} series invalid`);
+          }
+          t.ranges[range].forEach(value => {
+            if (!Number.isFinite(value)) throw new Error(`${t.sym} ${range} contains non numeric value`);
+          });
+        });
+        if (!Array.isArray(t.history) || t.history.length < 250) {
+          throw new Error(`${t.sym} daily history missing`);
+        }
+        t.history.forEach(point => {
+          if (!point.date || !Number.isFinite(point.value)) throw new Error(`${t.sym} daily history invalid`);
+        });
+        if (!Array.isArray(t.intraday) || t.intraday.length < 2) {
+          throw new Error(`${t.sym} intraday data missing`);
+        }
+        t.intraday.forEach(point => {
+          if (!point.time || !Number.isFinite(point.value)) throw new Error(`${t.sym} intraday data invalid`);
+        });
+      });
+      if (!data.treasury?.labels?.length || !Array.isArray(data.treasury.curves)) throw new Error("treasury data missing");
+      data.treasury.curves.forEach(curve => {
+        if (curve.values.length !== data.treasury.labels.length) throw new Error(`${curve.label} curve length mismatch`);
+      });
+      if (!Array.isArray(data.regime) || data.regime.length < 4) throw new Error("regime data missing");
+    }
+
+    function setStatus(text, ok = true) {
+      const status = document.getElementById("dataStatus");
+      status.textContent = text;
+      status.style.color = ok ? "var(--accent-2)" : "var(--red)";
+    }
+
+    function marketClass(direction) {
+      if (direction === "up") return "up";
+      if (direction === "down") return "down";
+      return "flat";
+    }
+
+    function marketColor(direction) {
+      if (direction === "up") return "#b3312c";
+      if (direction === "down") return "#147b45";
+      return "#66645f";
+    }
+
+    try {
+      validateData(DATA);
+      const days = Math.min(...DATA.tickers.map(t => t.history.length));
+      setStatus(`本地日频/日内缓存已加载并校验 · ${days}天 · ${DATA.asOf}`);
+    } catch (error) {
+      setStatus(`数据校验失败：${error.message}`, false);
+      throw error;
+    }
+
+    DATA.tickers.forEach((t, index) => {
+      const button = document.createElement("button");
+      button.className = "ticker" + (index === activeTickerIndex ? " active" : "");
+      button.innerHTML = `<span class="sym">${t.sym}</span><span class="val">${t.value}</span><span class="chg ${marketClass(t.direction)}">${t.change}</span>`;
+      button.addEventListener("click", () => selectTicker(index));
+      strip.appendChild(button);
+    });
+
+    const rangeControl = document.getElementById("rangeControl");
+    DATA.ranges.forEach(range => {
+      const button = document.createElement("button");
+      button.className = "range-btn" + (range === activeRange ? " active" : "");
+      button.textContent = range;
+      button.addEventListener("click", event => {
+        event.stopPropagation();
+        activeRange = range;
+        document.querySelectorAll(".range-btn").forEach(btn => btn.classList.toggle("active", btn.textContent === range));
+        drawSpark(DATA.tickers[activeTickerIndex]);
+      });
+      rangeControl.appendChild(button);
+    });
+
+    document.getElementById("curveToggle").addEventListener("click", event => {
+      event.stopPropagation();
+      const panel = document.getElementById("curvePanel");
+      const open = panel.classList.toggle("open");
+      event.currentTarget.textContent = open ? "收起" : "展开";
+      event.currentTarget.setAttribute("aria-expanded", String(open));
+    });
+
+    function scale(values, minPix, maxPix) {
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const span = max - min || 1;
+      return v => maxPix - ((v - min) / span) * (maxPix - minPix);
+    }
+
+    function parseChange(change) {
+      return Number(String(change).replace("%", ""));
+    }
+
+    function rangeDays(range) {
+      return { "1d": 1, "7d": 7, "30d": 30, "6m": 183, "1y": 366 }[range] || 7;
+    }
+
+    function hasOnlyTradingDays(history) {
+      return history.every(point => {
+        const day = new Date(`${point.date}T00:00:00Z`).getUTCDay();
+        return day !== 0 && day !== 6;
+      });
+    }
+
+    function historyForRange(ticker) {
+      if (activeRange === "1d") return ticker.intraday.map(point => ({ ...point, label: point.time }));
+      const tradingDayCounts = { "7d": 7, "30d": 30, "6m": 126, "1y": 252 };
+      const count = hasOnlyTradingDays(ticker.history)
+        ? Math.min(ticker.history.length, tradingDayCounts[activeRange] || 7)
+        : Math.min(ticker.history.length, rangeDays(activeRange) + 1);
+      return ticker.history.slice(-count).map(point => ({ ...point, label: fmtDateLabel(point.date) }));
+    }
+
+    function fmtDateLabel(date) {
+      const [year, month, day] = date.split("-");
+      return `${month}/${day}/${year.slice(2)}`;
+    }
+
+    function drawSpark(ticker) {
+      const svg = document.getElementById("sparkChart");
+      const w = 640, h = 260, pad = 34;
+      const series = historyForRange(ticker);
+      const values = series.map(point => point.value);
+      const xs = values.map((_, i) => pad + i * ((w - pad * 2) / (values.length - 1 || 1)));
+      const y = scale(values, pad, h - pad);
+      const points = values.map((v, i) => `${xs[i]},${y(v)}`).join(" ");
+      const area = `${pad},${h-pad} ${points} ${w-pad},${h-pad}`;
+      const color = marketColor(ticker.direction);
+      const markers = series.filter((_, i) => i === 0 || i === series.length - 1 || i % Math.ceil(series.length / 6) === 0);
+      const caption = activeRange === "1d" ? "1d · 日内走势 · 09:30-16:00 ET" : `${activeRange} · 日频缓存 · 最近收盘点为 2026-05-05`;
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${pad}" y1="${pad+i*(h-pad*2)/3}" x2="${w-pad}" y2="${pad+i*(h-pad*2)/3}"></line>`).join("")}</g>
+        <polygon points="${area}" fill="${color}" opacity=".10"></polygon>
+        ${values.map((v, i) => `<circle cx="${xs[i]}" cy="${y(v)}" r="${activeRange === "1y" ? .65 : activeRange === "6m" ? .8 : 1}" fill="${color}" opacity=".36"></circle>`).join("")}
+        <polyline points="${points}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        ${markers.map(point => {
+          const i = series.indexOf(point);
+          return `<circle cx="${xs[i]}" cy="${y(point.value)}" r="${i === values.length-1 ? 4 : 2.5}" fill="${color}"></circle>`;
+        }).join("")}
+        <text x="${pad}" y="${h-10}" fill="#66645f" font-size="11">${caption}</text>
+      `;
+    }
+
+    function selectTicker(index) {
+      activeTickerIndex = index;
+      const ticker = DATA.tickers[index];
+      document.querySelectorAll(".ticker").forEach((el, i) => el.classList.toggle("active", i === index));
+      document.getElementById("activeName").textContent = ticker.name;
+      document.getElementById("activeValue").textContent = ticker.value;
+      const change = document.getElementById("activeChange");
+      change.textContent = ticker.change;
+      change.className = marketClass(ticker.direction);
+      document.getElementById("activeNote").textContent = ticker.note;
+      drawSpark(ticker);
+    }
+
+    function drawCurve() {
+      const svg = document.getElementById("curveChart");
+      const w = 640, h = 260, pad = 38;
+      const labels = DATA.treasury.labels;
+      const curves = DATA.treasury.curves;
+      const all = curves.flatMap(curve => curve.values);
+      const y = scale(all, pad, h - pad);
+      const xs = labels.map((_, i) => pad + i * ((w - pad * 2) / (labels.length - 1)));
+      function path(vals) { return vals.map((v,i) => `${xs[i]},${y(v)}`).join(" "); }
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${pad}" y1="${pad+i*(h-pad*2)/3}" x2="${w-pad}" y2="${pad+i*(h-pad*2)/3}"></line>`).join("")}</g>
+        ${curves.map(curve => `<polyline points="${path(curve.values)}" fill="none" stroke="${curve.color}" stroke-width="${curve.width}" stroke-linecap="round" stroke-linejoin="round"></polyline>`).join("")}
+        ${curves.map(curve => curve.values.map((v,i) => `<circle cx="${xs[i]}" cy="${y(v)}" r="${curve.key === "current" ? 4 : 3}" fill="${curve.color}"></circle>`).join("")).join("")}
+        ${labels.map((label,i) => `<text x="${xs[i]}" y="${h-12}" text-anchor="middle" fill="#66645f" font-size="11">${label}</text>`).join("")}
+        <text x="${w-pad}" y="20" text-anchor="end" fill="#66645f" font-size="11">Daily Treasury par yield curve · local</text>
+      `;
+      document.getElementById("curveLegend").innerHTML = curves.map(curve => `<span class="legend-item"><span class="legend-swatch" style="background:${curve.color}; height:${Math.max(2, curve.width)}px"></span>${curve.label}</span>`).join("");
+    }
+
+    function drawBondMoveChart() {
+      const svg = document.getElementById("bondMoveChart");
+      const w = 760, h = 310;
+      const padLeft = 62, padRight = 36, padTop = 38, padBottom = 44;
+      const tenors = ["2Y", "5Y", "10Y", "30Y"];
+      const prevDate = "2026-05-04";
+      const currentDate = "2026-05-05";
+      const prev = [3.95, 4.08, 4.45, 5.02];
+      const current = [3.93, 4.08, 4.43, 4.98];
+      const bp = current.map((v, i) => Math.round((v - prev[i]) * 100));
+      const all = prev.concat(current);
+      const y = scale(all, padTop, h - padBottom);
+      const xs = tenors.map((_, i) => padLeft + i * ((w - padLeft - padRight) / (tenors.length - 1)));
+      const line = values => values.map((v, i) => `${xs[i]},${y(v)}`).join(" ");
+      const fmtBp = value => value > 0 ? `+${value}bp` : `${value}bp`;
+      const bpColor = value => value > 0 ? "#b3312c" : value < 0 ? "#147b45" : "#66645f";
+      svg.innerHTML = `
+        <rect width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${padLeft}" y1="${padTop+i*(h-padTop-padBottom)/3}" x2="${w-padRight}" y2="${padTop+i*(h-padTop-padBottom)/3}"></line>`).join("")}</g>
+        <polyline points="${line(prev)}" fill="none" stroke="#8a8172" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        <polyline points="${line(current)}" fill="none" stroke="#147b45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        ${tenors.map((tenor, i) => `
+          <line x1="${xs[i]}" y1="${y(prev[i])}" x2="${xs[i]}" y2="${y(current[i])}" stroke="${bpColor(bp[i])}" stroke-width="1.4" stroke-dasharray="3 3" opacity=".65"></line>
+          <circle cx="${xs[i]}" cy="${y(prev[i])}" r="5" fill="#8a8172"></circle>
+          <circle cx="${xs[i]}" cy="${y(current[i])}" r="6" fill="#147b45"></circle>
+          <text x="${xs[i]}" y="${h-18}" text-anchor="middle" fill="#171717" font-size="12" font-weight="800">${tenor}</text>
+          <text x="${xs[i]}" y="${Math.min(y(prev[i]), y(current[i])) - 12}" text-anchor="middle" fill="${bpColor(bp[i])}" font-size="12" font-weight="800">${fmtBp(bp[i])}</text>
+        `).join("")}
+        <text x="${padLeft}" y="22" fill="#8a8172" font-size="12">${prevDate}</text>
+        <text x="${padLeft + 92}" y="22" fill="#147b45" font-size="12">${currentDate}</text>
+        <text x="${w-padRight}" y="22" text-anchor="end" fill="#66645f" font-size="12">收益率，%</text>
+      `;
+    }
+
+    function drawRegime() {
+      const svg = document.getElementById("regimeChart");
+      const points = DATA.regime.map(point => {
+        const x = 42 + point.x * 236;
+        const y = 170 - point.y * 140;
+        const labelLeft = x > 220;
+        const labelAbove = Math.abs(y - 104) < 18;
+        const tx = labelLeft ? x - 12 : x + 12;
+        const ty = labelAbove ? y - 13 : y + 4;
+        const anchor = labelLeft ? "end" : "start";
+        const labelWidth = point.key === "current" ? 34 : 24;
+        const bgX = labelLeft ? tx - labelWidth - 4 : tx - 4;
+        const bgY = ty - 11;
+        return `
+          <circle cx="${x}" cy="${y}" r="${point.key === "current" ? 9 : 7}" fill="${point.color}"></circle>
+          <rect x="${bgX}" y="${bgY}" width="${labelWidth + 8}" height="16" rx="2" fill="#fffdf8" opacity=".88"></rect>
+          <text x="${tx}" y="${ty}" text-anchor="${anchor}" fill="#171717" font-size="11" font-weight="${point.key === "current" ? 800 : 600}">${point.label}</text>
+        `;
+      }).join("");
+      svg.innerHTML = `
+        <rect width="320" height="210" fill="#fffdf8"></rect>
+        <line x1="160" y1="28" x2="160" y2="180" stroke="#d9d2c3"></line>
+        <line x1="35" y1="104" x2="288" y2="104" stroke="#d9d2c3"></line>
+        <text x="160" y="18" text-anchor="middle" fill="#66645f" font-size="11">通胀压力 ↑</text>
+        <text x="160" y="202" text-anchor="middle" fill="#66645f" font-size="11">通胀压力 ↓</text>
+        <text x="36" y="92" fill="#66645f" font-size="11">增长承压</text>
+        <text x="284" y="92" text-anchor="end" fill="#66645f" font-size="11">增长韧性</text>
+        ${points}
+      `;
+    }
+
+    drawSpark(DATA.tickers[0]);
+    drawBondMoveChart();
+    drawCurve();
+    drawRegime();
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inflation Expectation Monitor</title>
+    <title>US Rates Shock & Duration Timing Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,26 +20,26 @@
       <main class="desktop-stage">
         <section class="hero-card">
           <div class="hero-copy">
-            <p class="eyebrow">Inflation Drift Monitor</p>
-            <h1>盯住 survey 先抬头后，市场锚是否也开始漂。</h1>
+            <p class="eyebrow">US Rates Shock &amp; Duration Timing</p>
+            <h1>先判断利率异动是否罕见，再决定 duration 是否值得加。</h1>
             <p class="hero-text">
-              托盘式实时监控壳。Macro 页看 breakeven、利率与 survey；Fear 页单独看
-              CNN Fear &amp; Greed 与相关拆分指标。
+              首页前置利率冲击带、市场叙事排序与久期动作面板；
+              TIPS/nominal 和 inflation anchor 留在 Macro 页里做背景验证。
             </p>
           </div>
 
           <div class="hero-rulebook">
             <div class="rule-chip">
-              <span class="rule-label">Base Case</span>
-              <span class="rule-value" id="hero-base-case">Survey up / market still anchored</span>
+              <span class="rule-label">First Read</span>
+              <span class="rule-value" id="hero-base-case">Shock rarity before asset choice</span>
             </div>
             <div class="rule-chip">
-              <span class="rule-label">Watch</span>
-              <span class="rule-value">T5YIE holds above 2.75%</span>
+              <span class="rule-label">Narrative</span>
+              <span class="rule-value">What divergence is the market trading?</span>
             </div>
             <div class="rule-chip">
-              <span class="rule-label">Escalation</span>
-              <span class="rule-value">T5YIE and T5YIFR rise together</span>
+              <span class="rule-label">Action</span>
+              <span class="rule-value">No trade / nibble 10Y / add long-end</span>
             </div>
           </div>
 
@@ -48,6 +48,18 @@
             <span class="global-load-title">加载中</span>
             <span class="global-load-progress" id="global-load-progress">0 / 0</span>
             <span class="global-load-detail" id="global-load-detail">优先读取本地缓存...</span>
+          </div>
+        </section>
+
+        <section class="daily-cache-banner is-loading" id="daily-cache-banner" aria-live="polite">
+          <div>
+            <p class="panel-label">Daily Macro Task</p>
+            <h2 id="daily-cache-title">检查今日 Macro 数据与研报...</h2>
+            <p id="daily-cache-detail">如果本地已有今日 JSON 和研报，首页会直接读取；否则提示去 Codex 执行每日任务。</p>
+          </div>
+          <div class="daily-cache-meta">
+            <span id="daily-cache-date">--</span>
+            <span id="daily-cache-source">local check</span>
           </div>
         </section>
 
@@ -96,23 +108,102 @@
             <p class="panel-label">Notes</p>
             <div class="note-stack">
               <div class="note-item">
-                <span>核心问题</span>
-                <p>survey 预期已经抬头后，市场端 breakeven 与长端 forward 是否也跟着上漂。</p>
+                <span>看板定位</span>
+                <p>先做利率冲击诊断，再看市场叙事分歧，最后落到 duration 建仓动作。</p>
               </div>
               <div class="note-item">
                 <span>首页曲线</span>
-                <p>US3Y、US10Y、US30Y 用来先看 nominal yield 曲线的短中长端压力是否同步上行。</p>
+                <p>US3Y、US10Y、US30Y 保留在首屏，用来判断短端政策路径与长端 term premium 谁在领涨/领跌。</p>
               </div>
               <div class="note-item">
-                <span>触发信号</span>
-                <p>若 T5YIE 站上 2.75%，且 T5YIFR 同步抬升，说明“有条件冲击”开始向长期锚外溢。</p>
+                <span>每日复盘</span>
+                <p>如果今日自动化报告已存在，首页会直接用本地数据；没有则显示任务提醒，避免误用旧分析。</p>
               </div>
               <div class="note-item">
                 <span>页面分工</span>
-                <p>Macro 看通胀补偿、利率与 survey；Fear 单独看 CNN Fear &amp; Greed、AHR999 与拆分压力项。</p>
+                <p>Macro 和 Fear 页继续保留：Macro 看 inflation anchor 背景，Fear 看风险偏好和压力项。</p>
               </div>
             </div>
           </aside>
+        </section>
+
+        <section class="diagnostic-stack" aria-label="Rates shock and duration diagnostics">
+          <section class="diagnostic-section" id="rate-shock-tape">
+            <div class="section-head">
+              <div>
+                <p class="panel-label">Module 1</p>
+                <h2>Rate Shock Tape</h2>
+              </div>
+              <p>看 1D / 5D / 21D / 3M 变动、近10年分位、2022 后 regime 分位和波动调整 z-score。</p>
+            </div>
+            <div class="rate-table-wrap">
+              <table class="rate-shock-table" aria-label="Rate shock tape">
+                <thead>
+                  <tr>
+                    <th><span class="th-help" data-tip="美债期限点。无可用本地数据的期限会自动隐藏，避免用空行干扰判断。">Tenor</span></th>
+                    <th><span class="th-help" data-tip="最新收益率水平。数值越高代表该期限名义利率越高，不单独代表冲击强弱。">Level</span></th>
+                    <th><span class="th-help" data-tip="过去1个有效观测日的收益率变化，单位bp。红色为利率上行，绿色为利率下行，颜色越深代表幅度越大。">1D bp</span></th>
+                    <th><span class="th-help" data-tip="1D变化在历史样本中的分位。轴越靠右代表越接近利率上行冲击，越靠左代表越接近利率下行/rally。">1D pctile</span></th>
+                    <th><span class="th-help" data-tip="过去5个有效观测日的收益率变化，适合识别短线利率冲击。红涨绿跌，深浅表示幅度。">5D bp</span></th>
+                    <th><span class="th-help" data-tip="5D变化的历史分位。高分位说明近期selloff偏强，低分位说明近期rally偏强。">5D pctile</span></th>
+                    <th><span class="th-help" data-tip="过去21个有效观测日的收益率变化，约等于一个交易月。用于判断冲击是否已经变成趋势。">21D bp</span></th>
+                    <th><span class="th-help" data-tip="21D变化的历史分位。靠右代表月度利率上行压力强，靠左代表月度利率下行压力强。">21D pctile</span></th>
+                    <th><span class="th-help" data-tip="2022年以来regime样本内的分位，更贴近高通胀/高利率环境。高低含义同pctile轴。">2022+ pctile</span></th>
+                    <th><span class="th-help" data-tip="波动调整后的5D变化强度。正值为利率上行冲击，负值为利率下行rally；绝对值越大越异常。">z-score</span></th>
+                    <th><span class="th-help" data-tip="自动化对该期限近期 tape 的方向归类。bear/selloff 偏利率上行，bull/rally 偏利率下行。">Signal</span></th>
+                  </tr>
+                </thead>
+                <tbody id="rate-shock-table-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="diagnostic-section" id="market-narrative-ranking">
+            <div class="section-head">
+              <div>
+                <p class="panel-label">模块 2</p>
+                <h2>市场叙事排序</h2>
+              </div>
+              <p>6 类叙事按权重排序；每类得分用星级展示，依据保持透明。</p>
+            </div>
+            <div class="narrative-ranking-grid" id="narrative-ranking-grid"></div>
+          </section>
+
+          <section class="diagnostic-section" id="narrative-detail-panel">
+            <div class="section-head">
+              <div>
+                <p class="panel-label">模块 3</p>
+                <h2>叙事证据清单</h2>
+              </div>
+              <p>每个叙事下列出核心检查项、最新证据、信号解释；后续由每日任务按权重和时间倒序填充。</p>
+            </div>
+            <div class="narrative-detail-grid" id="narrative-detail-grid"></div>
+          </section>
+
+          <section class="diagnostic-section" id="duration-action-panel">
+            <div class="section-head">
+              <div>
+                <p class="panel-label">Module 4</p>
+                <h2>Duration Action Panel</h2>
+              </div>
+              <p>把诊断结果落到操作层级：不买、观察、试 10Y、加 10Y、加长端或 convex duration。</p>
+            </div>
+            <div class="duration-action-summary" id="duration-action-summary"></div>
+            <div class="duration-ladder" id="duration-ladder"></div>
+            <div class="duration-rule-grid" id="duration-rule-grid"></div>
+          </section>
+
+          <section class="diagnostic-section" id="technical-exhaustion-panel">
+            <div class="section-head">
+              <div>
+                <p class="panel-label">Module 5</p>
+                <h2>Technical Exhaustion Panel</h2>
+              </div>
+              <p>九转、RSI、Bollinger z-score、20D move percentile、MOVE 和 positioning 只做 timing overlay。</p>
+            </div>
+            <div class="technical-grid" id="technical-grid"></div>
+            <div class="technical-advice" id="technical-advice"></div>
+          </section>
         </section>
 
         <div class="flyout-backdrop" id="flyout-backdrop" hidden></div>

@@ -8,6 +8,7 @@ const { URL } = require("url");
 const HOST = "127.0.0.1";
 const PORT = process.env.PORT ? Number(process.env.PORT) : 8787;
 const ROOT = __dirname;
+const MACRO_DAILY_DIR = path.join(ROOT, "macro_daily");
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -63,6 +64,11 @@ http
       if (url.pathname === "/api/treasury-yields") {
         const mode = String(url.searchParams.get("mode") || "").trim().toLowerCase();
         return proxyTreasuryYields(res, mode);
+      }
+
+      if (url.pathname === "/api/macro-daily") {
+        const date = String(url.searchParams.get("date") || "").trim();
+        return proxyMacroDaily(res, date);
       }
 
       return serveStatic(url.pathname, res);
@@ -264,6 +270,67 @@ async function proxyAhr999(res, mode = "") {
   }
 }
 
+function proxyMacroDaily(res, requestedDate) {
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) ? requestedDate : localDateIso();
+  const expected = {
+    dashboard: path.join("macro_daily", "data", `${date}_dashboard.json`),
+    report: path.join("macro_daily", "reports", `${date}_rates_duration_report.md`),
+    reportHtml: path.join("macro_daily", "reports", `${date}_rates_duration_report.html`),
+  };
+  const dashboardPath = path.join(MACRO_DAILY_DIR, "data", `${date}_dashboard.json`);
+  const reportMdPath = path.join(MACRO_DAILY_DIR, "reports", `${date}_rates_duration_report.md`);
+  const reportHtmlPath = path.join(MACRO_DAILY_DIR, "reports", `${date}_rates_duration_report.html`);
+  const hasDashboard = fs.existsSync(dashboardPath);
+  const reportPath = fs.existsSync(reportMdPath) ? reportMdPath : fs.existsSync(reportHtmlPath) ? reportHtmlPath : "";
+
+  if (!hasDashboard || !reportPath) {
+    return respondJson(
+      res,
+      200,
+      JSON.stringify({
+        date,
+        exists: false,
+        hasDashboard,
+        hasReport: Boolean(reportPath),
+        expected,
+      }),
+      "DISK",
+    );
+  }
+
+  try {
+    const dashboard = JSON.parse(fs.readFileSync(dashboardPath, "utf8"));
+    dashboard.reportPath = path.relative(ROOT, reportPath);
+    return respondJson(
+      res,
+      200,
+      JSON.stringify({
+        date,
+        exists: true,
+        hasDashboard: true,
+        hasReport: true,
+        expected,
+        dashboard,
+      }),
+      "DISK",
+    );
+  } catch (error) {
+    return respondJson(
+      res,
+      200,
+      JSON.stringify({
+        date,
+        exists: false,
+        hasDashboard: true,
+        hasReport: true,
+        expected,
+        error: `Daily dashboard JSON parse failed: ${error.message}`,
+      }),
+      "DISK",
+    );
+  }
+}
+
 function proxyJson(res, cacheKey, targetUrl, headers) {
   const cached = CACHE.get(cacheKey);
   const isFresh = cached && Date.now() - cached.savedAt < TTL_MS[cacheKey];
@@ -383,6 +450,12 @@ function shiftIsoDate(dateString, days) {
   const date = new Date(`${dateString}T00:00:00Z`);
   date.setUTCDate(date.getUTCDate() + days);
   return date.toISOString().slice(0, 10);
+}
+
+function localDateIso() {
+  const now = new Date();
+  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
 }
 
 function mergeFredCsv(baseCsv, nextCsv) {
@@ -582,7 +655,13 @@ async function buildAhr999PayloadIncremental() {
 }
 
 function canUseAhrState(state, fetchedBtcData) {
-  if (!state?.btcData?.length || !state?.series?.length || !state.lastBtcDate || !fetchedBtcData.length) {
+  if (
+    state?.version !== 2 ||
+    !state?.btcData?.length ||
+    !state?.series?.length ||
+    !state.lastBtcDate ||
+    !fetchedBtcData.length
+  ) {
     return false;
   }
 
@@ -645,9 +724,9 @@ function computeAhrPoint(btcData, index, genesisTime = Date.UTC(2009, 0, 3)) {
   const time = new Date(`${current.date}T00:00:00Z`).getTime();
   const coinAgeDays = Math.max(1, Math.floor((time - genesisTime) / 86400000));
   const priceUsd = current.value;
-  const gma200Usd = Math.exp(window.reduce((sum, point) => sum + Math.log(point.value), 0) / window.length);
+  const ma200Usd = window.reduce((sum, point) => sum + point.value, 0) / window.length;
   const indexGrowthVal = Math.pow(10, 5.84 * Math.log10(coinAgeDays) - 17.01);
-  const ahr999 = (priceUsd / gma200Usd) * (priceUsd / indexGrowthVal);
+  const ahr999 = (priceUsd / ma200Usd) * (priceUsd / indexGrowthVal);
 
   if (!Number.isFinite(ahr999)) {
     return null;
@@ -657,7 +736,9 @@ function computeAhrPoint(btcData, index, genesisTime = Date.UTC(2009, 0, 3)) {
     t: current.date,
     ahr999,
     price_usd: priceUsd,
-    gma200_usd: gma200Usd,
+    ma200_usd: ma200Usd,
+    sma200_usd: ma200Usd,
+    gma200_usd: ma200Usd,
     index_growth_val: indexGrowthVal,
     coin_age_days: coinAgeDays,
   };
@@ -665,7 +746,7 @@ function computeAhrPoint(btcData, index, genesisTime = Date.UTC(2009, 0, 3)) {
 
 function makeAhrState(btcData, series, calculationMode) {
   return {
-    version: 1,
+    version: 2,
     source: "fred:CBBTCUSD derived",
     calculationMode,
     updatedAt: new Date().toISOString(),
@@ -686,6 +767,8 @@ function buildAhr999PayloadFromState(state) {
     source: state.source,
     calculation_mode: state.calculationMode,
     price_usd: latest.price_usd,
+    ma200_usd: latest.ma200_usd,
+    sma200_usd: latest.sma200_usd || latest.ma200_usd,
     gma200_usd: latest.gma200_usd,
     index_growth_val: latest.index_growth_val,
     coin_age_days: latest.coin_age_days,

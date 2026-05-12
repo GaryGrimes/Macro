@@ -12,6 +12,7 @@ const API_ROUTES = {
   ahr: (mode) => `/api/ahr999${mode ? `?mode=${encodeURIComponent(mode)}` : ""}`,
   fred: (id, mode) => `/api/fred?id=${encodeURIComponent(id)}${mode ? `&mode=${encodeURIComponent(mode)}` : ""}`,
   treasuryYields: (mode) => `/api/treasury-yields${mode ? `?mode=${encodeURIComponent(mode)}` : ""}`,
+  macroDaily: (date) => `/api/macro-daily?date=${encodeURIComponent(date)}`,
 };
 
 const HOME_YIELD_DEFS = [
@@ -19,6 +20,182 @@ const HOME_YIELD_DEFS = [
   { id: "us10y", symbol: "US10Y", name: "10Y Treasury Yield", fredId: "DGS10", unit: "pct", decimals: 2, color: "#8bf0c8" },
   { id: "us30y", symbol: "US30Y", name: "30Y Treasury Yield", fredId: "DGS30", unit: "pct", decimals: 2, color: "#ffb864" },
 ];
+
+const DEFAULT_RATE_SHOCK_ROWS = ["2Y", "3Y", "5Y", "10Y", "30Y"].map((tenor) => ({
+  tenor,
+  level: "--",
+  d1: "--",
+  d1Pctile: "--",
+  d5: "--",
+  d5Pctile: "--",
+  d21: "--",
+  d21Pctile: "--",
+  regimePctile: "--",
+  zScore: "--",
+  signal: "Awaiting daily task",
+}));
+
+const DEFAULT_NARRATIVES = [
+  {
+    id: "fed_path",
+    title: "Fed path repricing",
+    score: 0,
+    updatedAt: "--",
+    core: "市场是否在重定价 cuts fewer / higher for longer。",
+    checks: [
+      "DGS2 / DGS3 上行",
+      "SOFR futures 隐含降息次数减少",
+      "Fed funds futures terminal / cuts repricing",
+      "2s5s flattening",
+      "real yield 上行",
+    ],
+    interpretation: "如果 3Y 明显上行，且 10Y/30Y 跟随有限，市场主要在交易 Fed path。",
+  },
+  {
+    id: "inflation_comp",
+    title: "Inflation compensation shock",
+    score: 0,
+    updatedAt: "--",
+    core: "市场是否在外推油价、商品或 survey 通胀扰动。",
+    checks: ["T5YIE", "T10YIE", "T5YIFR", "oil / gasoline", "commodity basket", "UMICH1 / inflation survey surprise"],
+    interpretation: "如果 breakeven 上行贡献大而 real yield 稳定，是 inflation compensation shock；要继续监控二阶 Fed 传导。",
+  },
+  {
+    id: "growth_scare",
+    title: "Growth scare / recession hedge",
+    score: 0,
+    updatedAt: "--",
+    core: "市场是否在交易增长放缓或衰退对冲。",
+    checks: ["DGS10 down", "real yield down", "breakeven down", "oil/copper down", "HY spread widening", "USD / JPY / gold risk-off"],
+    interpretation: "如果利率下行伴随 breakeven 和周期资产走弱，长债表现好不等于权益风险低。",
+  },
+  {
+    id: "term_premium",
+    title: "Long-end term premium / fiscal supply",
+    score: 0,
+    updatedAt: "--",
+    core: "长端是否被财政供给、duration demand 或 term premium 独立拖累。",
+    checks: ["30Y up > 10Y up > 5Y up", "5s30s steepening", "10s30s steepening", "ACM / Kim-Wright term premium up", "auction tail", "MOVE index up"],
+    interpretation: "如果 30Y 独立走弱，这不是普通 Fed path 问题，而是长端 duration supply / fiscal risk 问题。",
+  },
+  {
+    id: "risk_liquidity",
+    title: "Risk appetite / liquidity shock",
+    score: 0,
+    updatedAt: "--",
+    core: "风险偏好、美元流动性或交叉资产压力是否主导利率表现。",
+    checks: ["VIX / MOVE", "credit spread", "equity breadth", "USD funding", "safe-haven demand", "dealer balance sheet stress"],
+    interpretation: "如果风险资产和波动率同步恶化，利率信号需要和流动性压力一起解读。",
+  },
+  {
+    id: "technical_exhaustion",
+    title: "Technical positioning / exhaustion",
+    score: 0,
+    updatedAt: "--",
+    core: "短期单边走势是否已经拥挤、衰竭或接近反身性拐点。",
+    checks: ["US10Y 九转", "US30Y 九转", "RSI", "Bollinger z-score", "20D move percentile", "CFTC Treasury futures positioning"],
+    interpretation: "技术面只做 timing overlay；没有宏观归因时不单独生成交易 thesis。",
+  },
+];
+
+const NARRATIVE_CN = {
+  fed_path: {
+    title: "美联储路径重定价",
+    core: "最强证据来自过去63个有效观测里的熊平背景，而不是新的5日冲击。",
+    interpretation: "政策路径重定价仍是背景叙事，但当前没有出现新的短端主导冲击。",
+  },
+  inflation_comp: {
+    title: "通胀补偿冲击",
+    core: "breakeven 在中期窗口仍偏正，但5日窗口转弱；当前不是通胀补偿主导的利率冲击。",
+    interpretation: "通胀补偿只是弱观察项，本地5日 tape 没有形成广泛的 breakeven 主导 selloff。",
+  },
+  growth_scare: {
+    title: "增长担忧 / 衰退对冲",
+    core: "5日名义利率回落和 breakeven 走弱符合轻度对冲需求，但风险代理没有确认衰退式冲击。",
+    interpretation: "增长担忧叙事偏弱，因为5日 rally 幅度小，整体风险 tape 也不是明显防御。",
+  },
+  term_premium: {
+    title: "长端期限溢价 / 财政供给",
+    core: "本地曲线代理没有显示30Y在5日窗口内独立承压。",
+    interpretation: "没有30Y主导的熊陡，不支持升级长端久期；同时也移除了主要的长端压力否决项。",
+  },
+  risk_liquidity: {
+    title: "风险偏好 / 流动性冲击",
+    core: "风险偏好信号分化：CNN总分偏贪婪，但垃圾债需求内部项较弱。",
+    interpretation: "风险/流动性不是利率主导信号，但信用偏好偏弱，久期判断仍需保留条件。",
+  },
+  technical_exhaustion: {
+    title: "技术面拥挤 / 衰竭",
+    core: "当前技术指标没有显示明确的收益率上行衰竭形态。",
+    interpretation: "技术信号不足以单独触发或升级久期动作，仍需基本面冲击配合。",
+  },
+};
+
+const DEFAULT_DURATION_STEPS = [
+  { index: 0, title: "No trade / wait", condition: "利率涨幅不极端、叙事仍在强化或长端风险未释放。", active: false },
+  { index: 1, title: "Watchlist only", condition: "数据待更新，先观察叙事权重和曲线形态是否确认。", active: true },
+  { index: 2, title: "Start 10Y nibble", condition: "10Y 1W/1M 上行进入高分位，且技术面出现短期 exhaustion。", active: false },
+  { index: 3, title: "Add 10Y / intermediate", condition: "real yield 主导、Fed path repricing 接近充分，30Y 没有独立恶化。", active: false },
+  { index: 4, title: "Add long-end duration", condition: "30Y 极端上行后，5s30s/10s30s steepening 停滞，term premium 放缓。", active: false },
+  { index: 5, title: "Add convex duration", condition: "长端风险已 price in，增长/通胀回落信号和技术 exhaustion 同时出现。", active: false },
+];
+
+const DEFAULT_DURATION_RULES = [
+  {
+    title: "优先加 10Y",
+    body: "当折现率已经变贵，但 30Y term premium 风险还没完全释放时，10Y 是更稳的 duration 表达。",
+    triggers: ["10Y yield 上行进入高分位", "real yield 是主导贡献", "Fed path repricing 接近充分", "30Y 没有明显独立恶化", "技术面显示 exhaustion"],
+  },
+  {
+    title: "谨慎加 30Y",
+    body: "只有当 long-end term premium 接近过度定价，且长端曲线陡峭化停止时，30Y 才比 10Y 更值得加。",
+    triggers: ["30Y 上行极端", "10s30s / 5s30s steepening 停止", "term premium 上行放缓", "auction 没继续恶化", "growth scare 开始出现"],
+  },
+  {
+    title: "不要加长端",
+    body: "如果是 bear steepening 加速，不是普通高收益率机会，先不要接 30Y。",
+    triggers: ["30Y up > 10Y up", "10s30s steepening", "term premium rising", "auction weak", "MOVE rising", "fiscal supply narrative strengthening"],
+  },
+  {
+    title: "可以逆向试仓",
+    body: "当市场叙事单一拥挤、利率上行极端、驱动停止恶化并出现技术衰竭时，才进入认知分歧窗口。",
+    triggers: ["1W / 1M 利率上行极端", "主流叙事单一且拥挤", "驱动没有继续恶化", "九转顶部", "RSI / z-score 极端"],
+  },
+];
+
+const DEFAULT_TECHNICAL_SIGNALS = [
+  { title: "US10Y 九转", value: "--", status: "pending", note: "识别 10Y 收益率连续单边后的短期动能衰竭。" },
+  { title: "US30Y 九转", value: "--", status: "pending", note: "识别长端收益率是否进入 extension extreme。" },
+  { title: "RSI", value: "--", status: "pending", note: "辅助判断短期超买/超卖，不单独作为交易结论。" },
+  { title: "Bollinger z-score", value: "--", status: "pending", note: "看当前收益率偏离滚动均值的程度。" },
+  { title: "20D move percentile", value: "--", status: "pending", note: "衡量近 20D 利率变动在历史中的罕见度。" },
+  { title: "MOVE index", value: "--", status: "pending", note: "判断 rates vol 是否仍在放大，避免过早接长端。" },
+  { title: "CFTC positioning", value: "--", status: "pending", note: "观察 Treasury futures 仓位是否拥挤或开始反转。" },
+  { title: "Timing overlay", value: "--", status: "pending", note: "把技术衰竭和基本面归因叠加后再给动作建议。" },
+];
+
+const DEFAULT_DAILY_DASHBOARD = {
+  date: "",
+  source: "template",
+  generatedAt: "",
+  reportTitle: "Awaiting daily Macro task",
+  reportSummary: "今日 Rate Shock / Narrative / Duration 数据尚未生成；当前展示为空白模板。",
+  rateShockRows: DEFAULT_RATE_SHOCK_ROWS,
+  narratives: DEFAULT_NARRATIVES,
+  durationAction: {
+    currentIndex: 1,
+    label: "Watchlist only",
+    explanation: "还没有检测到今日自动化分析结果，先保留观察档位。",
+    reasons: ["等待 1D / 5D / 21D percentile 与 z-score", "等待 narrative ranking", "等待 term premium 与 technical exhaustion 读数"],
+    steps: DEFAULT_DURATION_STEPS,
+    rules: DEFAULT_DURATION_RULES,
+  },
+  technical: {
+    signals: DEFAULT_TECHNICAL_SIGNALS,
+    adviceTitle: "Waiting for automation",
+    adviceBody: "每日任务会把技术衰竭信号与 Rate Shock / Driver Attribution / Narrative Ranking 叠加，再输出是否支持 nibble 10Y 或继续等待。",
+  },
+};
 
 const MACRO_COLUMNS = [
   {
@@ -127,6 +304,13 @@ const state = {
     phase: "idle",
     detail: "尚未开始获取数据。",
   },
+  dailyDashboard: {
+    status: "loading",
+    date: "",
+    expected: null,
+    data: DEFAULT_DAILY_DASHBOARD,
+    message: "检查今日 Macro 数据与研报...",
+  },
 };
 
 const homeYieldState = {
@@ -150,6 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
   tickClock();
   window.setInterval(tickClock, 1000);
   render();
+  loadDailyDashboard();
   loadCachedSnapshot().finally(() => {
     beginLoadProgress();
     refreshHomeYieldChart("refresh");
@@ -198,6 +383,19 @@ function cacheRefs() {
   refs.homeYieldTooltip = document.getElementById("home-yield-tooltip");
   refs.homeYieldLegend = document.getElementById("home-yield-legend");
   refs.homeYieldFooter = document.getElementById("home-yield-footer");
+  refs.dailyCacheBanner = document.getElementById("daily-cache-banner");
+  refs.dailyCacheTitle = document.getElementById("daily-cache-title");
+  refs.dailyCacheDetail = document.getElementById("daily-cache-detail");
+  refs.dailyCacheDate = document.getElementById("daily-cache-date");
+  refs.dailyCacheSource = document.getElementById("daily-cache-source");
+  refs.rateShockTableBody = document.getElementById("rate-shock-table-body");
+  refs.narrativeRankingGrid = document.getElementById("narrative-ranking-grid");
+  refs.narrativeDetailGrid = document.getElementById("narrative-detail-grid");
+  refs.durationActionSummary = document.getElementById("duration-action-summary");
+  refs.durationLadder = document.getElementById("duration-ladder");
+  refs.durationRuleGrid = document.getElementById("duration-rule-grid");
+  refs.technicalGrid = document.getElementById("technical-grid");
+  refs.technicalAdvice = document.getElementById("technical-advice");
 }
 
 function bindEvents() {
@@ -353,6 +551,464 @@ async function loadCachedDashboard() {
     ahr: ahrSeries?.source === "live" ? `ahr ${formatCacheStatus(ahrSeries.cacheStatus)}` : "ahr unavailable",
   };
   render();
+}
+
+async function loadDailyDashboard() {
+  const date = todayLocalIso();
+  state.dailyDashboard = {
+    ...state.dailyDashboard,
+    status: "loading",
+    date,
+    message: "检查今日 Macro 数据与研报...",
+  };
+  renderDailyDiagnostics();
+
+  if (window.location.protocol === "file:") {
+    state.dailyDashboard = {
+      ...state.dailyDashboard,
+      status: "missing",
+      date,
+      message: "需要通过 node server.js 打开 localhost，才能检查本地每日缓存。",
+      expected: {
+        dashboard: `macro_daily/data/${date}_dashboard.json`,
+        report: `macro_daily/reports/${date}_rates_duration_report.md`,
+      },
+      data: normalizeDailyDashboard(null, date),
+    };
+    renderDailyDiagnostics();
+    return;
+  }
+
+  try {
+    const response = await fetch(API_ROUTES.macroDaily(date), { cache: "no-store" });
+    const contentType = response.headers.get("Content-Type") || "";
+    if (!response.ok || !contentType.includes("application/json")) {
+      const detail = await response.text();
+      throw new Error(detail || `HTTP ${response.status}`);
+    }
+    const payload = await response.json();
+    const status = payload.exists ? "ready" : "missing";
+    state.dailyDashboard = {
+      status,
+      date: payload.date || date,
+      expected: payload.expected || null,
+      data: normalizeDailyDashboard(payload.dashboard, payload.date || date),
+      message: payload.exists
+        ? "今日 Macro 数据与研报已在本地，首页已读取缓存。"
+        : "今日 Macro 数据或研报不存在，请去 Codex 执行每日 Macro 自动化任务。",
+    };
+  } catch (error) {
+    state.dailyDashboard = {
+      ...state.dailyDashboard,
+      status: "error",
+      date,
+      message: error?.message || "本地每日缓存检查失败。",
+      data: normalizeDailyDashboard(null, date),
+    };
+  }
+  renderDailyDiagnostics();
+}
+
+function normalizeDailyDashboard(raw, date) {
+  const source = raw && typeof raw === "object" ? raw : {};
+  const rawNarratives = Array.isArray(source.narratives) ? source.narratives : [];
+  const narrativesById = new Map(rawNarratives.map((item) => [item.id, item]));
+  const narratives = DEFAULT_NARRATIVES.map((item) => ({
+    ...item,
+    ...(narrativesById.get(item.id) || {}),
+    checks: Array.isArray(narrativesById.get(item.id)?.checks) ? narrativesById.get(item.id).checks : item.checks,
+  }));
+  const durationAction = {
+    ...DEFAULT_DAILY_DASHBOARD.durationAction,
+    ...(source.durationAction || {}),
+    steps: Array.isArray(source.durationAction?.steps) && source.durationAction.steps.length
+      ? source.durationAction.steps
+      : DEFAULT_DURATION_STEPS,
+    rules: Array.isArray(source.durationAction?.rules) && source.durationAction.rules.length
+      ? source.durationAction.rules
+      : DEFAULT_DURATION_RULES,
+  };
+  const technical = {
+    ...DEFAULT_DAILY_DASHBOARD.technical,
+    ...(source.technical || {}),
+    signals: Array.isArray(source.technical?.signals) && source.technical.signals.length
+      ? source.technical.signals
+      : DEFAULT_TECHNICAL_SIGNALS,
+  };
+
+  return {
+    ...DEFAULT_DAILY_DASHBOARD,
+    ...source,
+    date: source.date || date || todayLocalIso(),
+    rateShockRows: Array.isArray(source.rateShockRows) && source.rateShockRows.length
+      ? source.rateShockRows
+      : DEFAULT_RATE_SHOCK_ROWS,
+    narratives,
+    durationAction,
+    technical,
+  };
+}
+
+function renderDailyDiagnostics() {
+  if (!refs.dailyCacheBanner) {
+    return;
+  }
+  renderDailyCacheBanner();
+  const dashboard = state.dailyDashboard.data || normalizeDailyDashboard(null, state.dailyDashboard.date);
+  renderRateShockTape(dashboard.rateShockRows || DEFAULT_RATE_SHOCK_ROWS);
+  renderNarrativeRanking(dashboard.narratives || DEFAULT_NARRATIVES);
+  renderNarrativeDetails(dashboard.narratives || DEFAULT_NARRATIVES);
+  renderDurationAction(dashboard.durationAction || DEFAULT_DAILY_DASHBOARD.durationAction);
+  renderTechnicalPanel(dashboard.technical || DEFAULT_DAILY_DASHBOARD.technical);
+}
+
+function renderDailyCacheBanner() {
+  const status = state.dailyDashboard.status || "loading";
+  const dashboard = state.dailyDashboard.data || DEFAULT_DAILY_DASHBOARD;
+  const expected = state.dailyDashboard.expected || {};
+  refs.dailyCacheBanner.className = `daily-cache-banner is-${status}`;
+  if (status === "ready") {
+    refs.dailyCacheTitle.textContent = dashboard.reportTitle || "今日 Macro 数据与研报已就绪";
+    refs.dailyCacheDetail.textContent = dashboard.reportSummary || "已读取本地每日任务输出。";
+  } else if (status === "missing") {
+    refs.dailyCacheTitle.textContent = "今日 Macro 数据与研报尚未生成";
+    refs.dailyCacheDetail.textContent = `请在 Codex 执行每日 Macro 自动化任务。预期文件：${expected.dashboard || "macro_daily/data/YYYY-MM-DD_dashboard.json"} / ${expected.report || "macro_daily/reports/YYYY-MM-DD_rates_duration_report.md"}`;
+  } else if (status === "error") {
+    refs.dailyCacheTitle.textContent = "本地每日缓存检查失败";
+    refs.dailyCacheDetail.textContent = state.dailyDashboard.message || "请确认本地 server 正常运行。";
+  } else {
+    refs.dailyCacheTitle.textContent = "检查今日 Macro 数据与研报...";
+    refs.dailyCacheDetail.textContent = "如果本地已有今日 JSON 和研报，首页会直接读取；否则提示去 Codex 执行每日任务。";
+  }
+  refs.dailyCacheDate.textContent = state.dailyDashboard.date || dashboard.date || "--";
+  refs.dailyCacheSource.textContent = status === "ready" ? (dashboard.source || "local daily cache") : "local check";
+}
+
+function renderRateShockTape(rows) {
+  const visibleRows = rows.filter(hasRateShockData);
+  refs.rateShockTableBody.innerHTML = visibleRows
+    .map((row) => `
+      <tr>
+        <td>${escapeHtml(row.tenor || "--")}</td>
+        <td>${escapeHtml(row.level ?? "--")}</td>
+        <td>${renderBpChip(row.d1)}</td>
+        <td>${renderPctileRail(row.d1Pctile)}</td>
+        <td>${renderBpChip(row.d5)}</td>
+        <td>${renderPctileRail(row.d5Pctile)}</td>
+        <td>${renderBpChip(row.d21)}</td>
+        <td>${renderPctileRail(row.d21Pctile)}</td>
+        <td>${renderPctileRail(row.regimePctile)}</td>
+        <td>${renderZScoreChip(row.zScore)}</td>
+        <td class="rate-signal">${renderSignalPill(row.signal)}</td>
+      </tr>
+    `)
+    .join("");
+}
+
+function hasRateShockData(row) {
+  return [row.level, row.d1, row.d5, row.d21, row.d1Pctile, row.d5Pctile, row.d21Pctile, row.regimePctile, row.zScore]
+    .some((value) => String(value ?? "").toLowerCase() !== "unavailable" && String(value ?? "").trim() !== "--");
+}
+
+function parseBpValue(value) {
+  const match = String(value ?? "").match(/[-+]?\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : null;
+}
+
+function parsePctileValue(value) {
+  const match = String(value ?? "").match(/[-+]?\d+(?:\.\d+)?/);
+  return match ? clamp(Number(match[0]), 0, 100) : null;
+}
+
+function renderBpChip(value) {
+  const bp = parseBpValue(value);
+  if (!Number.isFinite(bp)) {
+    return `<span class="rate-empty">--</span>`;
+  }
+  const tone = bp > 0 ? "up" : bp < 0 ? "down" : "flat";
+  const strength = Math.min(1, Math.abs(bp) / 25).toFixed(2);
+  return `<span class="rate-chip is-${tone}" style="--strength:${strength}">${escapeHtml(String(value))}</span>`;
+}
+
+function renderZScoreChip(value) {
+  const score = Number.parseFloat(String(value ?? ""));
+  if (!Number.isFinite(score)) {
+    return `<span class="rate-empty">--</span>`;
+  }
+  const tone = score > 0 ? "up" : score < 0 ? "down" : "flat";
+  const strength = Math.min(1, Math.abs(score) / 2).toFixed(2);
+  return `<span class="rate-chip is-${tone}" style="--strength:${strength}">${escapeHtml(String(value))}</span>`;
+}
+
+function renderPctileRail(value) {
+  const pctile = parsePctileValue(value);
+  if (!Number.isFinite(pctile)) {
+    return `<span class="rate-empty">--</span>`;
+  }
+  const tone = pctile >= 70 ? "up" : pctile <= 30 ? "down" : "flat";
+  return `
+    <span class="pctile-cell is-${tone}" title="${escapeHtml(formatPctileTitle(pctile))}">
+      <span class="pctile-rail"><span class="pctile-marker" style="left:${pctile}%"></span></span>
+      <span class="pctile-label">${escapeHtml(String(value))}</span>
+    </span>
+  `;
+}
+
+function formatPctileTitle(pctile) {
+  if (pctile >= 85) {
+    return "高分位：利率上行冲击偏极端，接近 selloff tape。";
+  }
+  if (pctile >= 70) {
+    return "偏高分位：利率上行动能强于常态。";
+  }
+  if (pctile <= 15) {
+    return "低分位：利率下行/ rally 偏极端。";
+  }
+  if (pctile <= 30) {
+    return "偏低分位：利率回落动能强于常态。";
+  }
+  return "中性分位：当前变化接近历史常态区间。";
+}
+
+function renderSignalPill(value) {
+  const text = String(value || "Awaiting daily task");
+  const normalized = text.toLowerCase();
+  const tone = normalized.includes("bear") || normalized.includes("selloff") || normalized.includes("shock")
+    ? "up"
+    : normalized.includes("bull") || normalized.includes("rally")
+      ? "down"
+      : "flat";
+  return `<span class="signal-pill is-${tone}">${escapeHtml(text)}</span>`;
+}
+
+function renderNarrativeRanking(narratives) {
+  const ranked = getRankedNarratives(narratives);
+  refs.narrativeRankingGrid.innerHTML = ranked
+    .map((item, index) => {
+      const display = getNarrativeDisplay(item);
+      return `
+        <article class="narrative-card">
+          <div class="narrative-card-head">
+            <span class="narrative-rank">#${index + 1}</span>
+            <span class="star-score" aria-label="${escapeHtml(String(item.score || 0))} 分">${formatStars(item.score)}</span>
+          </div>
+          <h3 class="narrative-title">${escapeHtml(display.title)}</h3>
+          <p>${escapeHtml(display.core || "等待每日任务填入核心叙事。")}</p>
+          <div class="narrative-meta">
+            <span class="narrative-chip">得分 ${escapeHtml(String(item.score ?? 0))}</span>
+            <span class="narrative-chip">${escapeHtml(item.updatedAt || "--")}</span>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderNarrativeDetails(narratives) {
+  const ranked = getRankedNarratives(narratives);
+  refs.narrativeDetailGrid.innerHTML = ranked
+    .map((item) => {
+      const display = getNarrativeDisplay(item);
+      const checks = display.checks;
+      return `
+        <article class="narrative-detail-card">
+          <div class="narrative-card-head">
+            <h3>${escapeHtml(display.title)}</h3>
+            <span class="star-score">${formatStars(item.score)}</span>
+          </div>
+          <ul class="evidence-list">
+            ${checks.map((check) => `<li>${escapeHtml(check)}</li>`).join("")}
+          </ul>
+          <p>${escapeHtml(display.interpretation || "等待每日任务生成信号解释。")}</p>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function getNarrativeDisplay(item) {
+  const config = NARRATIVE_CN[item.id] || {};
+  const checks = Array.isArray(item.checks) && item.checks.length ? item.checks : [];
+  return {
+    title: config.title || translateNarrativeText(item.title || ""),
+    core: config.core || translateNarrativeText(item.core || ""),
+    interpretation: config.interpretation || translateNarrativeText(item.interpretation || ""),
+    checks: checks.map((check) => translateNarrativeText(check)).filter(Boolean),
+  };
+}
+
+function translateNarrativeText(text) {
+  const source = String(text || "").trim();
+  if (!source) {
+    return "";
+  }
+  const exact = {
+    "HY OAS is unavailable.": "HY OAS 暂无本地数据。",
+    "DXY and funding stress data are unavailable.": "DXY 和美元融资压力暂无本地数据。",
+    "MOVE index is unavailable.": "MOVE 指数暂无本地数据。",
+    "SOFR futures implied cuts are unavailable.": "SOFR 期货隐含降息次数暂无本地数据。",
+    "Fed funds futures implied cuts are unavailable.": "联邦基金期货隐含降息次数暂无本地数据。",
+    "Oil, gasoline, and commodity basket data are unavailable.": "油价、汽油和商品篮子暂无本地数据。",
+    "ACM / Kim-Wright term premium is unavailable.": "ACM / Kim-Wright 期限溢价暂无本地数据。",
+    "Auction tail and bid-to-cover are unavailable.": "国债拍卖 tail 和 bid-to-cover 暂无本地数据。",
+    "MOVE index: unavailable": "MOVE 指数：暂无本地数据",
+    "CFTC Treasury futures positioning: unavailable": "CFTC 美债期货持仓：暂无本地数据",
+    "Timing overlay: No standalone timing signal": "择时叠加：没有独立择时信号",
+  };
+  if (exact[source]) {
+    return exact[source];
+  }
+  let match = source.match(/^CNN Fear & Greed is (\w+) as of ([\d-]+); VIX is (\w+) and junk bond demand is ([\w\s]+)\.$/);
+  if (match) {
+    return `CNN 恐惧与贪婪在 ${match[2]} 为${translateRating(match[1])}；VIX 为${translateRating(match[3])}，垃圾债需求为${translateRating(match[4])}。`;
+  }
+  match = source.match(/^DGS(\d+) 63-observation move is ([+-]?\d+)bp\.$/);
+  if (match) {
+    return `DGS${match[1]} 过去63个有效观测变化为 ${match[2]}bp。`;
+  }
+  match = source.match(/^DGS(\d+) 5D move is ([+-]?\d+)bp, while DGS(\d+) 5D move is ([+-]?\d+)bp\.$/);
+  if (match) {
+    return `DGS${match[1]} 5日变化为 ${match[2]}bp，同时 DGS${match[3]} 5日变化为 ${match[4]}bp。`;
+  }
+  match = source.match(/^DGS(\d+) 5D move is ([+-]?\d+)bp(?: versus DGS(\d+) ([+-]?\d+)bp)?\.$/);
+  if (match) {
+    return match[3]
+      ? `DGS${match[1]} 5日变化为 ${match[2]}bp，相比 DGS${match[3]} 为 ${match[4]}bp。`
+      : `DGS${match[1]} 5日变化为 ${match[2]}bp。`;
+  }
+  match = source.match(/^DGS(\d+) 21-observation move is ([+-]?\d+)bp\.$/);
+  if (match) {
+    return `DGS${match[1]} 过去21个有效观测变化为 ${match[2]}bp。`;
+  }
+  match = source.match(/^(\d+)Y breakeven contribution over 5D is ([+-]?\d+)bp\.$/);
+  if (match) {
+    return `${match[1]}年 breakeven 对5日变化的贡献为 ${match[2]}bp。`;
+  }
+  match = source.match(/^T5YIFR 5D move is ([+-]?\d+)bp\.$/);
+  if (match) {
+    return `T5YIFR 5日变化为 ${match[1]}bp。`;
+  }
+  match = source.match(/^(\d+)s(\d+)s 5D change is ([+-]?\d+)bp\.$/);
+  if (match) {
+    return `${match[1]}s${match[2]}s 5日变化为 ${match[3]}bp。`;
+  }
+  match = source.match(/^US(\d+)Y 九转: up (\d+) \/ down (\d+)$/);
+  if (match) {
+    return `US${match[1]}Y 九转：上行 ${match[2]} / 下行 ${match[3]}`;
+  }
+  match = source.match(/^RSI: 10Y ([\d.]+) \/ 30Y ([\d.]+)$/);
+  if (match) {
+    return `RSI：10Y ${match[1]} / 30Y ${match[2]}`;
+  }
+  match = source.match(/^Bollinger z-score: 10Y ([+-]?[\d.]+) \/ 30Y ([+-]?[\d.]+)$/);
+  if (match) {
+    return `布林 z-score：10Y ${match[1]} / 30Y ${match[2]}`;
+  }
+  match = source.match(/^20D move percentile: 10Y ([+-]?\d+)bp ([\d%*]+) \/ 30Y ([+-]?\d+)bp ([\d%*]+)$/);
+  if (match) {
+    return `20日变化分位：10Y ${match[1]}bp ${match[2]} / 30Y ${match[3]}bp ${match[4]}`;
+  }
+  return source
+    .replaceAll("Risk appetite", "风险偏好")
+    .replaceAll("liquidity", "流动性")
+    .replaceAll("Fed path repricing", "美联储路径重定价")
+    .replaceAll("Growth scare", "增长担忧")
+    .replaceAll("recession hedge", "衰退对冲")
+    .replaceAll("Inflation compensation shock", "通胀补偿冲击")
+    .replaceAll("Long-end term premium", "长端期限溢价")
+    .replaceAll("fiscal supply", "财政供给")
+    .replaceAll("Technical positioning", "技术面仓位")
+    .replaceAll("exhaustion", "衰竭");
+}
+
+function translateRating(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  const labels = {
+    greed: "贪婪",
+    "extreme greed": "极度贪婪",
+    neutral: "中性",
+    fear: "恐惧",
+    "extreme fear": "极度恐惧",
+  };
+  return labels[normalized] || value;
+}
+
+function renderDurationAction(action) {
+  const reasons = Array.isArray(action.reasons) ? action.reasons : [];
+  refs.durationActionSummary.innerHTML = `
+    <article class="duration-summary-card">
+      <strong>${escapeHtml(action.label || "Watchlist only")}</strong>
+      <p>${escapeHtml(action.explanation || "等待每日任务生成当前档位说明。")}</p>
+      <ul class="duration-reason-list">
+        ${reasons.map((reason) => `<li>${escapeHtml(reason)}</li>`).join("")}
+      </ul>
+    </article>
+  `;
+  const currentIndex = Number.isFinite(Number(action.currentIndex)) ? Number(action.currentIndex) : 1;
+  const steps = Array.isArray(action.steps) && action.steps.length ? action.steps : DEFAULT_DURATION_STEPS;
+  refs.durationLadder.innerHTML = steps
+    .map((step) => {
+      const index = Number.isFinite(Number(step.index)) ? Number(step.index) : 0;
+      return `
+        <article class="duration-step ${index === currentIndex || step.active ? "is-active" : ""}">
+          <div class="duration-step-head">
+            <span class="duration-step-index">${index}</span>
+          </div>
+          <h3 class="duration-step-title">${escapeHtml(step.title || "--")}</h3>
+          <p>${escapeHtml(step.condition || "等待规则填充。")}</p>
+        </article>
+      `;
+    })
+    .join("");
+  const rules = Array.isArray(action.rules) && action.rules.length ? action.rules : DEFAULT_DURATION_RULES;
+  refs.durationRuleGrid.innerHTML = rules
+    .map((rule) => `
+      <article class="duration-rule-card">
+        <h3>${escapeHtml(rule.title || "--")}</h3>
+        <p>${escapeHtml(rule.body || "")}</p>
+        <ul class="duration-reason-list">
+          ${(Array.isArray(rule.triggers) ? rule.triggers : []).map((trigger) => `<li>${escapeHtml(trigger)}</li>`).join("")}
+        </ul>
+      </article>
+    `)
+    .join("");
+}
+
+function renderTechnicalPanel(technical) {
+  const signals = Array.isArray(technical.signals) && technical.signals.length ? technical.signals : DEFAULT_TECHNICAL_SIGNALS;
+  refs.technicalGrid.innerHTML = signals
+    .map((signal) => `
+      <article class="technical-signal">
+        <div class="technical-signal-head">
+          <h3 class="technical-title">${escapeHtml(signal.title || "--")}</h3>
+          <span class="technical-status">${escapeHtml(signal.status || "pending")}</span>
+        </div>
+        <div class="technical-value">${escapeHtml(signal.value ?? "--")}</div>
+        <p>${escapeHtml(signal.note || "等待每日任务填充读数。")}</p>
+      </article>
+    `)
+    .join("");
+  refs.technicalAdvice.innerHTML = `
+    <strong>${escapeHtml(technical.adviceTitle || "Waiting for automation")}</strong>
+    <p>${escapeHtml(technical.adviceBody || "技术面只做 timing overlay，需和基本面叠加。")}</p>
+  `;
+}
+
+function getRankedNarratives(narratives) {
+  return narratives
+    .slice()
+    .sort((left, right) => {
+      const scoreDiff = Number(right.score || 0) - Number(left.score || 0);
+      if (scoreDiff) {
+        return scoreDiff;
+      }
+      return String(right.updatedAt || "").localeCompare(String(left.updatedAt || ""));
+    });
+}
+
+function formatStars(score) {
+  const count = clamp(Math.round(Number(score) || 0), 0, 3);
+  return `${"★".repeat(count)}${"☆".repeat(4 - count)}`;
 }
 
 async function refreshDashboard(mode = "refresh") {
@@ -716,7 +1372,7 @@ async function fetchAhrSeries(mode = "") {
           latestMeta: {
             source: payload.source,
             priceUsd: payload.price_usd,
-            gma200: payload.gma200_usd,
+            ma200: payload.ma200_usd || payload.sma200_usd || payload.gma200_usd,
             indexGrowth: payload.index_growth_val,
             historyPoints: data.length,
           },
@@ -1091,6 +1747,7 @@ function inferSource(sources) {
 function render() {
   renderFlyoutState();
   renderTabs();
+  renderDailyDiagnostics();
   renderColumns();
   updateMacroSummary();
   updateFearSummary();
@@ -1191,20 +1848,29 @@ function updateMacroSummary() {
 
   refs.anchorSummary.textContent = `5Y breakeven ${formatValue(t5yie, t5yieValue)} · 5Y5Y ${formatValue(t5yifr, t5yifrValue)}`;
   let readText = "Market still reads this as conditional rather than permanent re-inflation.";
-  let baseText = "Survey up / market still anchored";
+  const baseText = getHeroBaseCaseText();
 
   if (Number.isFinite(t5yieValue) && Number.isFinite(t5yifrValue) && t5yieValue >= 2.75 && t5yifrValue >= 2.6) {
     readText = "Both front-end and forward anchor are lifting. De-anchoring risk is moving higher.";
-    baseText = "Anchor drift is no longer a tail risk";
   } else if (Number.isFinite(t5yieValue) && t5yieValue >= 2.7) {
     readText = "5Y breakeven is pressing higher. Watch whether the move broadens into the forward anchor.";
-    baseText = "Breakeven watch is active";
   } else if (Number.isFinite(umich5Value) && Number.isFinite(t5yieValue) && umich5Value - t5yieValue > 0.5) {
     readText = "Surveys are hotter than market pricing. For now, the market still treats this as conditional.";
   }
 
   refs.readSummary.textContent = readText;
   refs.heroBaseCase.textContent = baseText;
+}
+
+function getHeroBaseCaseText() {
+  const action = state.dailyDashboard?.data?.durationAction;
+  if (state.dailyDashboard?.status === "ready" && action?.label) {
+    return action.label;
+  }
+  if (state.dailyDashboard?.status === "missing") {
+    return "Run daily Macro task";
+  }
+  return "Shock rarity before asset choice";
 }
 
 function updateFearSummary() {
@@ -2153,17 +2819,32 @@ function buildLegendHtml(items) {
 
 function getChartNote(id) {
   const notes = {
-    cnn_fear: "该指数把七个市场情绪子指标合成为 0 到 100 的总分。分数越低代表市场越偏恐惧，越高则越偏贪婪。通常把极低读数视为风险厌恶升温，把极高读数视为情绪过热信号。",
-    market_momentum_sp500: "市场动能把标普500当前水平与其过去125个交易日的移动平均线做比较。指数位于均线上方，通常说明价格动能偏强；跌破均线则往往代表风险偏好转弱。在“恐惧与贪婪”框架里，动能走弱通常更接近恐惧区间。",
-    market_volatility_vix: "市场波动指标使用 VIX，并与其50日移动平均线一起观察。VIX 上升通常代表市场对未来波动的定价抬高、避险情绪升温；若 VIX 长时间高于其均线，往往意味着恐惧情绪在累积。",
-    stock_price_strength: "股票价格强度衡量纽约证交所创新高与创新低股票的对比。创新高占优通常表示市场内部状态更强，创新低增多则更接近恐惧读数。",
-    stock_price_breadth: "股票价格广度观察上涨参与度是否足够广泛。若只有少数大市值股票支撑指数，而多数股票没有跟随，说明风险偏好并不扎实。",
-    put_call_options: "看跌/看涨期权比率衡量市场对下行保护的需求。看跌期权需求明显升温时，通常意味着投资者更偏防守，情绪更接近恐惧。",
-    junk_bond_demand: "垃圾债需求反映投资者是否愿意承担信用风险。若高收益债利差扩大、需求下降，通常意味着风险偏好降温。",
-    safe_haven_demand: "避险需求比较股票与美国国债的相对表现。资金明显流向国债等避险资产时，通常代表市场风险偏好减弱。",
-    ahr999: "AHR999 是比特币价格相对长期估值框架的热度指标。这里用 FRED 的 Coinbase BTC/USD 日线计算：价格相对 200 日几何均价，再乘以价格相对指数增长估值。读数越低通常代表市场更冷、更谨慎；读数越高则更接近风险偏好过热。",
+    t5yie: "5Y breakeven = 5年名义美债收益率 - 5年TIPS实际收益率，代表市场对未来5年平均通胀补偿的定价。若持续上破约2.75%，说明通胀风险溢价开始重新抬升。",
+    t10yie: "10Y breakeven 衡量未来10年平均通胀补偿，期限更长、受长期锚影响更大。若它和T5YIE同步上行，说明漂移不只停留在短端。",
+    swap5y: "5Y inflation swap 是OTC市场交易的5年通胀互换固定腿，可和TIPS breakeven交叉验证。当前未接入实时源，主要保留为后续补充的市场定价口径。",
+    t5yifr: "5Y5Y forward inflation 表示市场对5年后开始、再往后5年的通胀补偿定价。它比现货breakeven更接近长期通胀锚，若上行通常比T5YIE更值得警惕。",
+    clev5y: "Cleveland 5Y expected inflation 是模型估计的中期通胀预期，用来剥离部分流动性和风险溢价噪音。当前未接入稳定免费源，仅作为待补充的模型口径。",
+    anchor_gap: "T5YIE - T5YIFR 衡量近端通胀补偿相对长期锚的溢价，单位为bp。正值扩大多是短中期通胀冲击，若T5YIFR也跟涨，风险从条件冲击升级为锚松动。",
+    umich1: "Michigan 1Y 是消费者对未来一年通胀的调查预期，通常最先反映油价、食品和 headline CPI 记忆。它上行但breakeven不动，说明市场暂未完全买单。",
+    umich5: "Michigan 5Y 是家庭部门中期通胀预期，是观察预期是否脱锚的重要 survey 口径。若它抬升并传导到T5YIFR，说明市场开始承认长期锚风险。",
+    nyfed3: "NY Fed 3Y survey 是家庭部门三年通胀预期，可作为Michigan数据的交叉验证。多个survey同向上行时，预期漂移信号比单一调查更可靠。",
+    dgs5: "5年名义美债收益率是T5YIE的名义腿，反映政策利率路径、期限溢价和通胀补偿的合成结果。要和DFII5一起看，判断breakeven变化来自名义端还是实际端。",
+    dfii5: "5年TIPS实际收益率是T5YIE的实际利率腿，近似市场对真实利率和TIPS风险溢价的定价。若T5YIE上行同时DFII5下行，通胀补偿抬升更明显。",
+    dgs10: "10年名义美债收益率是长端贴现率核心锚，受增长、通胀、期限溢价和财政供给共同影响。若它与breakeven同涨，通常说明名义利率压力来自通胀补偿。",
+    survey_gap: "Survey - 5Y breakeven 衡量家庭中期通胀预期相对市场定价的差值。正值扩大说明survey更热、市场仍克制；差值收窄可能是市场补涨或survey降温。",
+    drift_1m: "T5YIE 1M Change 观察5年breakeven过去约21个交易日的变化，单位为bp。连续正漂移比单日跳动更重要，说明通胀补偿正在形成趋势。",
+    cpi3m: "Sticky core CPI 3M annualized 衡量粘性核心通胀的短期年化动能。若它维持高位，会给survey和breakeven上行提供基本面支撑。",
+    cnn_fear: "CNN Fear & Greed 把七个情绪子项合成为0-100总分。低分代表风险厌恶，高分代表追逐风险；极端读数更适合作为反向情绪温度计。",
+    market_momentum_sp500: "Market Momentum 比较标普500与125日均线。指数高于均线说明趋势和风险偏好偏强，跌破均线则提示动能转弱。",
+    market_volatility_vix: "VIX 衡量标普500期权隐含波动率，是市场为未来风险付费的价格。高于50日均线并继续上行，通常代表防御需求增强。",
+    stock_price_strength: "Stock Price Strength 比较NYSE创新高和创新低股票数量。创新高占优说明内部结构健康，创新低扩散则提示风险偏好变脆。",
+    stock_price_breadth: "Stock Price Breadth 观察上涨参与度是否广泛。若指数上涨但成交量或个股参与不足，行情更依赖少数权重股，持续性较弱。",
+    put_call_options: "Put/Call ratio 衡量看跌期权相对看涨期权的需求。比率上升说明保护性仓位增加，通常对应更强的下行担忧。",
+    junk_bond_demand: "Junk Bond Demand 反映高收益债相对投资级债的风险偏好。需求走弱或利差扩大，说明信用市场开始要求更高补偿。",
+    safe_haven_demand: "Safe Haven Demand 比较股票与美国国债的相对表现。资金转向国债时，通常说明市场从追风险切换到保本金。",
+    ahr999: "AHR999 用 BTC 价格相对200日简单均价和指数增长估值衡量冷热。读数越低越接近冷区，越高越接近过热区。",
   };
-  return notes[id] || "该指标用于补充观察市场情绪结构。一般来说，越偏防守或避险的信号越接近恐惧，越偏追逐风险的信号越接近贪婪。";
+  return notes[id] || "该指标暂无专属说明。请优先查看其来源、单位和图中趋势，避免把单点波动误读成稳定信号。";
 }
 
 function extractHistory(root) {
@@ -2358,6 +3039,12 @@ function nearestIndex(positions, x) {
 
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function todayLocalIso() {
+  const now = new Date();
+  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
 }
 
 function clamp(value, min, max) {

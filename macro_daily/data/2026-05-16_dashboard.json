@@ -1,0 +1,714 @@
+{
+  "date": "2026-05-16",
+  "marketDate": "2026-05-15",
+  "source": "macro_daily automation",
+  "generatedAt": "2026-05-16T11:13:56+08:00",
+  "reportTitle": "10Y shock is entering a duration watch window",
+  "reportSummary": "2026-05-15 rates show DGS10 5D +21bp, DGS30 5D +17bp, parallel bear / mixed, and duration index 3 with a technical timing overlay.",
+  "firstRead": {
+    "title": "Start 10Y nibble / intermediate-duration watch",
+    "subtitle": "10Y 利率冲击已经进入可试仓区间，但MOVE、拍卖、持仓、期限溢价证据缺失，当前只支持小比例试 7-10Y，不支持正式加满中久期。",
+    "asOf": "2026-05-15",
+    "source": "durationAction + rateShock + driverAttribution"
+  },
+  "marketStatus": "Latest confirmed U.S. rates data is 2026-05-15; 2026-05-16 does not yet have a complete U.S. rates close in local cache.",
+  "rateShockRows": [
+    {
+      "tenor": "2Y",
+      "symbol": "DGS2",
+      "level": "4.09%",
+      "d1": "+9bp",
+      "d1Pctile": "92%*",
+      "d5": "+19bp",
+      "d5Pctile": "94%*",
+      "d21": "+31bp",
+      "d21Pctile": "80%*",
+      "d3m": "+66bp",
+      "d3mPctile": "92%*",
+      "regimePctile": "94%*",
+      "zScore": "1.8",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "2024-01-02 to 2026-05-15",
+      "comparedTo": {
+        "d1": "2026-05-14",
+        "d5": "2026-05-08",
+        "d21": "2026-04-16",
+        "d3m": "2026-02-17"
+      },
+      "raw": {
+        "d1Bp": 9,
+        "d5Bp": 19,
+        "d21Bp": 31,
+        "d3mBp": 66,
+        "d5Pctile": 93.5,
+        "zScore5D": 1.77
+      }
+    },
+    {
+      "tenor": "3Y",
+      "symbol": "DGS3",
+      "level": "4.14%",
+      "d1": "+10bp",
+      "d1Pctile": "92%*",
+      "d5": "+22bp",
+      "d5Pctile": "95%*",
+      "d21": "+34bp",
+      "d21Pctile": "81%*",
+      "d3m": "+67bp",
+      "d3mPctile": "87%*",
+      "regimePctile": "95%*",
+      "zScore": "1.9",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "2024-01-02 to 2026-05-15",
+      "comparedTo": {
+        "d1": "2026-05-14",
+        "d5": "2026-05-08",
+        "d21": "2026-04-16",
+        "d3m": "2026-02-17"
+      },
+      "raw": {
+        "d1Bp": 10,
+        "d5Bp": 22,
+        "d21Bp": 34,
+        "d3mBp": 67,
+        "d5Pctile": 94.6,
+        "zScore5D": 1.93
+      }
+    },
+    {
+      "tenor": "5Y",
+      "symbol": "DGS5",
+      "level": "4.26%",
+      "d1": "+13bp",
+      "d1Pctile": "97%*",
+      "d5": "+24bp",
+      "d5Pctile": "95%*",
+      "d21": "+35bp",
+      "d21Pctile": "78%*",
+      "d3m": "+63bp",
+      "d3mPctile": "86%*",
+      "regimePctile": "95%*",
+      "zScore": "2.0",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "2024-01-02 to 2026-05-15",
+      "comparedTo": {
+        "d1": "2026-05-14",
+        "d5": "2026-05-08",
+        "d21": "2026-04-16",
+        "d3m": "2026-02-17"
+      },
+      "raw": {
+        "d1Bp": 13,
+        "d5Bp": 24,
+        "d21Bp": 35,
+        "d3mBp": 63,
+        "d5Pctile": 94.6,
+        "zScore5D": 2.04
+      }
+    },
+    {
+      "tenor": "10Y",
+      "symbol": "DGS10",
+      "level": "4.59%",
+      "d1": "+12bp",
+      "d1Pctile": "96%*",
+      "d5": "+21bp",
+      "d5Pctile": "94%*",
+      "d21": "+27bp",
+      "d21Pctile": "76%*",
+      "d3m": "+54bp",
+      "d3mPctile": "86%*",
+      "regimePctile": "94%*",
+      "zScore": "2.1",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "2024-01-02 to 2026-05-15",
+      "comparedTo": {
+        "d1": "2026-05-14",
+        "d5": "2026-05-08",
+        "d21": "2026-04-16",
+        "d3m": "2026-02-17"
+      },
+      "raw": {
+        "d1Bp": 12,
+        "d5Bp": 21,
+        "d21Bp": 27,
+        "d3mBp": 54,
+        "d5Pctile": 93.8,
+        "zScore5D": 2.07
+      }
+    },
+    {
+      "tenor": "30Y",
+      "symbol": "DGS30",
+      "level": "5.12%",
+      "d1": "+10bp",
+      "d1Pctile": "95%*",
+      "d5": "+17bp",
+      "d5Pctile": "91%*",
+      "d21": "+19bp",
+      "d21Pctile": "70%*",
+      "d3m": "+44bp",
+      "d3mPctile": "86%*",
+      "regimePctile": "91%*",
+      "zScore": "2.0",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "2024-01-02 to 2026-05-15",
+      "comparedTo": {
+        "d1": "2026-05-14",
+        "d5": "2026-05-08",
+        "d21": "2026-04-16",
+        "d3m": "2026-02-17"
+      },
+      "raw": {
+        "d1Bp": 10,
+        "d5Bp": 17,
+        "d21Bp": 19,
+        "d3mBp": 44,
+        "d5Pctile": 91.2,
+        "zScore5D": 2
+      }
+    }
+  ],
+  "curveShape": {
+    "horizon": "5D",
+    "label": "parallel bear / mixed",
+    "interpretation": "Curve moves are not clean enough to upgrade a 10Y or 30Y duration signal.",
+    "spreads": {
+      "3s10s": {
+        "level": "45bp",
+        "change": "-1bp",
+        "comparedTo": "2026-05-08"
+      },
+      "5s30s": {
+        "level": "86bp",
+        "change": "-7bp",
+        "comparedTo": "2026-05-08"
+      },
+      "10s30s": {
+        "level": "53bp",
+        "change": "-4bp",
+        "comparedTo": "2026-05-08"
+      }
+    },
+    "moves": {
+      "3Y": "+22bp",
+      "5Y": "+24bp",
+      "10Y": "+21bp",
+      "30Y": "+17bp"
+    },
+    "raw": {
+      "d3Bp": 22,
+      "d5Bp": 24,
+      "d10Bp": 21,
+      "d30Bp": 17,
+      "spread3s10ChangeBp": -1,
+      "spread5s30ChangeBp": -7,
+      "spread10s30ChangeBp": -4
+    }
+  },
+  "driverAttribution": {
+    "horizon": "5D",
+    "5Y": {
+      "move": "+24bp",
+      "proxyUsed": false,
+      "realYield": {
+        "contribution": "+16bp",
+        "share": "67%"
+      },
+      "breakeven": {
+        "contribution": "+8bp",
+        "share": "33%"
+      },
+      "residual": {
+        "contribution": "0bp",
+        "share": "0%"
+      },
+      "dominantDriver": "real-yield",
+      "interpretation": "5Y move is real-yield led.",
+      "raw": {
+        "nominalBp": 24,
+        "realYieldBp": 16,
+        "breakevenBp": 8,
+        "residualBp": 0
+      }
+    },
+    "10Y": {
+      "move": "+21bp",
+      "proxyUsed": false,
+      "realYield": {
+        "contribution": "+17bp",
+        "share": "81%"
+      },
+      "breakeven": {
+        "contribution": "+4bp",
+        "share": "19%"
+      },
+      "residual": {
+        "contribution": "0bp",
+        "share": "0%"
+      },
+      "dominantDriver": "real-yield",
+      "interpretation": "10Y move is real-yield led.",
+      "raw": {
+        "nominalBp": 21,
+        "realYieldBp": 17,
+        "breakevenBp": 4,
+        "residualBp": 0
+      }
+    },
+    "30Y": {
+      "move": "+17bp",
+      "proxyUsed": true,
+      "realYield": "unavailable",
+      "breakeven": "unavailable",
+      "termPremium": "unavailable",
+      "proxyEvidence": [
+        "5s30s changed -7bp from 2026-05-08 to 2026-05-15.",
+        "10s30s changed -4bp from 2026-05-08 to 2026-05-15.",
+        "DGS30 changed +17bp from 2026-05-08 to 2026-05-15."
+      ],
+      "interpretation": "30Y did not independently weaken over the 5D window; long-end term-premium stress is not confirmed by local curve proxies.",
+      "raw": {
+        "moveBp": 17,
+        "spread5s30ChangeBp": -7,
+        "spread10s30ChangeBp": -4
+      }
+    },
+    "inflationAnchor": {
+      "t5yifr": "0bp",
+      "comparedTo": "2026-05-08",
+      "source": "FRED T5YIFR",
+      "proxyUsed": false,
+      "note": "T5YIFR moved 0bp from 2026-05-08 to 2026-05-15; source is FRED T5YIFR."
+    }
+  },
+  "crossAssetSignals": {
+    "source": "CNN local cache",
+    "signals": [
+      {
+        "title": "CNN Fear & Greed",
+        "score": 62.9,
+        "rating": "greed",
+        "updatedAt": "2026-05-15",
+        "latestValue": "unavailable"
+      },
+      {
+        "title": "VIX",
+        "score": 50,
+        "rating": "neutral",
+        "updatedAt": "2026-05-15",
+        "latestValue": 18.43
+      },
+      {
+        "title": "Junk bond demand",
+        "score": 26,
+        "rating": "fear",
+        "updatedAt": "2026-05-15",
+        "latestValue": 1.31
+      },
+      {
+        "title": "Safe haven demand",
+        "score": 89,
+        "rating": "extreme greed",
+        "updatedAt": "2026-05-15",
+        "latestValue": 6.69
+      },
+      {
+        "title": "Stock breadth",
+        "score": 33.2,
+        "rating": "fear",
+        "updatedAt": "2026-05-15",
+        "latestValue": 1044.61
+      },
+      {
+        "title": "S&P 500 momentum",
+        "score": 98.2,
+        "rating": "extreme greed",
+        "updatedAt": "2026-05-15",
+        "latestValue": 7408.5
+      }
+    ],
+    "interpretation": "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand is fear."
+  },
+  "crossSourceVerification": [
+    {
+      "source": "U.S. Treasury Daily Treasury Yield Curve + Real Yield Curve XML",
+      "role": "primary rates source",
+      "latestDate": "2026-05-15",
+      "fetchedAt": "2026-05-16T02:26:34.210Z",
+      "note": "Used for nominal curve, real-yield curve, breakeven proxies, curve shape, rate shock tape, and technical calculations."
+    },
+    {
+      "source": "FRED T5YIFR",
+      "role": "inflation-forward cross-check",
+      "latestDate": "2026-05-15",
+      "proxyUsed": false,
+      "note": "FRED T5YIFR is available through 2026-05-15."
+    },
+    {
+      "source": "CNN Fear & Greed local proxy",
+      "role": "risk-appetite cross-check",
+      "latestDate": "2026-05-15",
+      "note": "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand is fear."
+    },
+    {
+      "source": "Federal Reserve H.15 / FRED",
+      "role": "official secondary rates cross-check",
+      "latestDate": "checked separately during run",
+      "note": "Used as a sanity check for methodology and release lag. Treasury XML remains the controlling source when it is fresher than H.15/FRED page views."
+    }
+  ],
+  "marketReaction": {
+    "asOf": "2026-05-15",
+    "coverageWindow": "2026-05-12 to 2026-05-15",
+    "sourceCoverageStatus": "missing_research_input",
+    "summary": "Market reaction research input is missing; this panel is intentionally not inferring media consensus from local market data alone.",
+    "methodology": "Daily automation must browse and summarize authoritative media, institutional notes, official releases, and community discussion before assigning market-reaction weights.",
+    "sourceMix": [
+      {
+        "type": "media",
+        "count": 0,
+        "weight": 0
+      },
+      {
+        "type": "institution",
+        "count": 0,
+        "weight": 0
+      },
+      {
+        "type": "community",
+        "count": 0,
+        "weight": 0
+      }
+    ],
+    "themes": [
+      {
+        "rank": 1,
+        "title": "Research input missing",
+        "weight": 100,
+        "stance": "unavailable",
+        "interpretation": "Use Module 1 and Module 2 for local diagnostics only; do not treat them as evidence of what the broader market narrative was trading.",
+        "linkedNarrativeIds": [],
+        "evidence": [
+          {
+            "sourceType": "automation",
+            "sourceName": "local rates dashboard",
+            "publishedAt": "2026-05-15",
+            "summary": "Local diagnostics: DGS10 5D +21bp (94%*); DGS30 5D +17bp (91%*); parallel bear / mixed; real-yield; technical exhaustion present.",
+            "reliability": 0,
+            "weight": 0
+          }
+        ]
+      }
+    ]
+  },
+  "narratives": [
+    {
+      "id": "technical_exhaustion",
+      "title": "Technical positioning / exhaustion",
+      "score": 2,
+      "updatedAt": "2026-05-15",
+      "core": "RSI and Bollinger z-scores show a yield-up exhaustion setup on 2026-05-15, but it is only a timing overlay.",
+      "checks": [
+        "US10Y 九转: up 4 / down 0",
+        "US30Y 九转: up 4 / down 0",
+        "RSI: 10Y 72.2 / 30Y 71.4",
+        "Bollinger z-score: 10Y +2.60 / 30Y +2.64",
+        "20D move percentile: 10Y +33bp 83%* / 30Y +24bp 79%*",
+        "MOVE index: unavailable",
+        "CFTC Treasury futures positioning: unavailable",
+        "Timing overlay: Timing support present"
+      ],
+      "interpretation": "Technical signals can support timing only after rate-shock and driver attribution agree; they do not create a standalone trade.",
+      "evidence": [
+        {
+          "time": "2026-05-15",
+          "weight": 2,
+          "text": "10Y RSI 72.2, 30Y RSI 71.4, 10Y Bollinger +2.60."
+        }
+      ]
+    },
+    {
+      "id": "fed_path",
+      "title": "Fed path repricing",
+      "score": 1,
+      "updatedAt": "2026-05-15",
+      "core": "The strongest policy-path evidence is the 63-observation bear flattening background, not a fresh 5D shock.",
+      "checks": [
+        "DGS3 63-observation move is +67bp.",
+        "DGS3 5D move is +22bp, while DGS10 5D move is +21bp.",
+        "SOFR futures implied cuts are unavailable.",
+        "Fed funds futures implied cuts are unavailable."
+      ],
+      "interpretation": "Policy-path repricing remains a background narrative, but 2026-05-15 does not show a fresh front-end-led shock.",
+      "evidence": [
+        {
+          "time": "2026-05-15",
+          "weight": 1,
+          "text": "3Y is up +67bp over 63 valid observations, while the 5D window is +22bp."
+        }
+      ]
+    },
+    {
+      "id": "inflation_comp",
+      "title": "Inflation compensation shock",
+      "score": 1,
+      "updatedAt": "2026-05-15",
+      "core": "Breakevens are positive over 21/63 observations but softer over the 5D window, so inflation compensation is not the main shock on 2026-05-15.",
+      "checks": [
+        "5Y breakeven contribution over 5D is +8bp.",
+        "10Y breakeven contribution over 5D is +4bp.",
+        "T5YIFR 5D move is 0bp.",
+        "Oil, gasoline, and commodity basket data are unavailable."
+      ],
+      "interpretation": "Inflation compensation is a weak watch item; there is no broad breakeven-led rates selloff in the local 5D tape.",
+      "evidence": [
+        {
+          "time": "2026-05-15",
+          "weight": 1,
+          "text": "5Y breakeven fell +8bp over 5D while T5YIFR moved 0bp."
+        }
+      ]
+    },
+    {
+      "id": "risk_liquidity",
+      "title": "Risk appetite / liquidity shock",
+      "score": 1,
+      "updatedAt": "2026-05-15",
+      "core": "Risk appetite is mixed: headline CNN Fear & Greed is in greed, while junk-bond-demand internals are weaker.",
+      "checks": [
+        "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand is fear.",
+        "HY OAS is unavailable.",
+        "DXY and funding stress data are unavailable.",
+        "MOVE index is unavailable."
+      ],
+      "interpretation": "Risk/liquidity does not dominate the rates signal, but weak credit appetite keeps the duration read conditional.",
+      "evidence": [
+        {
+          "time": "2026-05-15",
+          "weight": 1,
+          "text": "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand is fear."
+        }
+      ]
+    },
+    {
+      "id": "growth_scare",
+      "title": "Growth scare / recession hedge",
+      "score": 0,
+      "updatedAt": "2026-05-15",
+      "core": "DGS10 rose +21bp over 5D, so a growth-scare / recession-hedge rates rally is not confirmed.",
+      "checks": [
+        "DGS10 5D move is +21bp.",
+        "DGS10 21-observation move is +27bp.",
+        "10Y breakeven 5D contribution is +4bp.",
+        "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand is fear."
+      ],
+      "interpretation": "The growth-scare narrative is weak because yields are not rallying over the 5D window and risk proxies are mixed rather than decisively defensive.",
+      "evidence": [
+        {
+          "time": "2026-05-15",
+          "weight": 1,
+          "text": "DGS10 rose +21bp over 5D, while CNN risk proxies are mixed."
+        }
+      ]
+    },
+    {
+      "id": "term_premium",
+      "title": "Long-end term premium / fiscal supply",
+      "score": 0,
+      "updatedAt": "2026-05-15",
+      "core": "Local curve proxies do not show independent 30Y stress over the 5D window.",
+      "checks": [
+        "DGS30 5D move is +17bp versus DGS10 +21bp.",
+        "5s30s 5D change is -7bp.",
+        "10s30s 5D change is -4bp.",
+        "ACM / Kim-Wright term premium is unavailable.",
+        "Auction tail and bid-to-cover are unavailable.",
+        "MOVE index is unavailable."
+      ],
+      "interpretation": "The absence of 30Y-led bear steepening argues against upgrading long-end duration, but it also removes the main long-end stress veto for 2026-05-15.",
+      "evidence": [
+        {
+          "time": "2026-05-15",
+          "weight": 0,
+          "text": "10s30s flattened -4bp over 5D, so the term-premium proxy is not deteriorating."
+        }
+      ]
+    }
+  ],
+  "durationAction": {
+    "currentIndex": 3,
+    "label": "Start 10Y nibble / intermediate-duration watch",
+    "asOf": "2026-05-15",
+    "explanation": "The duration panel upgrades to intermediate duration because the 10Y shock is extreme, real-yield led, and technically stretched, while 30Y does not show enough independent participation to justify long-end duration.",
+    "reasons": [
+      "10Y 5D move is +21bp with local-cache percentile 94%*.",
+      "30Y 5D move is +17bp and 10s30s changed -4bp.",
+      "Technical overlay: Timing signal only.",
+      "Top narratives: Technical positioning / exhaustion score 2; Fed path repricing score 1; Inflation compensation shock score 1."
+    ],
+    "supports": [
+      "5D curve proxies do not show fresh 30Y-led bear steepening.",
+      "10Y shock is extreme in the available local-cache window and is real-yield led.",
+      "Local CNN headline risk appetite is not in broad panic."
+    ],
+    "opposes": [
+      "30Y shock is elevated, but 30Y lags 10Y by more than 2bp over 5D, so long-end participation is not strong enough for index 4.",
+      "Technical exhaustion is present, but it is only a timing overlay and cannot justify long-end duration by itself.",
+      "DGS2, SOFR/Fed funds futures, MOVE, formal term premium, auction data, and CFTC positioning are unavailable."
+    ],
+    "upgradeSignals": [
+      "Move to index 2 if DGS10 5D or 21D selloff reaches >=85th percentile, real yield leads, and technical exhaustion appears.",
+      "Move to index 3 if 10Y shock becomes extreme while 30Y term-premium proxies remain stable.",
+      "Move to index 4 only if 30Y shock is extreme and 5s30s/10s30s steepening stops after term-premium pressure stabilizes.",
+      "Move to index 5 only after long-end stabilization coincides with bull flattening, growth/disinflation confirmation, and exhaustion."
+    ],
+    "downgradeSignals": [
+      "Stay at index 0 if DGS3 or DGS30 accelerates without exhaustion.",
+      "Stay at index 0 if 10s30s bear steepening resumes or auction/MOVE data later show stress."
+    ],
+    "steps": [
+      {
+        "index": 0,
+        "title": "No trade / wait",
+        "active": false
+      },
+      {
+        "index": 1,
+        "title": "Watchlist only",
+        "active": false
+      },
+      {
+        "index": 2,
+        "title": "Start 10Y nibble",
+        "active": false
+      },
+      {
+        "index": 3,
+        "title": "Start 10Y nibble / intermediate-duration watch",
+        "active": true
+      },
+      {
+        "index": 4,
+        "title": "Add long-end duration",
+        "active": false
+      },
+      {
+        "index": 5,
+        "title": "Add convex duration / STRIPS-like exposure",
+        "active": false
+      }
+    ]
+  },
+  "technical": {
+    "asOf": "2026-05-15",
+    "signals": [
+      {
+        "title": "US10Y 九转",
+        "value": "up 4 / down 0",
+        "status": "neutral",
+        "source": "proxy",
+        "note": "Proxy rule compares each yield with its value four valid observations earlier."
+      },
+      {
+        "title": "US30Y 九转",
+        "value": "up 4 / down 0",
+        "status": "neutral",
+        "source": "proxy",
+        "note": "Proxy rule compares each yield with its value four valid observations earlier."
+      },
+      {
+        "title": "RSI",
+        "value": "10Y 72.2 / 30Y 71.4",
+        "status": "exhaustion",
+        "note": "RSI is calculated on yield changes, not bond-price changes."
+      },
+      {
+        "title": "Bollinger z-score",
+        "value": "10Y +2.60 / 30Y +2.64",
+        "status": "exhaustion",
+        "note": "20 valid-observation moving average and standard deviation."
+      },
+      {
+        "title": "20D move percentile",
+        "value": "10Y +33bp 83%* / 30Y +24bp 79%*",
+        "status": "neutral",
+        "note": "Percentile uses available local Treasury cache and is marked with *."
+      },
+      {
+        "title": "MOVE index",
+        "value": "unavailable",
+        "status": "unavailable",
+        "note": "MOVE is not present in local cache."
+      },
+      {
+        "title": "CFTC Treasury futures positioning",
+        "value": "unavailable",
+        "status": "unavailable",
+        "note": "CFTC futures positioning is not present in local cache."
+      },
+      {
+        "title": "Timing overlay",
+        "value": "Timing support present",
+        "status": "watch",
+        "note": "Technical exhaustion must be paired with rate-shock and driver attribution before any duration upgrade."
+      }
+    ],
+    "tenYear": {
+      "label": "US10Y",
+      "rsi": 72.22,
+      "bollingerZ": 2.6,
+      "nineTurn": {
+        "up": 4,
+        "down": 0
+      },
+      "move20dBp": 33,
+      "move20dPercentile": 83.4
+    },
+    "thirtyYear": {
+      "label": "US30Y",
+      "rsi": 71.43,
+      "bollingerZ": 2.64,
+      "nineTurn": {
+        "up": 4,
+        "down": 0
+      },
+      "move20dBp": 24,
+      "move20dPercentile": 78.7
+    },
+    "hasExhaustion": true,
+    "adviceTitle": "Timing signal only",
+    "adviceBody": "Technical signals can support only a conditional timing overlay; they do not create a standalone duration trade."
+  },
+  "dataGaps": [
+    "Rate shock percentiles use local Treasury cache from 2024-01-02 to 2026-05-15; full 10-year and full 2022+ windows are unavailable in local cache.",
+    "SOFR futures and Fed funds futures implied cuts are unavailable in local cache.",
+    "ACM / Kim-Wright term premium is unavailable; 5s30s and 10s30s are used as long-end proxies.",
+    "Treasury auction tail, bid-to-cover, and dealer take-down are unavailable in local cache.",
+    "MOVE index is unavailable in local cache; VIX and CNN credit/sentiment components are used only as risk proxies.",
+    "CFTC Treasury futures positioning is unavailable in local cache.",
+    "Oil, copper, gold, DXY, and HY OAS are unavailable in local cache.",
+    "Market reaction research input macro_daily/data/2026-05-16_market_reaction_sources.json is unavailable; Module 1.5 will show a research-needed state."
+  ],
+  "dataQuality": {
+    "treasuryCacheFetchedAt": "2026-05-16T02:26:34.210Z",
+    "treasuryHistoryStart": "2024-01-02",
+    "percentileProxyUsed": true,
+    "percentileProxyNote": "A trailing local-cache percentile is shown with * because the local Treasury cache starts after the required 10-year and 2022-01-01 windows.",
+    "missingRequiredSources": [
+      "Rate shock percentiles use local Treasury cache from 2024-01-02 to 2026-05-15; full 10-year and full 2022+ windows are unavailable in local cache.",
+      "SOFR futures and Fed funds futures implied cuts are unavailable in local cache.",
+      "ACM / Kim-Wright term premium is unavailable; 5s30s and 10s30s are used as long-end proxies.",
+      "Treasury auction tail, bid-to-cover, and dealer take-down are unavailable in local cache.",
+      "MOVE index is unavailable in local cache; VIX and CNN credit/sentiment components are used only as risk proxies.",
+      "CFTC Treasury futures positioning is unavailable in local cache.",
+      "Oil, copper, gold, DXY, and HY OAS are unavailable in local cache.",
+      "Market reaction research input macro_daily/data/2026-05-16_market_reaction_sources.json is unavailable; Module 1.5 will show a research-needed state."
+    ]
+  }
+}

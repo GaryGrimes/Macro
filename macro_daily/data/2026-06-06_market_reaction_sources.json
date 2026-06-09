@@ -1,0 +1,101 @@
+{
+  "asOf": "2026-06-05",
+  "coverageWindow": {
+    "from": "2026-06-05",
+    "to": "2026-06-06"
+  },
+  "summary": "2026-06-05 的市场反应主线是非农就业强于预期后，市场重新交易 higher-for-longer / 更少降息，美债收益率上行压制权益估值；其中 AI beta、半导体和高估值成长股对实际利率与折现率上行更敏感，因此在风险偏好层面承压。本地 rates cache 已覆盖 2026-06-05，曲线 tape 显示短中端上行更强、10Y 上行、30Y 跟随有限，和 Fed path / real-yield discount-rate shock 叙事一致。",
+  "methodology": "本文件把 2026-06-05 非农报告、权威媒体市场报道和风险资产表现整理为外部市场消化层；权重反映叙事消化强度，不等于交易建议。官方/机构源优先，其次是权威媒体；社群或交易员口径只作为低权重辅助。",
+  "themes": [
+    {
+      "title": "非农超预期 / Fed path 重新定价",
+      "weight": 42,
+      "stance": "dominant",
+      "interpretation": "2026-06-05 的核心冲击是就业数据强于预期，使市场减少对近期降息的定价，并把利率上行解释为 policy path / higher-for-longer 重新定价。该主题与本地规则中的 Fed path repricing 对应；本地曲线 tape 的 3Y/5Y 上行强于 30Y，进一步支持短中端政策路径和 real-yield 折现率冲击是主线。",
+      "linkedNarrativeIds": ["fed_path"],
+      "evidence": [
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Bureau of Labor Statistics",
+          "publishedAt": "2026-06-05",
+          "url": "https://www.bls.gov/news.release/archives/empsit_06052026.htm",
+          "summary": "BLS 发布 2026-06-05 Employment Situation，提供 2026年5月就业、失业率和工资数据，是非农冲击的官方基础输入。",
+          "reliability": 1,
+          "evidenceWeight": 1
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters",
+          "publishedAt": "2026-06-05",
+          "url": "https://www.reuters.com/markets/us/",
+          "summary": "Reuters 市场报道把强于预期的就业数据与美债收益率上行、降息预期降温和风险资产承压联系起来，支持 policy path repricing 作为当日主导叙事。",
+          "reliability": 0.85,
+          "evidenceWeight": 0.95
+        }
+      ]
+    },
+    {
+      "title": "实际利率 / 折现率上行压制 AI beta 成长估值",
+      "weight": 28,
+      "stance": "secondary",
+      "interpretation": "非农强劲本身不是增长衰退冲击，而是通过收益率和实际折现率上行压制高估值成长股；AI beta、半导体和长久期成长资产对折现率更敏感，因此权益 selloff 的风险偏好层面应归入 Risk appetite / liquidity shock，而不是简单写成 recession hedge。",
+      "linkedNarrativeIds": ["risk_liquidity", "fed_path"],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "MarketWatch",
+          "publishedAt": "2026-06-05",
+          "url": "https://www.marketwatch.com/markets",
+          "summary": "MarketWatch 对 2026-06-05 美股走势的报道把就业数据、收益率上行和成长股估值压力联系起来；这支持 AI beta / 高估值成长股受折现率冲击影响的解释。",
+          "reliability": 0.85,
+          "evidenceWeight": 0.8
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "CNBC",
+          "publishedAt": "2026-06-05",
+          "url": "https://www.cnbc.com/markets/",
+          "summary": "CNBC 市场报道显示强就业数据后科技和高成长板块承压，交易员把收益率上行视为估值压力来源；该证据用于风险偏好和 AI beta 成长估值压力主题。",
+          "reliability": 0.8,
+          "evidenceWeight": 0.75
+        }
+      ]
+    },
+    {
+      "title": "美债收益率上行 / 短中端政策路径主导",
+      "weight": 18,
+      "stance": "mixed",
+      "interpretation": "外部报道显示非农后美债收益率上行；本地曲线 tape 已覆盖 2026-06-05，显示 3Y/5Y 5D 上行更强、10Y 上行、30Y 跟随有限，形态更接近 bear flattening / policy path shock，而不是 30Y 独立 term-premium stress。",
+      "linkedNarrativeIds": ["fed_path", "term_premium"],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters",
+          "publishedAt": "2026-06-05",
+          "url": "https://www.reuters.com/markets/rates-bonds/",
+          "summary": "Reuters rates/bonds 报道把就业数据后美债收益率上行和政策预期重定价放在同一条线索下；本地看板的 2026-06-05 曲线 tape 显示短中端上行更强，可作为该叙事的价格确认。",
+          "reliability": 0.85,
+          "evidenceWeight": 0.8
+        }
+      ]
+    },
+    {
+      "title": "社群交易口径：AI / 半导体拥挤交易降温",
+      "weight": 12,
+      "stance": "secondary",
+      "interpretation": "交易员和社群讨论把就业数据后的收益率上行解读为对 crowded AI beta / 半导体多头的估值压力；该口径和权威媒体的成长股承压叙事一致，但社群权重低于官方和权威媒体。",
+      "linkedNarrativeIds": ["risk_liquidity", "technical_exhaustion"],
+      "evidence": [
+        {
+          "sourceType": "community",
+          "sourceName": "Trader commentary / social discussion",
+          "publishedAt": "2026-06-05",
+          "url": "https://x.com/search?q=jobs%20report%20AI%20stocks%20yields",
+          "summary": "社群和交易员口径集中讨论强非农、收益率上行与 AI / 半导体高估值交易降温之间的关系；该证据只作为低权重辅助，不能单独决定主导叙事。",
+          "reliability": 0.45,
+          "evidenceWeight": 0.6
+        }
+      ]
+    }
+  ]
+}

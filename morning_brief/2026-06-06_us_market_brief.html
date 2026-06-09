@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>美股早报 | 2026-06-06</title>
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #66645f;
+      --line: #d9d2c3;
+      --paper: #f7f3eb;
+      --panel: #fffdf8;
+      --panel-2: #f0eadf;
+      --accent: #b3312c;
+      --accent-2: #126a65;
+      --gold: #a4762a;
+      --green: #147b45;
+      --red: #b3312c;
+      --blue: #244f8f;
+      --shadow: 0 14px 40px rgba(37, 31, 21, .10);
+      font-family: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 24px 52px;
+    }
+
+    header {
+      border-top: 7px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      padding: 22px 0 20px;
+      display: grid;
+      grid-template-columns: 1.4fr .8fr;
+      gap: 24px;
+      align-items: end;
+    }
+
+    .kicker {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--accent);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 4.6vw, 54px);
+      line-height: 1;
+      margin: 0;
+      letter-spacing: 0;
+      max-width: 980px;
+    }
+
+    .deck {
+      font-size: 16px;
+      color: #2a2926;
+      margin-top: 16px;
+      max-width: 980px;
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+    }
+
+    .meta {
+      justify-self: end;
+      text-align: right;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .meta strong {
+      color: var(--ink);
+      display: block;
+      font-size: 15px;
+    }
+
+    .ticker-strip {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 0;
+      background: rgba(247, 243, 235, .94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .ticker {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      min-width: 118px;
+      padding: 8px 10px;
+      cursor: pointer;
+      display: grid;
+      gap: 2px;
+      text-align: left;
+      border-radius: 3px;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+
+    .ticker.active {
+      border-color: var(--ink);
+      box-shadow: inset 0 -3px 0 var(--accent);
+    }
+
+    .ticker .sym { font-weight: 800; font-size: 12px; }
+    .ticker .val { font-variant-numeric: tabular-nums; font-size: 14px; }
+    .ticker .chg { font-variant-numeric: tabular-nums; font-size: 11px; }
+    .up { color: var(--red); }
+    .down { color: var(--green); }
+    .flat { color: var(--muted); }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    section {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 27px;
+      line-height: 1.1;
+      margin: 0 0 16px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 22px 0 8px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    p { margin: 0 0 12px; }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: -8px;
+      margin-bottom: 16px;
+    }
+
+    .lead-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .chart-panel,
+    .side-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      position: relative;
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .chart-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .range-control {
+      display: flex;
+      gap: 3px;
+      border: 1px solid var(--line);
+      background: #f7f2e9;
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+    .range-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 6px;
+      border-radius: 3px;
+    }
+
+    .range-btn.active {
+      background: var(--ink);
+      color: #fffdf8;
+    }
+
+    .data-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-left: 8px;
+      color: var(--accent-2);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .data-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      display: inline-block;
+    }
+
+    .curve-panel {
+      overflow: visible;
+    }
+
+    .curve-toggle {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 4px 7px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .curve-toggle:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .curve-detail {
+      border-top: 1px solid var(--line);
+      display: none;
+      margin-top: 14px;
+      padding: 12px 0 18px;
+      color: #2b2924;
+      font-size: 13px;
+    }
+
+    .curve-panel.open .curve-detail { display: block; }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 2px 0 8px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .legend-swatch {
+      width: 18px;
+      height: 3px;
+      border-radius: 99px;
+      display: inline-block;
+    }
+
+    .chart-caption {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 8px 0 0;
+    }
+
+    .bond-move-chart {
+      margin: 4px 0 18px;
+    }
+
+    .chart-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .chart-value {
+      font-size: 20px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    svg { max-width: 100%; display: block; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border-top: 2px solid var(--ink);
+      font-size: 13px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 9px;
+      vertical-align: top;
+    }
+
+    th {
+      text-align: left;
+      color: #2d2b27;
+      background: var(--panel-2);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    td.num, th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .weight {
+      font-weight: 800;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      background: #fbf7ef;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .callout {
+      margin: 16px 0;
+      padding: 15px 17px;
+      background: #fff8eb;
+      border-left: 4px solid var(--gold);
+      color: #2b2924;
+    }
+
+    .chain {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .chain div {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 12px;
+      min-height: 90px;
+      position: relative;
+    }
+
+    .chain div::after {
+      content: ">";
+      position: absolute;
+      right: -9px;
+      top: 36px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .chain div:last-child::after { content: ""; }
+    .chain strong { display: block; margin-bottom: 4px; }
+    .chain span { color: var(--muted); font-size: 13px; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mini-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 13px;
+    }
+
+    .mini-card b { display: block; margin-bottom: 5px; }
+    .mini-card span { color: var(--muted); font-size: 13px; }
+
+    aside {
+      position: sticky;
+      top: 76px;
+      align-self: start;
+    }
+
+    .brief-box {
+      background: #1f1e1a;
+      color: #f7f3eb;
+      padding: 18px;
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+    }
+
+    .brief-box h2 {
+      color: #f7f3eb;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .brief-box ol {
+      margin: 0;
+      padding-left: 20px;
+      color: #e1d8c6;
+      font-size: 14px;
+    }
+
+    .brief-box li { margin-bottom: 8px; }
+
+    .source-list {
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 16px;
+    }
+
+    .source-list a { color: var(--blue); }
+
+    .mobile-only { display: none; }
+
+    @media (max-width: 980px) {
+      header, main, .lead-grid, .split {
+        grid-template-columns: 1fr;
+      }
+      .meta {
+        justify-self: start;
+        text-align: left;
+      }
+      aside {
+        position: static;
+      }
+      .chain, .cards {
+        grid-template-columns: 1fr;
+      }
+      .chain div::after { content: ""; }
+      table { font-size: 13px; }
+      th, td { padding: 8px 7px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <div class="kicker">Daily U.S. Market Brief · June 6, 2026</div>
+        <h1>美股早报 | 强非农重定价 Fed；AI 链条领跌；长端收益率重新压住风险资产</h1>
+        <div class="deck">
+          昨晚的核心不是单纯“科技股回调”，而是强劲非农把 Fed 反应函数重新推到前台：5 月新增就业 172,000，远高于市场预期，2Y/10Y 收益率同步上行，市场重新定价年内加息风险。结果是 AI 和半导体估值最先承压，Nasdaq 跌幅超过 4%，S&P 500 结束九周连涨，VIX 跳到 20 上方。油价回落本应缓和通胀压力，但它没有抵消利率冲击；黄金和 BTC 同跌也说明这是一轮去杠杆式 risk-off，而不是传统避险切换。
+        </div>
+      </div>
+      <div class="meta">
+        <strong>覆盖交易日：2026-06-05</strong>
+        生成时间：2026-06-06 · Asia/Hong Kong<br>
+        页面类型：独立 HTML 早报，不接入 Macro 看板
+      </div>
+    </header>
+
+    <nav class="ticker-strip" aria-label="interactive ticker strip" id="tickerStrip"></nav>
+
+    <main>
+      <div>
+        <section id="dashboard">
+          <h2>固定市场仪表盘</h2>
+          <p class="section-note">读法：模块 2 先给昨日第一事实和交易主线，再看资产表。权重不是涨跌幅大小，而是它对今日定价主线的解释力。当前权重最高的是强非农、2Y/10Y 收益率上行、AI/半导体估值去风险，以及 VIX 从低波动区间跳升。<span class="data-status" id="dataStatus">数据校验中</span></p>
+          <div class="callout">
+            <strong>昨日第一事实：</strong>2026-06-05 的 5 月非农新增 172,000，明显高于预期，市场把它直接翻译成 Fed path 重新偏鹰。价格验证是同向的：2Y +12bp、10Y +8bp，Nasdaq -4.18%，Russell 2000 -3.47%，VIX +39.68%。这说明昨天交易的不是普通 AI 获利了结，而是“强就业 → 更高政策利率尾部风险 → AI beta / 成长股估值承压 → 高 beta 去杠杆”。
+          </div>
+          <table style="margin-top:14px;">
+            <thead><tr><th>昨日交易逻辑</th><th>价格证据</th><th>对今天的含义</th></tr></thead>
+            <tbody>
+              <tr><td>非农超预期抬高 Fed 加息尾部风险</td><td>2Y 从 4.05% 升至 4.17%，5Y 从 4.18% 升至 4.29%</td><td>先看 2Y 是否回到 4.10% 下方；否则风险资产反弹缺少政策路径支撑。</td></tr>
+              <tr><td>折现率上行压缩成长估值</td><td>10Y 升至 4.55%，Nasdaq 跌 4.18%</td><td>AI beta 不能只看财报叙事，必须先看 10Y 是否跌破 4.50%。</td></tr>
+              <tr><td>卖压从 mega-cap 扩散到融资敏感资产</td><td>Russell 2000 跌 3.47%，弱于 S&P 500</td><td>如果 Russell 继续跑输，说明市场仍在交易 higher-for-longer，而不是短线技术调整。</td></tr>
+              <tr><td>传统避险没有接住风险</td><td>Gold -3.35%，BTC 跌破约 $60,000，VIX 升至 21.51</td><td>这是美元/真实利率驱动的减杠杆，不是简单从股票切到防御资产。</td></tr>
+            </tbody>
+          </table>
+          <div class="lead-grid">
+            <div class="chart-panel">
+              <div class="chart-head">
+                <div><div class="chart-title" id="activeName">S&P 500</div><div class="chart-value" id="activeValue">7,383.74</div></div>
+                <div class="chart-actions"><div id="activeChange" class="down">-2.64%</div><div class="range-control" id="rangeControl" aria-label="ticker range"></div></div>
+              </div>
+              <svg id="sparkChart" viewBox="0 0 640 260" role="img" aria-label="Selected ticker chart"></svg>
+              <p id="activeNote" class="section-note" style="margin:10px 0 0;">S&P 500 结束九周连涨，强劲非农推高加息预期，指数从纪录区间回撤。</p>
+            </div>
+            <div class="chart-panel curve-panel" id="curvePanel">
+              <button class="curve-toggle" id="curveToggle" type="button" aria-expanded="false">展开</button>
+              <div class="chart-head">
+                <div><div class="chart-title">Treasury Curve</div><div class="chart-value">Payroll shock repricing</div></div>
+                <div class="up">2Y +12bp · 10Y +8bp</div>
+              </div>
+              <div class="legend-row" id="curveLegend"></div>
+              <svg id="curveChart" viewBox="0 0 640 260" role="img" aria-label="Treasury yield curve"></svg>
+              <p class="section-note" style="margin:10px 0 0;">2Y 升至 4.17%，10Y 升至 4.55%，30Y 回到 5.01%。市场重新定价 Fed 年内加息风险，前端与长端同时压制风险资产。</p>
+              <div class="curve-detail">
+                <p><strong>为什么这不是普通科技回调：</strong>强非农让短端利率直接上行，10Y 同步走高，说明市场不是只在卖 AI 拥挤仓位，而是在重估更高利率路径对估值的约束。</p>
+                <p>曲线形态上，2Y/5Y 上行更明显，30Y 重回 5% 上方。今天要看 2Y 能否回落到 4.10% 下方，10Y 能否重新跌破 4.50%；否则 Nasdaq 和小盘反弹会缺少利率支撑。</p>
+              </div>
+            </div>
+          </div>
+          <table style="margin-top:16px;"><thead><tr><th>资产/指标</th><th class="num">最新/收盘</th><th class="num">变化</th><th class="num">权重</th><th>解释</th></tr></thead><tbody>
+            <tr><td>Dow Jones</td><td class="num">50,866.78</td><td class="num down">-1.35%</td><td class="num weight">4/5</td><td>Dow 跌幅小于 Nasdaq，说明抛售核心在科技估值，但不是完全防御轮动。</td></tr>
+            <tr><td>S&P 500</td><td class="num">7,383.74</td><td class="num down">-2.64%</td><td class="num weight">5/5</td><td>结束九周连涨，是强就业冲击传导到整体风险资产的核心确认。</td></tr>
+            <tr><td>Nasdaq Composite</td><td class="num">25,709.43</td><td class="num down">-4.18%</td><td class="num weight">5/5</td><td>AI 与半导体领跌，估值拥挤在收益率上行时最脆弱。</td></tr>
+            <tr><td>Russell 2000</td><td class="num">2,833.50</td><td class="num down">-3.47%</td><td class="num weight">4/5</td><td>小盘同步大跌，说明 higher-for-longer 重新压住融资成本敏感资产。</td></tr>
+            <tr><td>VIX</td><td class="num">21.51</td><td class="num up">+39.68%</td><td class="num weight">5/5</td><td>波动率跳到 20 上方，市场从低波动追涨切换为主动减仓。</td></tr>
+            <tr><td>2Y / 5Y UST</td><td class="num">4.17% / 4.29%</td><td class="num up">+12bp / +11bp</td><td class="num weight">5/5</td><td>前端上行是 Fed path 重新偏鹰的直接证据。</td></tr>
+            <tr><td>10Y UST</td><td class="num">4.55%</td><td class="num up">+8bp</td><td class="num weight">5/5</td><td>成长股折现率核心锚上行，压缩 AI 和高 beta 的估值弹性。</td></tr>
+            <tr><td>30Y UST</td><td class="num">5.01%</td><td class="num up">+4bp</td><td class="num weight">4/5</td><td>长端重新站上 5%，term premium 压力仍在。</td></tr>
+            <tr><td>Brent / WTI</td><td class="num">约 $95.24 / $92.94</td><td class="num down">约 -0.2% / -0.1%</td><td class="num weight">3/5</td><td>油价偏弱没有救住风险资产；这说明昨晚主导变量是就业和利率，而不是能源通胀。</td></tr>
+            <tr><td>DXY</td><td class="num">约 100.1</td><td class="num up">走强</td><td class="num weight">4/5</td><td>美元随收益率走强，进一步压制黄金、BTC 和国际风险资产。</td></tr>
+            <tr><td>Gold</td><td class="num">$4,353.90</td><td class="num down">-3.35%</td><td class="num weight">4/5</td><td>黄金与股票同跌，说明实际利率/美元冲击压过避险需求。</td></tr>
+            <tr><td>BTC</td><td class="num">约 $59,909</td><td class="num down">约 -6.0%</td><td class="num weight">4/5</td><td>BTC 跌破 60,000 附近，高 beta 流动性资产确认风险偏好退潮。</td></tr>
+          </tbody></table>
+
+          <h3>1.5 市场昨天交易逻辑</h3>
+          <p class="section-note">这部分只回答一个问题：2026-06-05 市场到底在交易什么。结论是，市场交易的是“强就业重新抬高政策利率尾部风险”，不是简单的 AI 获利了结，也不是油价驱动的通胀交易。</p>
+          <div class="chain">
+            <div><strong>第一层：数据冲击</strong><span>5 月非农新增 172,000，失业率仍低，市场先把“经济韧性”翻译成“Fed 没有必要很快转松”。</span></div>
+            <div><strong>第二层：利率重定价</strong><span>2Y 从 4.05% 升到 4.17%，10Y 从 4.47% 升到 4.55%；前端和折现率锚同时上行。</span></div>
+            <div><strong>第三层：估值去杠杆</strong><span>Nasdaq 跌 4.18%，Russell 跌 3.47%，说明卖压集中在高估值和融资成本敏感资产。</span></div>
+            <div><strong>第四层：避险失灵</strong><span>黄金、BTC 与股票同跌，VIX 跳到 21.51；资金不是切到传统避险，而是在降低总风险敞口。</span></div>
+            <div><strong>第五层：油价降权</strong><span>油价偏弱本应缓和通胀，但没有改变 Fed path 重定价；能源不是昨天的主导变量。</span></div>
+          </div>
+          <table style="margin-top:14px;">
+            <thead><tr><th>价格动作</th><th>市场含义</th><th>今天优先验证</th></tr></thead>
+            <tbody>
+              <tr><td>2Y/5Y 上行幅度大于 30Y</td><td>市场先交易政策路径更紧，而不是单纯财政供给冲击。</td><td>2Y 是否回到 4.10% 下方。</td></tr>
+              <tr><td>Nasdaq 跌幅显著大于 Dow</td><td>估值久期越长，受真实利率冲击越大；AI beta 是主要减仓对象。</td><td>SMH 是否跑赢 QQQ，NVDA/AVGO/AMD 是否止跌。</td></tr>
+              <tr><td>Russell 同步大跌</td><td>压力扩散到融资成本敏感资产，不是少数 mega-cap 的局部问题。</td><td>Russell 是否跑赢 S&P 500。</td></tr>
+              <tr><td>黄金和 BTC 同跌</td><td>美元/真实利率压力压过避险需求，市场在减杠杆而不是换防守仓。</td><td>DXY 是否回落，BTC 是否收复 $61,000。</td></tr>
+              <tr><td>油价偏弱但股债仍承压</td><td>能源通胀不是昨天的核心，利率路径才是主线。</td><td>油价反弹只会加压；油价继续弱也未必足以救风险资产。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="equity-review">
+          <h2>美股复盘主线</h2>
+          <h3>3.1 指数表现</h3>
+          <p>四大指数同步下跌：S&P 500 收 7,383.74，跌 2.64%；Nasdaq Composite 收 25,709.43，跌 4.18%；Dow 收 50,866.78，跌 1.35%；Russell 2000 收 2,833.50，跌 3.47%。这组排序很清楚：AI/科技估值最脆弱，小盘也被利率冲击拖累，Dow 只是相对抗跌，不是防御资产全面接住市场。</p>
+          <h3>3.2 市场宽度</h3>
+          <p>VIX 升至 21.51，说明昨晚不是温和回撤，而是低波动环境被打破。Russell 2000 跌幅超过 3%，表明市场压力扩散到融资成本敏感资产。若今天盘前 VIX 不能回到 20 下方，反弹优先看作技术修复，而不是趋势恢复。</p>
+          <h3>3.3 板块表现</h3>
+          <p>半导体、AI 基础设施、高 beta 成长和加密相关资产是压力中心；金融和价值股相对抗跌但也难以独立走强。油价回落未能支撑运输/消费链，因为市场更关注利率上行对需求、融资和估值的共同压制。</p>
+          <h3>3.4 权重股/主题股</h3>
+          <p>Nvidia、Broadcom 等 AI 权重成为主要拖累。关键不是单家公司业绩，而是市场开始质疑 AI 资本开支链条在更高真实利率下还能否继续享受高估值。若今天 SMH 不能企稳，Nasdaq 的任何反弹都容易变成短线空头回补。</p>
+          <h3>3.5 个股事件</h3>
+          <div class="cards">
+            <div class="mini-card"><b>强非农冲击</b><span>5 月新增就业 172,000，远高于预期，市场重新定价 Fed 年内加息风险。</span></div>
+            <div class="mini-card"><b>AI beta 去风险</b><span>半导体和 AI 链条从领涨资产变成主要卖压源，估值拥挤在收益率上行时被放大。</span></div>
+            <div class="mini-card"><b>黄金/BTC 同跌</b><span>黄金和 BTC 同时下行，说明不是传统避险轮动，而是美元和真实利率驱动的去杠杆。</span></div>
+          </div>
+        </section>
+
+        <section id="catalysts">
+          <h2>今日催化与事件分层</h2>
+          <p class="section-note">排序依据：官方/高置信信息优先；每条都给标签、来源层级、信息权重和传导逻辑。</p>
+          <table><thead><tr><th>时间/状态</th><th>事件</th><th>标签</th><th>来源层级</th><th class="num">权重</th><th>影响资产</th><th>传导逻辑</th></tr></thead><tbody>
+            <tr><td>已发布</td><td>5 月非农就业新增 172,000</td><td><span class="tag">就业/Fed path</span></td><td>官方/高置信</td><td class="num weight">5/5</td><td>2Y、10Y、Nasdaq、美元</td><td>强就业让市场重新定价加息风险，前端利率上行直接压缩成长估值。</td></tr>
+            <tr><td>全天</td><td>2Y/10Y 是否回落</td><td><span class="tag">久期锚</span></td><td>官方/市场价格</td><td class="num weight">5/5</td><td>UST、TLT、SMH、ARKK</td><td>2Y 低于 4.10%、10Y 低于 4.50% 才能让 risk-off 降温。</td></tr>
+            <tr><td>全天</td><td>AI 链条是否企稳</td><td><span class="tag">AI capex</span></td><td>市场价格/公司事件</td><td class="num weight">5/5</td><td>NVDA、AVGO、AMD、SMH</td><td>如果 SMH 继续跑输，说明市场在重估 AI 估值，而不是单日获利了结。</td></tr>
+            <tr><td>全天</td><td>VIX 是否重新低于 20</td><td><span class="tag">波动率</span></td><td>市场价格</td><td class="num weight">4/5</td><td>SPX、QQQ、小盘</td><td>VIX 守在 20 上方意味着资金仍在减风险；跌回 20 下方才有技术修复空间。</td></tr>
+            <tr><td>盘中</td><td>美元、黄金、BTC 的同步性</td><td><span class="tag">流动性</span></td><td>市场价格</td><td class="num weight">4/5</td><td>DXY、Gold、BTC、MSTR</td><td>美元强、黄金/BTC 弱的组合代表真实利率压力仍占主导。</td></tr>
+            <tr><td>盘中</td><td>油价是否继续回落</td><td><span class="tag">能源/通胀</span></td><td>多源交叉</td><td class="num weight">3/5</td><td>WTI、Brent、5Y breakeven、XLE</td><td>油价回落可缓和通胀压力，但昨晚证明它不足以对冲强就业带来的 Fed path 重定价。</td></tr>
+          </tbody></table>
+        </section>
+
+        <section id="bonds">
+          <h2>美债市场专栏</h2>
+          <div class="chart-panel bond-move-chart">
+            <div class="chart-head"><div><div class="chart-title">Treasury Curve Move</div><div class="chart-value">Front-end led bear move</div></div><div class="up">2Y +12bp · 5Y +11bp · 10Y +8bp · 30Y +4bp</div></div>
+            <svg id="bondMoveChart" viewBox="0 0 760 310" role="img" aria-label="Treasury 2Y 5Y 10Y 30Y curve move"></svg>
+            <p class="chart-caption">比较 2026-06-04 与 2026-06-05 的 2Y/5Y/10Y/30Y 收益率；图中标注为每个期限的 bp 变化。</p>
+          </div>
+          <h3>5.1 曲线变化</h3>
+          <table><thead><tr><th>期限</th><th class="num">2026-06-04</th><th class="num">2026-06-05</th><th class="num">变化</th><th>含义</th></tr></thead><tbody>
+            <tr><td>2Y</td><td class="num">4.05%</td><td class="num">4.17%</td><td class="num up">+12bp</td><td>Fed path 重新偏鹰，是昨晚最重要的利率信号。</td></tr>
+            <tr><td>5Y</td><td class="num">4.18%</td><td class="num">4.29%</td><td class="num up">+11bp</td><td>中端实际折现率压力上升，直接压制成长和小盘。</td></tr>
+            <tr><td>10Y</td><td class="num">4.47%</td><td class="num">4.55%</td><td class="num up">+8bp</td><td>估值核心锚上行，Nasdaq 和 AI beta 首先被重估。</td></tr>
+            <tr><td>30Y</td><td class="num">4.97%</td><td class="num">5.01%</td><td class="num up">+4bp</td><td>长端回到 5% 上方，term premium 压力没有解除。</td></tr>
+          </tbody></table>
+          <h3>5.2 驱动拆分</h3>
+          <div class="chain">
+            <div><strong>Fed path</strong><span>强非农让市场重新定价年内加息概率，2Y 是主导变量。</span></div>
+            <div><strong>Real yield</strong><span>黄金和成长股同跌，说明真实利率/美元压力占上风。</span></div>
+            <div><strong>Term premium</strong><span>30Y 回到 5% 上方，长端供给和期限溢价仍限制长久期资产。</span></div>
+            <div><strong>Breakeven</strong><span>油价回落没有形成足够缓冲，通胀补偿不是昨晚主导。</span></div>
+            <div><strong>Risk appetite</strong><span>VIX 跳升、BTC 跌破 60,000 附近，risk-off 已经扩散到高 beta。</span></div>
+          </div>
+          <h3>5.3 昨天发生了什么</h3>
+          <div class="callout">第一脚：强非农把加息风险重新放到价格里；第二脚：2Y/10Y 同步上行，压缩 AI 和成长估值；第三脚：VIX、黄金、BTC 同时给出去杠杆信号。油价偏弱只是缓冲项，不是主导项。</div>
+          <h3>5.4 对工具的含义</h3>
+          <table><thead><tr><th>工具/方向</th><th>含义</th></tr></thead><tbody>
+            <tr><td>名义债</td><td>短中端承压最明显；若 2Y 不回落，债券反弹缺乏政策路径支持。</td></tr>
+            <tr><td>TIPS</td><td>真实利率上行压制 TIPS 价格；油价回落降低 breakeven 支撑。</td></tr>
+            <tr><td>TLT</td><td>30Y 回到 5% 上方，长债仍处高波动区，反弹要等收益率先稳定。</td></tr>
+            <tr><td>短票/SGOV</td><td>短端防守价值提高，风险资产波动升温时仍是现金替代核心。</td></tr>
+            <tr><td>VGSH</td><td>受 2Y/5Y 上行直接影响，短中端久期不能忽视 Fed path 风险。</td></tr>
+            <tr><td>曲线交易</td><td>前端上行更快，关注 2s10s 是否重新熊平；这决定银行/小盘能否相对抗跌。</td></tr>
+            <tr><td>Inflation hedge</td><td>油价下行削弱能源冲击，黄金下跌说明避险不是主线。</td></tr>
+          </tbody></table>
+          <h3>5.5 今日交易假设的失效条件</h3>
+          <p class="section-note">当前假设：强非农 + 前端收益率上行 + AI 链条去风险，会让市场在今天继续优先验证防守，而不是立即恢复追高。下面是这条假设被证伪时最先该看的触发器。</p>
+          <table><thead><tr><th>当前假设</th><th>失效触发器</th><th>先看资产</th><th>解读/动作含义</th></tr></thead><tbody>
+            <tr><td>Fed path 重新偏鹰</td><td>2Y 回落到 4.10% 下方并持续到美股午盘</td><td>2Y、DXY、VGSH</td><td>若前端快速回落，说明市场把强非农当作一次性冲击，risk-off 可降级。</td></tr>
+            <tr><td>10Y 上行压制成长估值</td><td>10Y 跌回 4.50% 下方，SMH 同时跑赢 QQQ</td><td>10Y、SMH、QQQ</td><td>成长股修复才有利率支撑，否则只是技术反弹。</td></tr>
+            <tr><td>AI 链条仍在去风险</td><td>NVDA/AVGO/AMD 开盘后 2 小时内收复半数跌幅，SMH 转正</td><td>SMH、NVDA、AVGO、AMD</td><td>说明卖压主要是隔夜风险控制，不是估值体系下修。</td></tr>
+            <tr><td>风险偏好处于减仓状态</td><td>VIX 跌回 20 下方，Russell 跑赢 S&P 500，BTC 收复 $61,000 三者同时出现</td><td>VIX、RUT、BTC/MSTR</td><td>高 beta 重新承接，市场可能从去杠杆切回逢低买入。</td></tr>
+            <tr><td>美元/真实利率压制黄金和加密</td><td>DXY 回落且黄金/BTC 同步反弹</td><td>DXY、Gold、BTC</td><td>若发生，说明真实利率压力开始缓和，risk-off 质量下降。</td></tr>
+          </tbody></table>
+        </section>
+
+        <section id="verify">
+          <h2>今天该验证什么</h2>
+          <table><thead><tr><th>需要验证的变量</th><th>观察阈值/方向</th><th>含义</th></tr></thead><tbody>
+            <tr><td>2Y 4.10%</td><td>回落到下方才算 Fed path 压力降温</td><td>否则短端继续压制小盘和高 beta。</td></tr>
+            <tr><td>10Y 4.50%</td><td>跌破才有成长股估值修复基础</td><td>若守在 4.55% 附近，Nasdaq 反弹质量有限。</td></tr>
+            <tr><td>VIX 20</td><td>低于 20 才能把昨晚下跌降级为技术回撤</td><td>高于 20 则资金仍在主动减风险。</td></tr>
+            <tr><td>SMH 相对 QQQ</td><td>SMH 跑赢代表 AI 链条企稳</td><td>若继续跑输，说明估值压力仍在扩散。</td></tr>
+            <tr><td>BTC 61,000</td><td>收复则高 beta 有承接</td><td>否则流动性风险仍未修复。</td></tr>
+            <tr><td>Gold 与 DXY</td><td>黄金反弹且美元回落才代表真实利率压力缓和</td><td>若美元强、黄金弱，risk-off 仍由利率驱动。</td></tr>
+          </tbody></table>
+        </section>
+
+        <section id="themes">
+          <h2>板块和主题异动</h2>
+          <table><thead><tr><th>主题</th><th class="num">昨日表现</th><th>催化</th><th>判断</th></tr></thead><tbody>
+            <tr><td>半导体 / AI infra</td><td class="num down">最弱</td><td>收益率上行、估值拥挤、AVGO/NVDA 压力</td><td>仍是市场方向的核心温度计；今天必须先看 SMH 是否止跌。</td></tr>
+            <tr><td>小盘 / 高 beta</td><td class="num down">弱</td><td>2Y/5Y 上行</td><td>融资成本敏感资产被 higher-for-longer 重新压制。</td></tr>
+            <tr><td>金融 / 价值</td><td class="num flat">相对抗跌</td><td>收益率上行、科技跑输</td><td>相对优势存在，但 VIX 上行时很难独立变成主线。</td></tr>
+            <tr><td>能源</td><td class="num down">偏弱</td><td>油价回落</td><td>能源没有成为避风港，说明就业/利率才是主线。</td></tr>
+            <tr><td>黄金 / 防御</td><td class="num down">弱</td><td>美元和真实利率走强</td><td>黄金下跌确认这不是传统避险轮动。</td></tr>
+            <tr><td>加密 / MSTR</td><td class="num down">弱</td><td>BTC 跌破 60,000 附近</td><td>高 beta 流动性资产仍是风险偏好最敏感的负反馈。</td></tr>
+          </tbody></table>
+        </section>
+
+        <section id="portfolio">
+          <h2>对重点持仓/关注资产的影响</h2>
+          <table><thead><tr><th>资产/方向</th><th>影响</th></tr></thead><tbody>
+            <tr><td>NVDA / AI infra</td><td>短线从盈利验证切换为估值压力测试；若 SMH 不能企稳，优先控制 beta。</td></tr>
+            <tr><td>AMD / SMH</td><td>受 AI 链条整体去风险影响，单股逻辑难以抵消 10Y 上行。</td></tr>
+            <tr><td>META / mega-cap</td><td>mega-cap 仍有质量溢价，但在 10Y 高于 4.50% 时估值弹性下降。</td></tr>
+            <tr><td>MSTR / BTC</td><td>BTC 跌破 60,000 附近，高 beta 负反馈需要先止住，不能只看股票反弹。</td></tr>
+            <tr><td>SGOV / VGSH</td><td>SGOV 防守价值提高；VGSH 受 2Y/5Y 上行影响，需要等前端稳定。</td></tr>
+            <tr><td>长债 / TLT</td><td>30Y 回到 5% 上方，TLT 仍处压力区；反弹需要 10Y/30Y 同时回落确认。</td></tr>
+          </tbody></table>
+        </section>
+
+        <section class="source-list">
+          <strong>数据与来源说明：</strong>
+          指数收盘使用 AP 2026-06-05 收盘报道，并以 Yahoo Finance 盘中/收盘报道核对强非农、AI/芯片抛售和 Fed-hike bets 主线；美债收益率使用 U.S. Treasury Daily Treasury Rates 2026-06-05；VIX、黄金、BTC、DXY 和油价采用 Yahoo Finance/Reuters/OGJ 等公开报道与本地缓存估算，页面中已标注“约”的项目需人工用 Bloomberg/FactSet/Refinitiv 或券商终端复核。顶部图表使用本地一年日频缓存并追加已核验的 2026-06-05 收盘点；中间历史路径用于图表连续性，非终端逐点复核；1d 使用按开盘到收盘关键时段重建的日内路径。
+          <br>
+          参考入口：
+          <a href="https://apnews.com/article/b9d2661cbba6cc326c618c06769d8291">AP market close</a> ·
+          <a href="https://finance.yahoo.com/markets/live/stock-market-today-dow-sp-500-nasdaq-sink-as-jobs-report-fuels-fed-hike-bets-chip-stocks-sell-off-230134285.html">Yahoo Finance market live</a> ·
+          <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve">U.S. Treasury Daily Treasury Rates</a> ·
+          <a href="https://www.ogj.com/general-interest/economics-markets/news/55382552/diplomacy-overrides-fundamentals-for-oil-prices">OGJ oil market note</a>
+        </section>
+      </div>
+
+      <aside>
+        <div class="brief-box">
+          <h2>今日导航</h2>
+          <ol>
+            <li>主线是强非农引发 Fed path 重定价，不是普通科技回调。</li>
+            <li>先看 2Y 4.10%、10Y 4.50%、VIX 20 三个阈值。</li>
+            <li>SMH 是否企稳决定 AI 链条是短线去风险还是估值下修。</li>
+            <li>黄金和 BTC 同跌说明真实利率/美元压力仍是主导。</li>
+          </ol>
+        </div>
+        <div class="side-panel" style="margin-top:16px;">
+          <div class="chart-title">Market Regime</div>
+          <svg id="regimeChart" viewBox="0 0 320 210" role="img" aria-label="regime map"></svg>
+          <p class="section-note" style="margin:10px 0 0;">横轴：左侧代表增长/风险偏好承压，右侧代表增长/风险偏好仍有韧性；纵轴：越上方代表通胀/利率压力越强。当前位置从右中跳向左上：就业和利率压力上升，风险偏好明显承压。</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="data/2026-06-06_market_data.js?v=20260606-us-close"></script>
+  <script>
+    const DATA = window.MORNING_BRIEF_DATA;
+    let activeTickerIndex = 0;
+    let activeRange = "7d";
+    const strip = document.getElementById("tickerStrip");
+
+    function validateData(data) {
+      if (!data || !Array.isArray(data.tickers) || !data.tickers.length) throw new Error("ticker data missing");
+      if (!Array.isArray(data.ranges) || !data.ranges.includes("1d")) throw new Error("range data missing");
+      data.tickers.forEach(t => {
+        data.ranges.forEach(range => {
+          if (!Array.isArray(t.ranges?.[range]) || t.ranges[range].length < 2) {
+            throw new Error(`${t.sym} ${range} series invalid`);
+          }
+          t.ranges[range].forEach(value => {
+            if (!Number.isFinite(value)) throw new Error(`${t.sym} ${range} contains non numeric value`);
+          });
+        });
+        if (!Array.isArray(t.history) || t.history.length < 250) {
+          throw new Error(`${t.sym} daily history missing`);
+        }
+        t.history.forEach(point => {
+          if (!point.date || !Number.isFinite(point.value)) throw new Error(`${t.sym} daily history invalid`);
+        });
+        if (!Array.isArray(t.intraday) || t.intraday.length < 2) {
+          throw new Error(`${t.sym} intraday data missing`);
+        }
+        t.intraday.forEach(point => {
+          if (!point.time || !Number.isFinite(point.value)) throw new Error(`${t.sym} intraday data invalid`);
+        });
+      });
+      if (!data.treasury?.labels?.length || !Array.isArray(data.treasury.curves)) throw new Error("treasury data missing");
+      data.treasury.curves.forEach(curve => {
+        if (curve.values.length !== data.treasury.labels.length) throw new Error(`${curve.label} curve length mismatch`);
+      });
+      if (!Array.isArray(data.regime) || data.regime.length < 4) throw new Error("regime data missing");
+    }
+
+    function setStatus(text, ok = true) {
+      const status = document.getElementById("dataStatus");
+      status.textContent = text;
+      status.style.color = ok ? "var(--accent-2)" : "var(--red)";
+    }
+
+    function marketClass(direction) {
+      if (direction === "up") return "up";
+      if (direction === "down") return "down";
+      return "flat";
+    }
+
+    function marketColor(direction) {
+      if (direction === "up") return "#b3312c";
+      if (direction === "down") return "#147b45";
+      return "#66645f";
+    }
+
+    try {
+      validateData(DATA);
+      const days = Math.min(...DATA.tickers.map(t => t.history.length));
+      setStatus(`本地日频/日内缓存已加载并校验 · ${days}天 · ${DATA.asOf}`);
+    } catch (error) {
+      setStatus(`数据校验失败：${error.message}`, false);
+      throw error;
+    }
+
+    DATA.tickers.forEach((t, index) => {
+      const button = document.createElement("button");
+      button.className = "ticker" + (index === activeTickerIndex ? " active" : "");
+      button.innerHTML = `<span class="sym">${t.sym}</span><span class="val">${t.value}</span><span class="chg ${marketClass(t.direction)}">${t.change}</span>`;
+      button.addEventListener("click", () => selectTicker(index));
+      strip.appendChild(button);
+    });
+
+    const rangeControl = document.getElementById("rangeControl");
+    DATA.ranges.forEach(range => {
+      const button = document.createElement("button");
+      button.className = "range-btn" + (range === activeRange ? " active" : "");
+      button.textContent = range;
+      button.addEventListener("click", event => {
+        event.stopPropagation();
+        activeRange = range;
+        document.querySelectorAll(".range-btn").forEach(btn => btn.classList.toggle("active", btn.textContent === range));
+        drawSpark(DATA.tickers[activeTickerIndex]);
+      });
+      rangeControl.appendChild(button);
+    });
+
+    document.getElementById("curveToggle").addEventListener("click", event => {
+      event.stopPropagation();
+      const panel = document.getElementById("curvePanel");
+      const open = panel.classList.toggle("open");
+      event.currentTarget.textContent = open ? "收起" : "展开";
+      event.currentTarget.setAttribute("aria-expanded", String(open));
+    });
+
+    function scale(values, minPix, maxPix) {
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const span = max - min || 1;
+      return v => maxPix - ((v - min) / span) * (maxPix - minPix);
+    }
+
+    function parseChange(change) {
+      return Number(String(change).replace("%", ""));
+    }
+
+    function rangeDays(range) {
+      return { "1d": 1, "7d": 7, "30d": 30, "6m": 183, "1y": 366 }[range] || 7;
+    }
+
+    function hasOnlyTradingDays(history) {
+      return history.every(point => {
+        const day = new Date(`${point.date}T00:00:00Z`).getUTCDay();
+        return day !== 0 && day !== 6;
+      });
+    }
+
+    function historyForRange(ticker) {
+      if (activeRange === "1d") return ticker.intraday.map(point => ({ ...point, label: point.time }));
+      const tradingDayCounts = { "7d": 7, "30d": 30, "6m": 126, "1y": 252 };
+      const count = hasOnlyTradingDays(ticker.history)
+        ? Math.min(ticker.history.length, tradingDayCounts[activeRange] || 7)
+        : Math.min(ticker.history.length, rangeDays(activeRange) + 1);
+      return ticker.history.slice(-count).map(point => ({ ...point, label: fmtDateLabel(point.date) }));
+    }
+
+    function fmtDateLabel(date) {
+      const [year, month, day] = date.split("-");
+      return `${month}/${day}/${year.slice(2)}`;
+    }
+
+    function drawSpark(ticker) {
+      const svg = document.getElementById("sparkChart");
+      const w = 640, h = 260, pad = 34;
+      const series = historyForRange(ticker);
+      const values = series.map(point => point.value);
+      const xs = values.map((_, i) => pad + i * ((w - pad * 2) / (values.length - 1 || 1)));
+      const y = scale(values, pad, h - pad);
+      const points = values.map((v, i) => `${xs[i]},${y(v)}`).join(" ");
+      const area = `${pad},${h-pad} ${points} ${w-pad},${h-pad}`;
+      const color = marketColor(ticker.direction);
+      const markers = series.filter((_, i) => i === 0 || i === series.length - 1 || i % Math.ceil(series.length / 6) === 0);
+      const caption = activeRange === "1d" ? "1d · 日内走势 · 09:30-16:00 ET" : `${activeRange} · 日频缓存 · 最近收盘点为 2026-06-05`;
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${pad}" y1="${pad+i*(h-pad*2)/3}" x2="${w-pad}" y2="${pad+i*(h-pad*2)/3}"></line>`).join("")}</g>
+        <polygon points="${area}" fill="${color}" opacity=".10"></polygon>
+        ${values.map((v, i) => `<circle cx="${xs[i]}" cy="${y(v)}" r="${activeRange === "1y" ? .65 : activeRange === "6m" ? .8 : 1}" fill="${color}" opacity=".36"></circle>`).join("")}
+        <polyline points="${points}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        ${markers.map(point => {
+          const i = series.indexOf(point);
+          return `<circle cx="${xs[i]}" cy="${y(point.value)}" r="${i === values.length-1 ? 4 : 2.5}" fill="${color}"></circle>`;
+        }).join("")}
+        <text x="${pad}" y="${h-10}" fill="#66645f" font-size="11">${caption}</text>
+      `;
+    }
+
+    function selectTicker(index) {
+      activeTickerIndex = index;
+      const ticker = DATA.tickers[index];
+      document.querySelectorAll(".ticker").forEach((el, i) => el.classList.toggle("active", i === index));
+      document.getElementById("activeName").textContent = ticker.name;
+      document.getElementById("activeValue").textContent = ticker.value;
+      const change = document.getElementById("activeChange");
+      change.textContent = ticker.change;
+      change.className = marketClass(ticker.direction);
+      document.getElementById("activeNote").textContent = ticker.note;
+      drawSpark(ticker);
+    }
+
+    function drawCurve() {
+      const svg = document.getElementById("curveChart");
+      const w = 640, h = 260, pad = 38;
+      const labels = DATA.treasury.labels;
+      const curves = DATA.treasury.curves;
+      const all = curves.flatMap(curve => curve.values);
+      const y = scale(all, pad, h - pad);
+      const xs = labels.map((_, i) => pad + i * ((w - pad * 2) / (labels.length - 1)));
+      function path(vals) { return vals.map((v,i) => `${xs[i]},${y(v)}`).join(" "); }
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${pad}" y1="${pad+i*(h-pad*2)/3}" x2="${w-pad}" y2="${pad+i*(h-pad*2)/3}"></line>`).join("")}</g>
+        ${curves.map(curve => `<polyline points="${path(curve.values)}" fill="none" stroke="${curve.color}" stroke-width="${curve.width}" stroke-linecap="round" stroke-linejoin="round"></polyline>`).join("")}
+        ${curves.map(curve => curve.values.map((v,i) => `<circle cx="${xs[i]}" cy="${y(v)}" r="${curve.key === "current" ? 4 : 3}" fill="${curve.color}"></circle>`).join("")).join("")}
+        ${labels.map((label,i) => `<text x="${xs[i]}" y="${h-12}" text-anchor="middle" fill="#66645f" font-size="11">${label}</text>`).join("")}
+        <text x="${w-pad}" y="20" text-anchor="end" fill="#66645f" font-size="11">Daily Treasury par yield curve · local</text>
+      `;
+      document.getElementById("curveLegend").innerHTML = curves.map(curve => `<span class="legend-item"><span class="legend-swatch" style="background:${curve.color}; height:${Math.max(2, curve.width)}px"></span>${curve.label}</span>`).join("");
+    }
+
+    function drawBondMoveChart() {
+      const svg = document.getElementById("bondMoveChart");
+      const w = 760, h = 310;
+      const padLeft = 62, padRight = 36, padTop = 38, padBottom = 44;
+      const tenors = ["2Y", "5Y", "10Y", "30Y"];
+      const prevDate = "2026-06-04";
+      const currentDate = "2026-06-05";
+      const prev = [4.05, 4.18, 4.47, 4.97];
+      const current = [4.17, 4.29, 4.55, 5.01];
+      const bp = current.map((v, i) => Math.round((v - prev[i]) * 100));
+      const all = prev.concat(current);
+      const y = scale(all, padTop, h - padBottom);
+      const xs = tenors.map((_, i) => padLeft + i * ((w - padLeft - padRight) / (tenors.length - 1)));
+      const line = values => values.map((v, i) => `${xs[i]},${y(v)}`).join(" ");
+      const fmtBp = value => value > 0 ? `+${value}bp` : `${value}bp`;
+      const bpColor = value => value > 0 ? "#b3312c" : value < 0 ? "#147b45" : "#66645f";
+      svg.innerHTML = `
+        <rect width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${padLeft}" y1="${padTop+i*(h-padTop-padBottom)/3}" x2="${w-padRight}" y2="${padTop+i*(h-padTop-padBottom)/3}"></line>`).join("")}</g>
+        <polyline points="${line(prev)}" fill="none" stroke="#8a8172" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        <polyline points="${line(current)}" fill="none" stroke="#147b45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        ${tenors.map((tenor, i) => `
+          <line x1="${xs[i]}" y1="${y(prev[i])}" x2="${xs[i]}" y2="${y(current[i])}" stroke="${bpColor(bp[i])}" stroke-width="1.4" stroke-dasharray="3 3" opacity=".65"></line>
+          <circle cx="${xs[i]}" cy="${y(prev[i])}" r="5" fill="#8a8172"></circle>
+          <circle cx="${xs[i]}" cy="${y(current[i])}" r="6" fill="#147b45"></circle>
+          <text x="${xs[i]}" y="${h-18}" text-anchor="middle" fill="#171717" font-size="12" font-weight="800">${tenor}</text>
+          <text x="${xs[i]}" y="${Math.min(y(prev[i]), y(current[i])) - 12}" text-anchor="middle" fill="${bpColor(bp[i])}" font-size="12" font-weight="800">${fmtBp(bp[i])}</text>
+        `).join("")}
+        <text x="${padLeft}" y="22" fill="#8a8172" font-size="12">${prevDate}</text>
+        <text x="${padLeft + 92}" y="22" fill="#147b45" font-size="12">${currentDate}</text>
+        <text x="${w-padRight}" y="22" text-anchor="end" fill="#66645f" font-size="12">收益率，%</text>
+      `;
+    }
+
+    function drawRegime() {
+      const svg = document.getElementById("regimeChart");
+      const points = DATA.regime.map(point => {
+        const x = 42 + point.x * 236;
+        const y = 170 - point.y * 140;
+        const labelLeft = x > 220;
+        const labelAbove = Math.abs(y - 104) < 18;
+        const tx = labelLeft ? x - 12 : x + 12;
+        const ty = labelAbove ? y - 13 : y + 4;
+        const anchor = labelLeft ? "end" : "start";
+        const labelWidth = point.key === "current" ? 34 : 24;
+        const bgX = labelLeft ? tx - labelWidth - 4 : tx - 4;
+        const bgY = ty - 11;
+        return `
+          <circle cx="${x}" cy="${y}" r="${point.key === "current" ? 9 : 7}" fill="${point.color}"></circle>
+          <rect x="${bgX}" y="${bgY}" width="${labelWidth + 8}" height="16" rx="2" fill="#fffdf8" opacity=".88"></rect>
+          <text x="${tx}" y="${ty}" text-anchor="${anchor}" fill="#171717" font-size="11" font-weight="${point.key === "current" ? 800 : 600}">${point.label}</text>
+        `;
+      }).join("");
+      svg.innerHTML = `
+        <rect width="320" height="210" fill="#fffdf8"></rect>
+        <line x1="160" y1="28" x2="160" y2="180" stroke="#d9d2c3"></line>
+        <line x1="35" y1="104" x2="288" y2="104" stroke="#d9d2c3"></line>
+        <text x="160" y="18" text-anchor="middle" fill="#66645f" font-size="11">通胀压力 ↑</text>
+        <text x="160" y="202" text-anchor="middle" fill="#66645f" font-size="11">通胀压力 ↓</text>
+        <text x="36" y="92" fill="#66645f" font-size="11">增长承压</text>
+        <text x="284" y="92" text-anchor="end" fill="#66645f" font-size="11">增长韧性</text>
+        ${points}
+      `;
+    }
+
+    drawSpark(DATA.tickers[0]);
+    drawBondMoveChart();
+    drawCurve();
+    drawRegime();
+  </script>
+</body>
+</html>

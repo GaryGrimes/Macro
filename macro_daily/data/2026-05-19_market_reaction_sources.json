@@ -1,0 +1,182 @@
+{
+  "asOf": "2026-05-18",
+  "coverageWindow": {
+    "from": "2026-05-15",
+    "to": "2026-05-19"
+  },
+  "summary": "Market reaction centered on oil-led inflation pressure, renewed Fed-hike pricing, and long-end term-premium/auction absorption; community discussion echoed the long-duration financing shock but was kept low weight.",
+  "methodology": "Themes are weighted by source reliability, recency, evidence strength, and consistency with the 2026-05-18 Treasury curve tape.",
+  "themes": [
+    {
+      "title": "Fed path / real-yield repricing",
+      "weight": 31,
+      "stance": "dominant",
+      "interpretation": "Wire and market commentary framed the Treasury selloff as a repricing away from 2026 cuts and toward possible Fed hikes as energy-driven inflation pressure persisted.",
+      "linkedNarrativeIds": ["fed_path"],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via MarketScreener",
+          "publishedAt": "2026-05-15",
+          "url": "https://ca.marketscreener.com/news/dollar-climbs-for-fifth-straight-day-as-fed-rate-hike-bets-grow-ce7f5bd3d988f723",
+          "summary": "Reuters reported that Fed policy expectations had tilted toward possible hikes, with CME FedWatch odds for at least one December hike rising to 49.5% from 14.3% a week earlier.",
+          "reliability": 0.85,
+          "weight": 0.9
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Sahm Capital",
+          "publishedAt": "2026-05-15",
+          "url": "https://www.sahmcapital.com/news/content/treasuries-us-yields-hit-11-month-high-on-rate-hike-bets-inflation-fears-2026-05-15",
+          "summary": "Reuters described U.S. yields reaching multi-month highs as investors priced a higher probability that the Fed may need to hike in response to inflation pressure.",
+          "reliability": 0.85,
+          "weight": 0.82
+        },
+        {
+          "sourceType": "community",
+          "sourceName": "Reddit r/Economics",
+          "publishedAt": "2026-05-18",
+          "url": "https://www.reddit.com/r/Economics/comments/1tew90f/traders_now_see_next_fed_interest_rate_move_as_a/",
+          "summary": "Discussion focused on futures pricing a hike rather than cuts, but this is treated as low-reliability community color.",
+          "reliability": 0.45,
+          "weight": 0.25
+        }
+      ]
+    },
+    {
+      "title": "Energy inflation and inflation-expectation repricing",
+      "weight": 28,
+      "stance": "dominant",
+      "interpretation": "Coverage repeatedly tied the global rates selloff to oil above $100 and inflation expectations from the Middle East energy shock.",
+      "linkedNarrativeIds": ["inflation_comp"],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com Canada",
+          "publishedAt": "2026-05-18",
+          "url": "https://ca.investing.com/news/economy-news/global-bond-rout-deepens-as-inflation-fears-trigger-ratehike-bets-4644508",
+          "summary": "Reuters reported that bonds from Tokyo to New York extended losses as rising energy prices fanned inflation fears and rate-hike bets.",
+          "reliability": 0.85,
+          "weight": 0.88
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com",
+          "publishedAt": "2026-05-18",
+          "url": "https://www.investing.com/news/economy-news/morning-bid-bonds-get-a-taste-of-oils-demand-destruction-4694627",
+          "summary": "Reuters noted 10Y Treasury yields had reached 4.631% and 30Y yields 5.159% during the global bond rout as oil-driven inflation risk dominated the market setup.",
+          "reliability": 0.85,
+          "weight": 0.82
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Kiplinger",
+          "publishedAt": "2026-05-15",
+          "url": "https://www.kiplinger.com/economic-forecasts/interest-rates",
+          "summary": "Kiplinger linked rising long-term rates to crude oil above $100 and market concern that elevated energy prices would feed longer-term inflation.",
+          "reliability": 0.75,
+          "weight": 0.65
+        }
+      ]
+    },
+    {
+      "title": "Long-end term premium / fiscal supply and auction absorption",
+      "weight": 23,
+      "stance": "mixed",
+      "interpretation": "The long-end narrative was active because 30Y yields remained above 5%, but auction evidence was mixed: the May 13 long-bond sale tailed modestly while indirect demand stayed sizable.",
+      "linkedNarrativeIds": ["term_premium"],
+      "evidence": [
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury",
+          "publishedAt": "2026-05-18",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+          "summary": "Treasury's 2026-05-18 curve showed DGS30 at 5.14% and DGS10 at 4.61%, keeping long-end yield levels elevated.",
+          "reliability": 1,
+          "weight": 0.9
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "TreasuryDirect",
+          "publishedAt": "2026-05-13",
+          "url": "https://www.treasurydirect.gov/instit/annceresult/press/preanre/2026/R_20260513_2.pdf",
+          "summary": "The 30Y auction cleared at a 5.046% high yield with a 2.30 bid-to-cover ratio, giving a direct supply-absorption check for the long end.",
+          "reliability": 1,
+          "weight": 0.82
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Fazen Markets / InvestingLive summary",
+          "publishedAt": "2026-05-13",
+          "url": "https://fazen.markets/en/us-treasury-25bn-30-year-5-046-percent-auction",
+          "summary": "Auction commentary characterized the result as a modest tail with healthy indirect participation but a tepid overall grade.",
+          "reliability": 0.7,
+          "weight": 0.55
+        },
+        {
+          "sourceType": "community",
+          "sourceName": "Reddit r/NewsExchange",
+          "publishedAt": "2026-05-15",
+          "url": "https://www.reddit.com/r/NewsExchange/comments/1te67d1/the_30year_treasury_yield_just_broke_to_its/",
+          "summary": "Community discussion treated the 30Y move above 5% as a fiscal/inflation-risk signal, but this is low-weight color rather than institutional evidence.",
+          "reliability": 0.45,
+          "weight": 0.18
+        }
+      ]
+    },
+    {
+      "title": "Risk appetite / liquidity shock",
+      "weight": 10,
+      "stance": "mixed",
+      "interpretation": "Equity and dollar coverage showed the bond rout denting sentiment, but the move was not a full risk-off liquidity shock because rates and oil were the primary catalysts.",
+      "linkedNarrativeIds": ["risk_liquidity"],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com",
+          "publishedAt": "2026-05-17",
+          "url": "https://www.investing.com/news/economy-news/dollar-firms-as-oil-climbs-bond-rout-saps-risk-appetite-4694597",
+          "summary": "Reuters described the global bond selloff as denting risk appetite while oil and elevated yields drove the cross-asset tone.",
+          "reliability": 0.85,
+          "weight": 0.55
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via MeckTimes",
+          "publishedAt": "2026-05-18",
+          "url": "https://mecktimes.com/news/2026/05/18/wall-street-mixed-as-treasury-yields-ease-oil-prices-retreat/",
+          "summary": "Reuters reported that U.S. stocks were mixed after yields and oil eased from intraday pressure, implying risk stress was present but not dominant.",
+          "reliability": 0.75,
+          "weight": 0.45
+        }
+      ]
+    },
+    {
+      "title": "Technical momentum / exhaustion",
+      "weight": 8,
+      "stance": "secondary",
+      "interpretation": "Technical and community commentary focused on the speed of the yield move and mortgage-rate transmission, but this remains a timing overlay.",
+      "linkedNarrativeIds": ["technical_exhaustion"],
+      "evidence": [
+        {
+          "sourceType": "community",
+          "sourceName": "Reddit r/MortgageRates",
+          "publishedAt": "2026-05-18",
+          "url": "https://www.reddit.com/r/MortgageRates/comments/1tgpapo/daily_mbs_mortgage_rate_monitor_minor_morning/",
+          "summary": "Mortgage-rate commentary described a minor recovery after Friday's sharp selloff and noted the 10Y yield had closed at 4.59% on 2026-05-15.",
+          "reliability": 0.45,
+          "weight": 0.28
+        },
+        {
+          "sourceType": "community",
+          "sourceName": "Reddit r/RealEstate",
+          "publishedAt": "2026-05-18",
+          "url": "https://www.reddit.com/r/RealEstate/comments/1th0jug/the_bond_market_just_killed_the_wait_for_rate/",
+          "summary": "Community discussion emphasized 10Y around 4.6% and 30Y above 5% as a mortgage and financing-cost shock.",
+          "reliability": 0.45,
+          "weight": 0.22
+        }
+      ]
+    }
+  ]
+}

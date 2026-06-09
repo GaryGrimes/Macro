@@ -156,6 +156,24 @@ button {
   font-size: 14px;
 }
 
+.rule-note {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-2);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.hero-rulebook .rule-chip:first-child {
+  align-content: start;
+  min-height: 94px;
+}
+
+.hero-rulebook .rule-chip:first-child .rule-value {
+  font-weight: 600;
+  line-height: 1.25;
+}
+
 .home-dashboard {
   display: grid;
   grid-template-columns: minmax(620px, 1fr) minmax(320px, 0.45fr);
@@ -369,12 +387,199 @@ button {
   overflow-x: auto;
 }
 
+.rate-shock-guide {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: -4px 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(127, 209, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(127, 209, 255, 0.05);
+  color: var(--text-1);
+}
+
+.rate-shock-guide span {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font: 700 11px/1.4 "IBM Plex Mono", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rate-shock-guide p {
+  margin: 0;
+  color: var(--text-1);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .rate-shock-table {
   width: 100%;
   min-width: 1120px;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 13px;
+}
+
+.market-reaction-summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid rgba(127, 209, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(127, 209, 255, 0.06);
+}
+
+.market-reaction-summary h3 {
+  margin: 3px 0 6px;
+  color: var(--text-0);
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.market-reaction-summary p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.reaction-kicker,
+.reaction-rank,
+.reaction-weight,
+.reaction-status,
+.reaction-tags span,
+.reaction-evidence-list span,
+.reaction-evidence-list strong {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.reaction-kicker {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reaction-status {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(127, 209, 255, 0.18);
+  background: rgba(127, 209, 255, 0.08);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.reaction-status.is-missing {
+  border-color: rgba(255, 194, 107, 0.2);
+  background: rgba(255, 194, 107, 0.08);
+  color: #ffc26b;
+}
+
+.market-reaction-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.market-reaction-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 230px;
+  padding: 14px;
+  border: 1px solid rgba(173, 216, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(12, 20, 31, 0.72);
+}
+
+.reaction-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.reaction-rank {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.reaction-weight {
+  color: #ffc26b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.market-reaction-card h3 {
+  margin: 0;
+  color: var(--text-0);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.market-reaction-card > p {
+  margin: 0;
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.reaction-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reaction-tags span {
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(127, 209, 255, 0.08);
+  color: var(--text-1);
+  font-size: 10px;
+}
+
+.reaction-evidence-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reaction-evidence-list li {
+  display: grid;
+  gap: 3px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.reaction-evidence-list span {
+  color: var(--text-2);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.reaction-evidence-list strong {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.reaction-evidence-list p {
+  margin: 0;
+  color: var(--text-1);
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .rate-shock-table th,
@@ -495,8 +700,8 @@ button {
   position: relative;
   height: 6px;
   border-radius: 999px;
-  background:
-    linear-gradient(90deg, rgba(41, 190, 126, 0.72), rgba(173, 216, 255, 0.26) 48%, rgba(173, 216, 255, 0.26) 52%, rgba(255, 91, 91, 0.72));
+  overflow: hidden;
+  background: rgba(126, 148, 176, 0.18);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
@@ -510,6 +715,14 @@ button {
   background: rgba(255, 255, 255, 0.28);
 }
 
+.pctile-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(108, 183, 255, 0.48), rgba(168, 132, 255, 0.62), rgba(255, 194, 107, 0.78));
+}
+
 .pctile-marker {
   position: absolute;
   top: 50%;
@@ -517,19 +730,23 @@ button {
   height: 12px;
   border: 2px solid var(--text-0);
   border-radius: 999px;
-  background: var(--text-1);
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.18);
+  background: #a7c7ff;
+  box-shadow: 0 0 12px rgba(127, 209, 255, 0.26);
   transform: translate(-50%, -50%);
 }
 
-.pctile-cell.is-up .pctile-marker {
-  background: #ff7872;
-  box-shadow: 0 0 16px rgba(255, 91, 91, 0.42);
+.pctile-cell.is-calm .pctile-marker {
+  background: #8fb4e8;
 }
 
-.pctile-cell.is-down .pctile-marker {
-  background: #4fd396;
-  box-shadow: 0 0 16px rgba(41, 190, 126, 0.38);
+.pctile-cell.is-elevated .pctile-marker {
+  background: #b998ff;
+  box-shadow: 0 0 16px rgba(168, 132, 255, 0.36);
+}
+
+.pctile-cell.is-extreme .pctile-marker {
+  background: #ffc26b;
+  box-shadow: 0 0 16px rgba(255, 194, 107, 0.38);
 }
 
 .pctile-label {
@@ -689,6 +906,21 @@ button {
   gap: 12px;
 }
 
+.score-rationale {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid rgba(127, 209, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(127, 209, 255, 0.06);
+}
+
+.score-rationale-label {
+  color: var(--accent);
+  font: 700 11px/1 "IBM Plex Mono", monospace;
+  text-transform: uppercase;
+}
+
 .narrative-detail-card h3,
 .duration-rule-card h3 {
   margin: 0;
@@ -758,8 +990,9 @@ button {
 
 .technical-signal {
   display: grid;
-  gap: 10px;
-  min-height: 130px;
+  align-content: start;
+  gap: 12px;
+  min-height: 154px;
 }
 
 .technical-value {
@@ -771,6 +1004,191 @@ button {
   color: var(--text-2);
   font: 500 11px/1.2 "IBM Plex Mono", monospace;
   text-transform: uppercase;
+}
+
+.technical-status.is-exhaustion,
+.technical-status.is-watch {
+  color: #ffc26b;
+}
+
+.technical-status.is-unavailable {
+  color: rgba(173, 216, 255, 0.48);
+}
+
+.nine-turn-visual {
+  display: grid;
+  gap: 10px;
+}
+
+.nine-turn-counts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.nine-turn-counts span {
+  display: grid;
+  gap: 3px;
+  min-height: 46px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: rgba(127, 209, 255, 0.07);
+}
+
+.nine-turn-counts strong {
+  color: var(--text-0);
+  font: 700 22px/1 "IBM Plex Mono", monospace;
+}
+
+.nine-turn-counts small,
+.technical-gauge small {
+  color: var(--text-2);
+  font-size: 11px;
+}
+
+.nine-dot-row {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.nine-dot {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(126, 148, 176, 0.22);
+}
+
+.nine-dot.is-active {
+  background: linear-gradient(90deg, rgba(108, 183, 255, 0.82), rgba(168, 132, 255, 0.9));
+  box-shadow: 0 0 12px rgba(127, 209, 255, 0.22);
+}
+
+.gauge-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.technical-gauge {
+  display: grid;
+  gap: 6px;
+}
+
+.gauge-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-1);
+  font-size: 12px;
+}
+
+.gauge-meta strong {
+  color: var(--text-0);
+  font: 700 15px/1 "IBM Plex Mono", monospace;
+}
+
+.gauge-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(126, 148, 176, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.gauge-track.is-percent {
+  background: linear-gradient(90deg, rgba(108, 183, 255, 0.34), rgba(168, 132, 255, 0.36), rgba(255, 194, 107, 0.56));
+}
+
+.gauge-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.gauge-band.is-low {
+  left: 30%;
+}
+
+.gauge-band.is-high {
+  left: 70%;
+}
+
+.gauge-track.is-bipolar {
+  background: linear-gradient(90deg, rgba(108, 183, 255, 0.4), rgba(126, 148, 176, 0.2) 50%, rgba(255, 194, 107, 0.48));
+}
+
+.gauge-zero {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.gauge-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.gauge-marker {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--text-0);
+  border-radius: 999px;
+  background: #d8e7ff;
+  box-shadow: 0 0 14px rgba(127, 209, 255, 0.26);
+  transform: translate(-50%, -50%);
+}
+
+.unavailable-visual {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(126, 148, 176, 0.08);
+  color: rgba(213, 225, 243, 0.72);
+  font: 700 14px/1 "IBM Plex Mono", monospace;
+}
+
+.unavailable-visual span {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(173, 216, 255, 0.38);
+  border-radius: 999px;
+}
+
+.timing-overlay-visual {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(127, 209, 255, 0.08);
+}
+
+.timing-overlay-visual strong {
+  color: var(--text-0);
+  font: 700 16px/1.25 "IBM Plex Mono", monospace;
+}
+
+.timing-orb {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #7fd1ff;
+  box-shadow: 0 0 18px rgba(127, 209, 255, 0.38);
 }
 
 .technical-advice {
@@ -1585,6 +2003,7 @@ button {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .market-reaction-grid,
   .narrative-ranking-grid,
   .technical-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1612,6 +2031,7 @@ button {
   .flyout-header,
   .chart-header,
   .section-head,
+  .market-reaction-summary,
   .daily-cache-banner {
     flex-direction: column;
     align-items: flex-start;
@@ -1675,6 +2095,7 @@ button {
   .thesis-band,
   .macro-grid,
   .fear-grid,
+  .market-reaction-grid,
   .narrative-ranking-grid,
   .narrative-detail-grid,
   .duration-rule-grid,

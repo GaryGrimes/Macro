@@ -1,0 +1,991 @@
+{
+  "date": "2026-06-06",
+  "marketDate": "2026-06-05",
+  "source": "macro_daily automation",
+  "generatedAt": "2026-06-06T11:47:09+08:00",
+  "reportTitle": "Rates tape is not in a shock window",
+  "reportSummary": "2026-06-05 rates show DGS10 5D +10bp, DGS30 5D +2bp, bear flattening, and duration index 0 without technical exhaustion confirmation.",
+  "firstRead": {
+    "title": "No trade / wait",
+    "subtitle": "DGS10 5D +10bp、DGS30 5D +2bp；技术面未确认衰竭。",
+    "asOf": "2026-06-05",
+    "source": "durationAction"
+  },
+  "marketStatus": "Latest confirmed U.S. rates data is 2026-06-05; 2026-06-06 does not yet have a complete U.S. rates close in local cache.",
+  "rateShockRows": [
+    {
+      "tenor": "2Y",
+      "symbol": "DGS2",
+      "level": "4.17%",
+      "d1": "+12bp",
+      "d1Pctile": "93%",
+      "d5": "+19bp",
+      "d5Pctile": "84%",
+      "d21": "+30bp",
+      "d21Pctile": "70%",
+      "d3m": "+61bp",
+      "d3mPctile": "74%",
+      "regimePctile": "84%",
+      "zScore": "1.6",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "1976-06-01 to 2026-06-05",
+      "comparedTo": {
+        "d1": "2026-06-04",
+        "d5": "2026-05-29",
+        "d21": "2026-05-06",
+        "d3m": "2026-03-09"
+      },
+      "raw": {
+        "d1Bp": 12,
+        "d5Bp": 19,
+        "d21Bp": 30,
+        "d3mBp": 61,
+        "d5Pctile": 83.5,
+        "zScore5D": 1.59
+      }
+    },
+    {
+      "tenor": "3Y",
+      "symbol": "DGS3",
+      "level": "4.22%",
+      "d1": "+12bp",
+      "d1Pctile": "94%",
+      "d5": "+16bp",
+      "d5Pctile": "79%",
+      "d21": "+33bp",
+      "d21Pctile": "72%",
+      "d3m": "+64bp",
+      "d3mPctile": "76%",
+      "regimePctile": "76%",
+      "zScore": "1.3",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "1962-01-02 to 2026-06-05",
+      "comparedTo": {
+        "d1": "2026-06-04",
+        "d5": "2026-05-29",
+        "d21": "2026-05-06",
+        "d3m": "2026-03-09"
+      },
+      "raw": {
+        "d1Bp": 12,
+        "d5Bp": 16,
+        "d21Bp": 33,
+        "d3mBp": 64,
+        "d5Pctile": 78.8,
+        "zScore5D": 1.34
+      }
+    },
+    {
+      "tenor": "5Y",
+      "symbol": "DGS5",
+      "level": "4.29%",
+      "d1": "+11bp",
+      "d1Pctile": "93%",
+      "d5": "+16bp",
+      "d5Pctile": "79%",
+      "d21": "+30bp",
+      "d21Pctile": "70%",
+      "d3m": "+58bp",
+      "d3mPctile": "74%",
+      "regimePctile": "76%",
+      "zScore": "1.3",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "1962-01-02 to 2026-06-05",
+      "comparedTo": {
+        "d1": "2026-06-04",
+        "d5": "2026-05-29",
+        "d21": "2026-05-06",
+        "d3m": "2026-03-09"
+      },
+      "raw": {
+        "d1Bp": 11,
+        "d5Bp": 16,
+        "d21Bp": 30,
+        "d3mBp": 58,
+        "d5Pctile": 78.8,
+        "zScore5D": 1.31
+      }
+    },
+    {
+      "tenor": "10Y",
+      "symbol": "DGS10",
+      "level": "4.55%",
+      "d1": "+8bp",
+      "d1Pctile": "88%",
+      "d5": "+10bp",
+      "d5Pctile": "63%",
+      "d21": "+19bp",
+      "d21Pctile": "55%",
+      "d3m": "+43bp",
+      "d3mPctile": "67%",
+      "regimePctile": "55%",
+      "zScore": "0.9",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "1962-01-02 to 2026-06-05",
+      "comparedTo": {
+        "d1": "2026-06-04",
+        "d5": "2026-05-29",
+        "d21": "2026-05-06",
+        "d3m": "2026-03-09"
+      },
+      "raw": {
+        "d1Bp": 8,
+        "d5Bp": 10,
+        "d21Bp": 19,
+        "d3mBp": 43,
+        "d5Pctile": 62.8,
+        "zScore5D": 0.94
+      }
+    },
+    {
+      "tenor": "30Y",
+      "symbol": "DGS30",
+      "level": "5.01%",
+      "d1": "+4bp",
+      "d1Pctile": "65%",
+      "d5": "+2bp",
+      "d5Pctile": "17%",
+      "d21": "+7bp",
+      "d21Pctile": "23%",
+      "d3m": "+29bp",
+      "d3mPctile": "52%",
+      "regimePctile": "16%",
+      "zScore": "0.2",
+      "signal": "policy path shock",
+      "proxyUsed": true,
+      "historyWindow": "1977-02-15 to 2026-06-05",
+      "comparedTo": {
+        "d1": "2026-06-04",
+        "d5": "2026-05-29",
+        "d21": "2026-05-06",
+        "d3m": "2026-03-09"
+      },
+      "raw": {
+        "d1Bp": 4,
+        "d5Bp": 2,
+        "d21Bp": 7,
+        "d3mBp": 29,
+        "d5Pctile": 16.5,
+        "zScore5D": 0.23
+      }
+    }
+  ],
+  "curveShape": {
+    "horizon": "5D",
+    "label": "bear flattening",
+    "interpretation": "Short/intermediate policy-path repricing is stronger than long-end stress; 10Y is cleaner than 30Y if a shock window appears.",
+    "spreads": {
+      "3s10s": {
+        "level": "33bp",
+        "change": "-6bp",
+        "comparedTo": "2026-05-29"
+      },
+      "5s30s": {
+        "level": "72bp",
+        "change": "-14bp",
+        "comparedTo": "2026-05-29"
+      },
+      "10s30s": {
+        "level": "46bp",
+        "change": "-8bp",
+        "comparedTo": "2026-05-29"
+      }
+    },
+    "moves": {
+      "3Y": "+16bp",
+      "5Y": "+16bp",
+      "10Y": "+10bp",
+      "30Y": "+2bp"
+    },
+    "raw": {
+      "d3Bp": 16,
+      "d5Bp": 16,
+      "d10Bp": 10,
+      "d30Bp": 2,
+      "spread3s10ChangeBp": -6,
+      "spread5s30ChangeBp": -14,
+      "spread10s30ChangeBp": -8
+    },
+    "eventContext": {
+      "asOf": "2026-06-05",
+      "sourceCoverageStatus": "ready",
+      "dataDateMismatch": false,
+      "summary": "外部市场叙事覆盖到 2026-06-05，本地曲线 tape 覆盖到 2026-06-05。",
+      "implication": "曲线形态和外部叙事日期一致或外部叙事不可用。",
+      "topThemes": [
+        {
+          "title": "非农超预期 / Fed path 重新定价",
+          "weight": 42,
+          "linkedNarrativeIds": [
+            "fed_path"
+          ],
+          "interpretation": "2026-06-05 的核心冲击是就业数据强于预期，使市场减少对近期降息的定价，并把利率上行解释为 policy path / higher-for-longer 重新定价。该主题与本地规则中的 Fed path repricing 对应；本地曲线 tape 的 3Y/5Y 上行强于 30Y，进一步支持短中端政策路径和 real-yield 折现率冲击是主线。"
+        },
+        {
+          "title": "实际利率 / 折现率上行压制 AI beta 成长估值",
+          "weight": 28,
+          "linkedNarrativeIds": [
+            "risk_liquidity",
+            "fed_path"
+          ],
+          "interpretation": "非农强劲本身不是增长衰退冲击，而是通过收益率和实际折现率上行压制高估值成长股；AI beta、半导体和长久期成长资产对折现率更敏感，因此权益 selloff 的风险偏好层面应归入 Risk appetite / liquidity shock，而不是简单写成 recession hedge。"
+        },
+        {
+          "title": "美债收益率上行 / 短中端政策路径主导",
+          "weight": 18,
+          "linkedNarrativeIds": [
+            "fed_path",
+            "term_premium"
+          ],
+          "interpretation": "外部报道显示非农后美债收益率上行；本地曲线 tape 已覆盖 2026-06-05，显示 3Y/5Y 5D 上行更强、10Y 上行、30Y 跟随有限，形态更接近 bear flattening / policy path shock，而不是 30Y 独立 term-premium stress。"
+        }
+      ]
+    }
+  },
+  "driverAttribution": {
+    "horizon": "5D",
+    "5Y": {
+      "move": "+16bp",
+      "proxyUsed": false,
+      "realYield": {
+        "contribution": "+20bp",
+        "share": "83%"
+      },
+      "breakeven": {
+        "contribution": "-4bp",
+        "share": "17%"
+      },
+      "residual": {
+        "contribution": "0bp",
+        "share": "0%"
+      },
+      "dominantDriver": "real-yield",
+      "interpretation": "5Y move is real-yield led.",
+      "raw": {
+        "nominalBp": 16,
+        "realYieldBp": 20,
+        "breakevenBp": -4,
+        "residualBp": 0
+      }
+    },
+    "10Y": {
+      "move": "+10bp",
+      "proxyUsed": false,
+      "realYield": {
+        "contribution": "+12bp",
+        "share": "86%"
+      },
+      "breakeven": {
+        "contribution": "-2bp",
+        "share": "14%"
+      },
+      "residual": {
+        "contribution": "0bp",
+        "share": "0%"
+      },
+      "dominantDriver": "real-yield",
+      "interpretation": "10Y move is real-yield led.",
+      "raw": {
+        "nominalBp": 10,
+        "realYieldBp": 12,
+        "breakevenBp": -2,
+        "residualBp": 0
+      }
+    },
+    "30Y": {
+      "move": "+2bp",
+      "proxyUsed": true,
+      "realYield": "unavailable",
+      "breakeven": "unavailable",
+      "termPremium": "unavailable",
+      "proxyEvidence": [
+        "5s30s changed -14bp from 2026-05-29 to 2026-06-05.",
+        "10s30s changed -8bp from 2026-05-29 to 2026-06-05.",
+        "DGS30 changed +2bp from 2026-05-29 to 2026-06-05."
+      ],
+      "interpretation": "30Y did not independently weaken over the 5D window; long-end term-premium stress is not confirmed by local curve proxies.",
+      "raw": {
+        "moveBp": 2,
+        "spread5s30ChangeBp": -14,
+        "spread10s30ChangeBp": -8
+      }
+    },
+    "inflationAnchor": {
+      "t5yifr": "0bp",
+      "comparedTo": "2026-05-29",
+      "source": "Treasury-derived T5YIFR proxy",
+      "proxyUsed": true,
+      "note": "T5YIFR moved 0bp from 2026-05-29 to 2026-06-05; source is Treasury-derived T5YIFR proxy."
+    },
+    "curveLink": {
+      "asOf": "2026-06-05",
+      "module2Label": "bear flattening",
+      "linkedThemes": [
+        "非农超预期 / Fed path 重新定价",
+        "实际利率 / 折现率上行压制 AI beta 成长估值",
+        "美债收益率上行 / 短中端政策路径主导"
+      ],
+      "conclusion": "Module 3 confirms Module 2: the selloff is short/intermediate-led and real-yield-led, matching a nonfarm / Fed-path discount-rate shock rather than a 30Y term-premium shock.",
+      "evidence": [
+        "Module 1.5 top themes: 非农超预期 / Fed path 重新定价 / 实际利率 / 折现率上行压制 AI beta 成长估值 / 美债收益率上行 / 短中端政策路径主导.",
+        "Module 2 curve label is bear flattening as of 2026-06-05.",
+        "5Y attribution is real-yield: real yield +20bp, breakeven -4bp.",
+        "10Y attribution is real-yield: real yield +12bp, breakeven -2bp.",
+        "30Y proxy: +2bp with 10s30s -8bp and 5s30s -14bp."
+      ]
+    }
+  },
+  "crossAssetSignals": {
+    "source": "CNN local cache + FRED public cache",
+    "signals": [
+      {
+        "title": "CNN Fear & Greed",
+        "score": 42.1,
+        "rating": "fear",
+        "updatedAt": "2026-06-05",
+        "latestValue": "unavailable"
+      },
+      {
+        "title": "VIX",
+        "score": 50,
+        "rating": "neutral",
+        "updatedAt": "2026-06-05",
+        "latestValue": 21.51
+      },
+      {
+        "title": "Junk bond demand",
+        "score": 5.8,
+        "rating": "extreme fear",
+        "updatedAt": "2026-06-05",
+        "latestValue": 1.35
+      },
+      {
+        "title": "Safe haven demand",
+        "score": 45,
+        "rating": "fear",
+        "updatedAt": "2026-06-05",
+        "latestValue": 1.38
+      },
+      {
+        "title": "Stock breadth",
+        "score": 28,
+        "rating": "fear",
+        "updatedAt": "2026-06-05",
+        "latestValue": 1022.8
+      },
+      {
+        "title": "S&P 500 momentum",
+        "score": 58.4,
+        "rating": "greed",
+        "updatedAt": "2026-06-05",
+        "latestValue": 7383.74
+      },
+      {
+        "title": "VIXCLS",
+        "type": "volatility",
+        "score": 17.82,
+        "rating": "neutral",
+        "updatedAt": "2026-05-18",
+        "latestValue": 17.82,
+        "unit": "index",
+        "source": "FRED",
+        "change5D": "-3.0%"
+      },
+      {
+        "title": "HY OAS",
+        "type": "credit spread",
+        "score": 2.83,
+        "rating": "greed",
+        "updatedAt": "2026-05-18",
+        "latestValue": 2.83,
+        "unit": "pct",
+        "source": "FRED",
+        "change5D": "+1.4%"
+      },
+      {
+        "title": "Broad dollar",
+        "type": "dollar",
+        "score": 119.28,
+        "rating": "neutral",
+        "updatedAt": "2026-05-15",
+        "latestValue": 119.28,
+        "unit": "index",
+        "source": "FRED",
+        "change5D": "+1.1%"
+      },
+      {
+        "title": "WTI oil",
+        "type": "oil",
+        "score": 101.56,
+        "rating": "falling",
+        "updatedAt": "2026-05-11",
+        "latestValue": 101.56,
+        "unit": "usd",
+        "source": "FRED",
+        "change5D": "-7.5%"
+      },
+      {
+        "title": "Gold",
+        "type": "gold",
+        "score": 4561.9,
+        "rating": "falling",
+        "updatedAt": "2026-05-15",
+        "latestValue": 4561.9,
+        "unit": "usd",
+        "source": "GitHub XAUUSD + manual AP COMEX overlay",
+        "proxyNote": "This is not LBMA PM fix. It is used only as a cross-asset gold proxy when official FRED gold is unavailable.",
+        "change5D": "-3.6%"
+      },
+      {
+        "title": "Copper",
+        "type": "copper",
+        "score": 12528.71,
+        "rating": "rising",
+        "updatedAt": "2026-03-01",
+        "latestValue": 12528.71,
+        "unit": "usd",
+        "source": "FRED",
+        "change5D": "+16.7%"
+      }
+    ],
+    "interpretation": "CNN Fear & Greed is fear as of 2026-06-05; VIX is neutral and junk bond demand / HY OAS is extreme fear."
+  },
+  "crossSourceVerification": [
+    {
+      "source": "U.S. Treasury Daily Treasury Yield Curve + Real Yield Curve XML",
+      "role": "primary rates source",
+      "latestDate": "2026-06-05",
+      "fetchedAt": "2026-06-06T01:30:29.956Z",
+      "note": "Used for nominal curve, real-yield curve, breakeven proxies, curve shape, rate shock tape, and technical calculations."
+    },
+    {
+      "source": "Treasury-derived T5YIFR proxy",
+      "role": "inflation-forward cross-check",
+      "latestDate": "2026-06-05",
+      "proxyUsed": true,
+      "note": "T5YIFR uses a Treasury-derived local proxy for 2026-06-05 because FRED T5YIFR cache ends on 2026-05-22."
+    },
+    {
+      "source": "CNN Fear & Greed local proxy",
+      "role": "risk-appetite cross-check",
+      "latestDate": "2026-06-05",
+      "note": "CNN Fear & Greed is fear as of 2026-06-05; VIX is neutral and junk bond demand / HY OAS is extreme fear."
+    },
+    {
+      "source": "FRED public market data cache",
+      "role": "public history and cross-asset feed",
+      "latestDate": "2026-05-18",
+      "fetchedAt": "2026-06-06T01:13:11.615Z",
+      "note": "Loaded 18 public series for rate history and cross-asset checks."
+    },
+    {
+      "source": "Federal Reserve H.15 / FRED",
+      "role": "official secondary rates cross-check",
+      "latestDate": "checked separately during run",
+      "note": "Used as a sanity check for methodology and release lag. Treasury XML remains the controlling source when it is fresher than H.15/FRED page views."
+    }
+  ],
+  "marketReaction": {
+    "asOf": "2026-06-05",
+    "coverageWindow": "2026-06-05 to 2026-06-06",
+    "sourceCoverageStatus": "ready",
+    "summary": "2026-06-05 的市场反应主线是非农就业强于预期后，市场重新交易 higher-for-longer / 更少降息，美债收益率上行压制权益估值；其中 AI beta、半导体和高估值成长股对实际利率与折现率上行更敏感，因此在风险偏好层面承压。本地 rates cache 已覆盖 2026-06-05，曲线 tape 显示短中端上行更强、10Y 上行、30Y 跟随有限，和 Fed path / real-yield discount-rate shock 叙事一致。",
+    "inputPath": "macro_daily/data/2026-06-06_market_reaction_sources.json",
+    "methodology": "本文件把 2026-06-05 非农报告、权威媒体市场报道和风险资产表现整理为外部市场消化层；权重反映叙事消化强度，不等于交易建议。官方/机构源优先，其次是权威媒体；社群或交易员口径只作为低权重辅助。",
+    "sourceMix": [
+      {
+        "type": "official",
+        "count": 1,
+        "weight": 25
+      },
+      {
+        "type": "media",
+        "count": 4,
+        "weight": 69
+      },
+      {
+        "type": "community",
+        "count": 1,
+        "weight": 7
+      }
+    ],
+    "themes": [
+      {
+        "rank": 1,
+        "title": "非农超预期 / Fed path 重新定价",
+        "weight": 42,
+        "stance": "dominant",
+        "interpretation": "2026-06-05 的核心冲击是就业数据强于预期，使市场减少对近期降息的定价，并把利率上行解释为 policy path / higher-for-longer 重新定价。该主题与本地规则中的 Fed path repricing 对应；本地曲线 tape 的 3Y/5Y 上行强于 30Y，进一步支持短中端政策路径和 real-yield 折现率冲击是主线。",
+        "linkedNarrativeIds": [
+          "fed_path"
+        ],
+        "evidence": [
+          {
+            "sourceType": "official",
+            "sourceName": "U.S. Bureau of Labor Statistics",
+            "publishedAt": "2026-06-05",
+            "url": "https://www.bls.gov/news.release/archives/empsit_06052026.htm",
+            "summary": "BLS 发布 2026-06-05 Employment Situation，提供 2026年5月就业、失业率和工资数据，是非农冲击的官方基础输入。",
+            "reliability": 1,
+            "weight": 1
+          },
+          {
+            "sourceType": "media",
+            "sourceName": "Reuters",
+            "publishedAt": "2026-06-05",
+            "url": "https://www.reuters.com/markets/us/",
+            "summary": "Reuters 市场报道把强于预期的就业数据与美债收益率上行、降息预期降温和风险资产承压联系起来，支持 policy path repricing 作为当日主导叙事。",
+            "reliability": 0.85,
+            "weight": 0.8075
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "title": "实际利率 / 折现率上行压制 AI beta 成长估值",
+        "weight": 28,
+        "stance": "secondary",
+        "interpretation": "非农强劲本身不是增长衰退冲击，而是通过收益率和实际折现率上行压制高估值成长股；AI beta、半导体和长久期成长资产对折现率更敏感，因此权益 selloff 的风险偏好层面应归入 Risk appetite / liquidity shock，而不是简单写成 recession hedge。",
+        "linkedNarrativeIds": [
+          "risk_liquidity",
+          "fed_path"
+        ],
+        "evidence": [
+          {
+            "sourceType": "media",
+            "sourceName": "MarketWatch",
+            "publishedAt": "2026-06-05",
+            "url": "https://www.marketwatch.com/markets",
+            "summary": "MarketWatch 对 2026-06-05 美股走势的报道把就业数据、收益率上行和成长股估值压力联系起来；这支持 AI beta / 高估值成长股受折现率冲击影响的解释。",
+            "reliability": 0.85,
+            "weight": 0.68
+          },
+          {
+            "sourceType": "media",
+            "sourceName": "CNBC",
+            "publishedAt": "2026-06-05",
+            "url": "https://www.cnbc.com/markets/",
+            "summary": "CNBC 市场报道显示强就业数据后科技和高成长板块承压，交易员把收益率上行视为估值压力来源；该证据用于风险偏好和 AI beta 成长估值压力主题。",
+            "reliability": 0.8,
+            "weight": 0.6000000000000001
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "title": "美债收益率上行 / 短中端政策路径主导",
+        "weight": 18,
+        "stance": "mixed",
+        "interpretation": "外部报道显示非农后美债收益率上行；本地曲线 tape 已覆盖 2026-06-05，显示 3Y/5Y 5D 上行更强、10Y 上行、30Y 跟随有限，形态更接近 bear flattening / policy path shock，而不是 30Y 独立 term-premium stress。",
+        "linkedNarrativeIds": [
+          "fed_path",
+          "term_premium"
+        ],
+        "evidence": [
+          {
+            "sourceType": "media",
+            "sourceName": "Reuters",
+            "publishedAt": "2026-06-05",
+            "url": "https://www.reuters.com/markets/rates-bonds/",
+            "summary": "Reuters rates/bonds 报道把就业数据后美债收益率上行和政策预期重定价放在同一条线索下；本地看板的 2026-06-05 曲线 tape 显示短中端上行更强，可作为该叙事的价格确认。",
+            "reliability": 0.85,
+            "weight": 0.68
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "title": "社群交易口径：AI / 半导体拥挤交易降温",
+        "weight": 12,
+        "stance": "secondary",
+        "interpretation": "交易员和社群讨论把就业数据后的收益率上行解读为对 crowded AI beta / 半导体多头的估值压力；该口径和权威媒体的成长股承压叙事一致，但社群权重低于官方和权威媒体。",
+        "linkedNarrativeIds": [
+          "risk_liquidity",
+          "technical_exhaustion"
+        ],
+        "evidence": [
+          {
+            "sourceType": "community",
+            "sourceName": "Trader commentary / social discussion",
+            "publishedAt": "2026-06-05",
+            "url": "https://x.com/search?q=jobs%20report%20AI%20stocks%20yields",
+            "summary": "社群和交易员口径集中讨论强非农、收益率上行与 AI / 半导体高估值交易降温之间的关系；该证据只作为低权重辅助，不能单独决定主导叙事。",
+            "reliability": 0.45,
+            "weight": 0.27
+          }
+        ]
+      }
+    ]
+  },
+  "narratives": [
+    {
+      "id": "fed_path",
+      "title": "Fed path repricing",
+      "score": 2,
+      "updatedAt": "2026-06-05",
+      "core": "External reaction points to policy-path repricing: 非农超预期 / Fed path 重新定价.",
+      "checks": [
+        "External market reaction: 非农超预期 / Fed path 重新定价 (42% weight).",
+        "2026-06-05 的核心冲击是就业数据强于预期，使市场减少对近期降息的定价，并把利率上行解释为 policy path / higher-for-longer 重新定价。该主题与本地规则中的 Fed path repricing 对应；本地曲线 tape 的 3Y/5Y 上行强于 30Y，进一步支持短中端政策路径和 real-yield 折现率冲击是主线。",
+        "DGS3 63-observation move is +64bp.",
+        "DGS3 5D move is +16bp, while DGS10 5D move is +10bp.",
+        "SOFR futures implied cuts are unavailable.",
+        "Fed funds futures implied cuts are unavailable."
+      ],
+      "interpretation": "Market-reaction evidence says the newer event tape is trading stronger-for-longer / fewer cuts, but local rates cache still only confirms curve data through 2026-06-05.",
+      "evidence": [
+        {
+          "time": "2026-06-05",
+          "weight": 2,
+          "text": "2026-06-05 的核心冲击是就业数据强于预期，使市场减少对近期降息的定价，并把利率上行解释为 policy path / higher-for-longer 重新定价。该主题与本地规则中的 Fed path repricing 对应；本地曲线 tape 的 3Y/5Y 上行强于 30Y，进一步支持短中端政策路径和 real-yield 折现率冲击是主线。"
+        },
+        {
+          "time": "2026-06-05",
+          "weight": 1,
+          "text": "3Y is up +64bp over 63 valid observations, while the 5D window is +16bp."
+        }
+      ]
+    },
+    {
+      "id": "risk_liquidity",
+      "title": "Risk appetite / liquidity shock",
+      "score": 2,
+      "updatedAt": "2026-06-05",
+      "core": "External reaction flags risk/liquidity pressure: 实际利率 / 折现率上行压制 AI beta 成长估值.",
+      "checks": [
+        "External market reaction: 实际利率 / 折现率上行压制 AI beta 成长估值 (28% weight).",
+        "非农强劲本身不是增长衰退冲击，而是通过收益率和实际折现率上行压制高估值成长股；AI beta、半导体和长久期成长资产对折现率更敏感，因此权益 selloff 的风险偏好层面应归入 Risk appetite / liquidity shock，而不是简单写成 recession hedge。",
+        "CNN Fear & Greed is fear as of 2026-06-05; VIX is neutral and junk bond demand / HY OAS is extreme fear.",
+        "HY OAS is unavailable.",
+        "DXY and funding stress data are unavailable.",
+        "MOVE index is unavailable."
+      ],
+      "interpretation": "External market-reaction evidence says growth/AI beta valuation pressure was part of the selloff; local cross-asset caches remain stale and cannot independently confirm the full move.",
+      "evidence": [
+        {
+          "time": "2026-06-05",
+          "weight": 1,
+          "text": "非农强劲本身不是增长衰退冲击，而是通过收益率和实际折现率上行压制高估值成长股；AI beta、半导体和长久期成长资产对折现率更敏感，因此权益 selloff 的风险偏好层面应归入 Risk appetite / liquidity shock，而不是简单写成 recession hedge。"
+        },
+        {
+          "time": "2026-06-05",
+          "weight": 1,
+          "text": "CNN Fear & Greed is fear as of 2026-06-05; VIX is neutral and junk bond demand / HY OAS is extreme fear."
+        }
+      ]
+    },
+    {
+      "id": "term_premium",
+      "title": "Long-end term premium / fiscal supply",
+      "score": 1,
+      "updatedAt": "2026-06-05",
+      "core": "External reaction includes long-end / duration-demand pressure, but local 30Y curve proxies remain the confirmation layer.",
+      "checks": [
+        "External market reaction: 美债收益率上行 / 短中端政策路径主导 (18% weight).",
+        "外部报道显示非农后美债收益率上行；本地曲线 tape 已覆盖 2026-06-05，显示 3Y/5Y 5D 上行更强、10Y 上行、30Y 跟随有限，形态更接近 bear flattening / policy path shock，而不是 30Y 独立 term-premium stress。",
+        "DGS30 5D move is +2bp versus DGS10 +10bp.",
+        "5s30s 5D change is -14bp.",
+        "10s30s 5D change is -8bp.",
+        "ACM / Kim-Wright term premium is unavailable.",
+        "Auction tail and bid-to-cover are unavailable.",
+        "MOVE index is unavailable."
+      ],
+      "interpretation": "The absence of 30Y-led bear steepening argues against upgrading long-end duration, but it also removes the main long-end stress veto for 2026-06-05.",
+      "evidence": [
+        {
+          "time": "2026-06-05",
+          "weight": 1,
+          "text": "外部报道显示非农后美债收益率上行；本地曲线 tape 已覆盖 2026-06-05，显示 3Y/5Y 5D 上行更强、10Y 上行、30Y 跟随有限，形态更接近 bear flattening / policy path shock，而不是 30Y 独立 term-premium stress。"
+        },
+        {
+          "time": "2026-06-05",
+          "weight": 0,
+          "text": "10s30s flattened -8bp over 5D, so the term-premium proxy is not deteriorating."
+        }
+      ]
+    },
+    {
+      "id": "technical_exhaustion",
+      "title": "Technical positioning / exhaustion",
+      "score": 1,
+      "updatedAt": "2026-06-05",
+      "core": "External reaction includes technical / positioning pressure: 社群交易口径：AI / 半导体拥挤交易降温.",
+      "checks": [
+        "US10Y 九转: up 3 / down 0",
+        "US30Y 九转: up 1 / down 0",
+        "RSI: 10Y 45.6 / 30Y 35.1",
+        "Bollinger z-score: 10Y +0.64 / 30Y -0.36",
+        "20D move percentile: 10Y +14bp 45% / 30Y +4bp 17%",
+        "MOVE index: 62.2 as of 2026-05-18; 21D -20.2%",
+        "CFTC Treasury futures positioning: Lev net -31.8% OI as of 2026-05-12; 4W +2.9 pts",
+        "Timing overlay: No standalone timing signal"
+      ],
+      "interpretation": "Technical signals are not strong enough to create or upgrade a duration action without a fundamental shock.",
+      "evidence": [
+        {
+          "time": "2026-06-05",
+          "weight": 1,
+          "text": "交易员和社群讨论把就业数据后的收益率上行解读为对 crowded AI beta / 半导体多头的估值压力；该口径和权威媒体的成长股承压叙事一致，但社群权重低于官方和权威媒体。"
+        },
+        {
+          "time": "2026-06-05",
+          "weight": 0,
+          "text": "10Y RSI 45.6, 30Y RSI 35.1, 10Y Bollinger +0.64."
+        }
+      ]
+    },
+    {
+      "id": "inflation_comp",
+      "title": "Inflation compensation shock",
+      "score": 0,
+      "updatedAt": "2026-06-05",
+      "core": "Breakevens are positive over 21/63 observations but softer over the 5D window, so inflation compensation is not the main shock on 2026-06-05.",
+      "checks": [
+        "5Y breakeven contribution over 5D is -4bp.",
+        "10Y breakeven contribution over 5D is -2bp.",
+        "T5YIFR 5D move is 0bp.",
+        "Oil, gasoline, and commodity basket data are unavailable."
+      ],
+      "interpretation": "Inflation compensation is a weak watch item; there is no broad breakeven-led rates selloff in the local 5D tape.",
+      "evidence": [
+        {
+          "time": "2026-06-05",
+          "weight": 1,
+          "text": "5Y breakeven fell -4bp over 5D while T5YIFR moved 0bp."
+        }
+      ]
+    },
+    {
+      "id": "growth_scare",
+      "title": "Growth scare / recession hedge",
+      "score": 0,
+      "updatedAt": "2026-06-05",
+      "core": "DGS10 rose +10bp over 5D, so a growth-scare / recession-hedge rates rally is not confirmed.",
+      "checks": [
+        "DGS10 5D move is +10bp.",
+        "DGS10 21-observation move is +19bp.",
+        "10Y breakeven 5D contribution is -2bp.",
+        "CNN Fear & Greed is fear as of 2026-06-05; VIX is neutral and junk bond demand / HY OAS is extreme fear."
+      ],
+      "interpretation": "The growth-scare narrative is weak because yields are not rallying over the 5D window and risk proxies are mixed rather than decisively defensive.",
+      "evidence": [
+        {
+          "time": "2026-06-05",
+          "weight": 1,
+          "text": "DGS10 rose +10bp over 5D, while CNN risk proxies are mixed."
+        }
+      ]
+    }
+  ],
+  "durationAction": {
+    "currentIndex": 0,
+    "label": "No trade / wait",
+    "asOf": "2026-06-05",
+    "explanation": "2026-06-05 does not show an extreme 5D rates shock, 30Y stress is not the binding problem, and technical exhaustion is absent; the duration panel stays at No trade / wait.",
+    "reasons": [
+      "10Y 5D move is +10bp with local-cache percentile 63%.",
+      "30Y 5D move is +2bp and 10s30s changed -8bp.",
+      "Technical overlay: No exhaustion confirmation.",
+      "Top narratives: Fed path repricing score 2; Risk appetite / liquidity shock score 2; Long-end term premium / fiscal supply score 1."
+    ],
+    "supports": [
+      "5D curve proxies do not show fresh 30Y-led bear steepening.",
+      "The 5D rates move is small enough that there is no need to chase duration.",
+      "Local CNN headline risk appetite is not in broad panic."
+    ],
+    "opposes": [
+      "10Y and 30Y shock percentiles are not extreme in the available local-cache window.",
+      "Technical exhaustion is not confirmed by RSI, Bollinger z-score, 20D percentile, or nine-turn proxy.",
+      "SOFR/Fed funds futures, MOVE, formal term premium, and CFTC positioning are unavailable."
+    ],
+    "upgradeSignals": [
+      "Move to index 2 if DGS10 5D or 21D selloff reaches >=85th percentile, real yield leads, and technical exhaustion appears.",
+      "Move to index 3 if 10Y shock becomes extreme while 30Y term-premium proxies remain stable.",
+      "Move to index 4 only if 30Y shock is extreme and 5s30s/10s30s steepening stops after term-premium pressure stabilizes.",
+      "Move to index 5 only after long-end stabilization coincides with bull flattening, growth/disinflation confirmation, and exhaustion."
+    ],
+    "downgradeSignals": [
+      "Stay at index 0 if DGS3 or DGS30 accelerates without exhaustion.",
+      "Stay at index 0 if 10s30s bear steepening resumes or auction/MOVE data later show stress."
+    ],
+    "steps": [
+      {
+        "index": 0,
+        "title": "No trade / wait",
+        "active": true
+      },
+      {
+        "index": 1,
+        "title": "Watchlist only",
+        "active": false
+      },
+      {
+        "index": 2,
+        "title": "Start 10Y nibble",
+        "active": false
+      },
+      {
+        "index": 3,
+        "title": "Start 10Y nibble / intermediate-duration watch",
+        "active": false
+      },
+      {
+        "index": 4,
+        "title": "Add long-end duration",
+        "active": false
+      },
+      {
+        "index": 5,
+        "title": "Add convex duration / STRIPS-like exposure",
+        "active": false
+      }
+    ]
+  },
+  "technical": {
+    "asOf": "2026-06-05",
+    "signals": [
+      {
+        "title": "US10Y 九转",
+        "value": "up 3 / down 0",
+        "status": "neutral",
+        "source": "proxy",
+        "note": "Proxy rule compares each yield with its value four valid observations earlier."
+      },
+      {
+        "title": "US30Y 九转",
+        "value": "up 1 / down 0",
+        "status": "neutral",
+        "source": "proxy",
+        "note": "Proxy rule compares each yield with its value four valid observations earlier."
+      },
+      {
+        "title": "RSI",
+        "value": "10Y 45.6 / 30Y 35.1",
+        "status": "neutral",
+        "note": "RSI is calculated on yield changes, not bond-price changes."
+      },
+      {
+        "title": "Bollinger z-score",
+        "value": "10Y +0.64 / 30Y -0.36",
+        "status": "neutral",
+        "note": "20 valid-observation moving average and standard deviation."
+      },
+      {
+        "title": "20D move percentile",
+        "value": "10Y +14bp 45% / 30Y +4bp 17%",
+        "status": "neutral",
+        "note": "Percentile uses the locally cached public history."
+      },
+      {
+        "title": "MOVE index",
+        "value": "62.2 as of 2026-05-18; 21D -20.2%",
+        "status": "stress falling",
+        "source": "FRED DGS10/DGS30 realized yield volatility proxy",
+        "note": "This is not the ICE BofA MOVE index. It is a local rates-volatility trend proxy used when official MOVE history is unavailable."
+      },
+      {
+        "title": "CFTC Treasury futures positioning",
+        "value": "Lev net -31.8% OI as of 2026-05-12; 4W +2.9 pts",
+        "status": "short crowded",
+        "source": "CFTC Traders in Financial Futures official annual zip",
+        "note": "Used for positioning trend and crowding only; contract DV01 differences are not normalized."
+      },
+      {
+        "title": "Timing overlay",
+        "value": "No standalone timing signal",
+        "status": "wait",
+        "note": "Technical panel does not upgrade the duration action without a fundamental shock."
+      }
+    ],
+    "tenYear": {
+      "label": "US10Y",
+      "rsi": 45.65,
+      "bollingerZ": 0.64,
+      "nineTurn": {
+        "up": 3,
+        "down": 0
+      },
+      "move20dBp": 14,
+      "move20dPercentile": 45.3
+    },
+    "thirtyYear": {
+      "label": "US30Y",
+      "rsi": 35.14,
+      "bollingerZ": -0.36,
+      "nineTurn": {
+        "up": 1,
+        "down": 0
+      },
+      "move20dBp": 4,
+      "move20dPercentile": 16.5
+    },
+    "moveSignal": {
+      "value": "62.2 as of 2026-05-18; 21D -20.2%",
+      "status": "stress falling",
+      "source": "FRED DGS10/DGS30 realized yield volatility proxy",
+      "note": "This is not the ICE BofA MOVE index. It is a local rates-volatility trend proxy used when official MOVE history is unavailable."
+    },
+    "cftcSignal": {
+      "value": "Lev net -31.8% OI as of 2026-05-12; 4W +2.9 pts",
+      "status": "short crowded",
+      "source": "CFTC Traders in Financial Futures official annual zip",
+      "note": "Used for positioning trend and crowding only; contract DV01 differences are not normalized."
+    },
+    "hasExhaustion": false,
+    "adviceTitle": "No exhaustion confirmation",
+    "adviceBody": "2026-06-05 yield RSI, Bollinger z-scores, nine-turn proxies, and 20D move percentiles are not extreme enough to support a duration nibble by themselves."
+  },
+  "dataGaps": [
+    "SOFR futures and Fed funds futures implied cuts are unavailable in local cache.",
+    "ACM / Kim-Wright term premium is unavailable; 5s30s, 10s30s, and auction evidence are used as long-end proxies.",
+    "Treasury auction tail, bid-to-cover, and dealer take-down are unavailable in local cache.",
+    "MOVE index is unavailable in local cache; VIX and CNN credit/sentiment components are used as risk proxies.",
+    "VIX, HY OAS, DXY/broad dollar, Oil, Gold are unavailable in local cache.",
+    "T5YIFR uses a Treasury-derived local proxy for 2026-06-05 because FRED T5YIFR cache ends on 2026-05-22."
+  ],
+  "dataQuality": {
+    "treasuryCacheFetchedAt": "2026-06-06T01:30:29.956Z",
+    "treasuryHistoryStart": "1962-01-02",
+    "percentileProxyUsed": false,
+    "percentileProxyNote": "Rate shock percentiles use the locally cached 10-year public history.",
+    "publicDataFetchedAt": "2026-06-06T01:13:11.615Z",
+    "feedStatus": {
+      "hasTenYearRatesHistory": true,
+      "rateHistoryStart": "1962-01-02",
+      "requiredRateStart": "2016-06-04",
+      "publicDataFetchedAt": "2026-06-06T01:13:11.615Z",
+      "publicSeriesCount": 18,
+      "hasPolicyPath": false,
+      "hasTermPremium": false,
+      "hasAuction": false,
+      "hasMove": false,
+      "hasCftc": true,
+      "missingCrossAssets": [
+        "VIX",
+        "HY OAS",
+        "DXY/broad dollar",
+        "Oil",
+        "Gold"
+      ]
+    },
+    "monthlyPreflight": {
+      "status": "skipped",
+      "month": "2026-06",
+      "reason": "Monthly preflight already completed for 2026-06.",
+      "reportPath": "macro_daily/reports/2026-06_monthly_preflight.md",
+      "jsonPath": "macro_daily/data/2026-06_monthly_preflight.json"
+    },
+    "missingRequiredSources": [
+      "SOFR futures and Fed funds futures implied cuts are unavailable in local cache.",
+      "ACM / Kim-Wright term premium is unavailable; 5s30s, 10s30s, and auction evidence are used as long-end proxies.",
+      "Treasury auction tail, bid-to-cover, and dealer take-down are unavailable in local cache.",
+      "MOVE index is unavailable in local cache; VIX and CNN credit/sentiment components are used as risk proxies.",
+      "VIX, HY OAS, DXY/broad dollar, Oil, Gold are unavailable in local cache.",
+      "T5YIFR uses a Treasury-derived local proxy for 2026-06-05 because FRED T5YIFR cache ends on 2026-05-22."
+    ]
+  }
+}

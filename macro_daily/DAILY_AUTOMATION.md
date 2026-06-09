@@ -1,6 +1,6 @@
 # Macro 看板每日自动化任务
 
-本任务用于支撑首页的 `Rate Shock Tape`、`Market Narrative Ranking`、`Duration Action Panel` 和 `Technical Exhaustion Panel`。首页只负责读取本地结果；每日任务负责拉数据、计算、归因、调用模型深度分析，并把结构化 JSON 与研报保存到本地。
+本任务用于支撑首页的 `Rate Shock Tape`、`市场昨天在交易什么`、`Market Narrative Ranking`、`Duration Action Panel` 和 `Technical Exhaustion Panel`。首页只负责读取本地结果；每日任务负责拉数据、计算、归因、拉取外部叙事证据、调用模型深度分析，并把结构化 JSON 与研报保存到本地。
 
 ## 必读上下文
 
@@ -28,6 +28,14 @@ macro_daily/reports/YYYY-MM-DD_rates_duration_report.md
 macro_daily/reports/YYYY-MM-DD_rates_duration_report.html
 ```
 
+外部市场反应研究可以先写成输入文件：
+
+```text
+macro_daily/data/YYYY-MM-DD_market_reaction_sources.json
+```
+
+该文件不是最终必需产物，但只要存在，生成器会读取它并填充首页模块 1.5 `marketReaction`。如果不存在，JSON 必须写 `sourceCoverageStatus: "missing_research_input"`，报告必须说明该模块缺研究输入，不能把本地指标归因假装成市场共识。
+
 首页检查逻辑：
 
 - 同时存在 `dashboard.json` 和 `.md` 或 `.html` 研报时，首页读取本地 JSON。
@@ -35,6 +43,28 @@ macro_daily/reports/YYYY-MM-DD_rates_duration_report.html
 - 当天多次打开页面，优先复用本地文件，不重复触发远端分析。
 
 ## 每日执行步骤
+
+0. 月度首次运行 preflight（必须在看板生成之前触发）
+
+   - 每个自然月第一次运行 `macro_daily/scripts/generate_daily_dashboard.js` 时，先运行月度 preflight。
+   - preflight 输出：
+
+     ```text
+     macro_daily/data/YYYY-MM_monthly_preflight.json
+     macro_daily/reports/YYYY-MM_monthly_preflight.md
+     ```
+
+   - preflight 必须检查历史数据 cache：
+     - Treasury / FRED 历史是否覆盖 10 年分位窗口。
+     - 必需期限、real yield、breakeven、T5YIFR、VIX、HY OAS、DXY/美元、oil、gold、copper 等公开数据源是否存在、是否过期、是否有重复日期。
+     - 缓存缺口必须写成 warning / issue，不能静默忽略。
+   - preflight 还必须做脚本健康检查：
+     - 统计主要脚本行数、函数数量、重复的 `unavailable` / dataGaps 逻辑。
+     - 列出可以瘦身的模块边界，例如 data IO、analytics、narrative scoring、report rendering。
+     - 列出可能逻辑打架的地方，例如 VIX proxy 与 MOVE 缺失、auction 证据在 marketReaction 但 duration rules 无结构化 auction cache。
+   - preflight 只能产出建议，不能自动修改生产代码。
+   - 任何代码瘦身、逻辑重构、数据源 schema 调整，都必须先把建议发给用户，等用户确认后再改。
+   - preflight 执行状态写入本地 state；同一自然月内后续运行默认跳过，除非用户明确要求重新跑月度 preflight。
 
 1. 确认日期与覆盖市场日
 
@@ -83,7 +113,87 @@ macro_daily/reports/YYYY-MM-DD_rates_duration_report.html
    - `ΔDGS10 = ΔDFII10 + ΔT10YIE`
    - `30Y` 用 real yield、term premium、curve steepening 和 auction proxy 归因
 
-5. 生成 Market Narrative Ranking
+5. 生成“市场昨天在交易什么”
+
+   每日任务必须拉取或整理前一交易日和近几日的外部叙事证据，覆盖：
+
+   - 权威媒体 / wire：Reuters、Bloomberg、Financial Times、WSJ、MarketWatch 等。
+   - 官方 / 机构：Treasury、Fed、NY Fed、CME/FedWatch、Treasury auction result、主要投行/资管公开评论。
+   - 社群讨论：X/Twitter、Reddit、专业论坛、交易员讨论。社群只能作为低权重辅助证据。
+
+   搜索窗口：
+
+   - 默认覆盖 `marketDate - 3 calendar days` 到 `runDate`。
+   - 若 `marketDate` 是周五、`runDate` 是周末，必须覆盖周五收盘后到周末的消化叙事。
+   - 每条证据必须写绝对 `publishedAt`，不写“昨天/今天”。
+
+   语言和信息密度要求：
+
+   - 模块 1.5 面向首页展示和研报阅读，`summary`、`themes[].title`、`themes[].interpretation`、`themes[].evidence[].summary`、缺失状态说明、方法论说明必须写中文。
+   - 来源名、机构名、URL、英文专有缩写可以保留原文，例如 Reuters、U.S. Treasury、Fed、DGS10、real yield、term premium。
+   - 不能因为首页卡片展示空间有限而压缩或删减核心信息。每条主题解释必须保留“市场在交易什么 + 证据来自哪里 + 与本地 tape 是否一致”的完整逻辑。
+   - 每个主题下的证据不得为了版面只保留前三条；只要输入证据有信息量并通过可靠性筛选，就必须进入 `evidence` 数组和研报输出。
+   - 如果英文来源摘要很长，允许中文转述，但不能只写模糊短句；必须保留触发因素、资产/曲线段、方向、日期和叙事含义。
+
+   输入文件 schema：
+
+   ```json
+   {
+     "asOf": "2026-05-15",
+     "coverageWindow": { "from": "2026-05-13", "to": "2026-05-16" },
+     "summary": "市场反应主要集中在政策路径和实际利率重定价，长端供给/拍卖吸收压力是第二层主线。",
+     "themes": [
+       {
+         "title": "政策路径 / 实际利率重定价",
+         "weight": 34,
+         "stance": "dominant",
+         "interpretation": "权威媒体把利率上行解释为市场重新定价更少降息或潜在加息风险，同时 5Y-30Y 实际利率同步上行，说明名义利率 selloff 不是单纯 breakeven 推动。",
+         "linkedNarrativeIds": ["fed_path"],
+         "evidence": [
+           {
+             "sourceType": "media",
+             "sourceName": "Reuters",
+             "publishedAt": "2026-05-15",
+             "url": "https://...",
+             "summary": "Reuters 报道短中端收益率随政策利率预期重新定价而上行，市场把最新通胀和 Fed 路径解读为 higher-for-longer 风险。",
+             "reliability": 0.85,
+             "evidenceWeight": 0.9
+           }
+         ]
+       }
+     ]
+   }
+   ```
+
+   如果没有手工归好主题，也可以给 `sources` / `evidence` 平铺列表，每条必须包含 `theme`，生成器会按 `theme` 分组。
+
+   权重规则：
+
+   - 官方/机构基础 reliability `1.0`。
+   - 权威媒体 / wire 基础 reliability `0.85`。
+   - 社群讨论基础 reliability `0.45`。
+   - 证据最终分数 = reliability × evidenceWeight。
+   - 主题权重归一化到 100%。
+   - 社群可以影响排序细节，但不能单独把某个主题推成 #1；若社群和权威来源冲突，报告必须写成分歧而非共识。
+
+   输出字段：
+
+   ```json
+   {
+     "marketReaction": {
+       "asOf": "2026-05-15",
+       "coverageWindow": "2026-05-13 to 2026-05-16",
+       "sourceCoverageStatus": "ready",
+       "summary": "...",
+       "sourceMix": [{ "type": "media", "count": 4, "weight": 42 }],
+       "themes": []
+     }
+   }
+   ```
+
+   该模块是“市场如何消化异动”的外部叙事层；下一步的 `Market Narrative Ranking` 仍然是规则化诊断层。二者冲突时，报告必须显式指出：市场共识可能在交易 X，但本地数据更支持/不支持 Y。
+
+6. 生成 Market Narrative Ranking
 
    六类叙事固定为：
 
@@ -103,14 +213,14 @@ macro_daily/reports/YYYY-MM-DD_rates_duration_report.html
    - `interpretation`: 信号解释
    - `evidence`: 可选，按权重再按时间倒序列出核心证据
 
-6. 生成 Duration Action Panel
+7. 生成 Duration Action Panel
 
    固定六档：
 
    - `0 No trade / wait`
    - `1 Watchlist only`
    - `2 Start 10Y nibble`
-   - `3 Add 10Y / intermediate`
+   - `3 Start 10Y nibble / intermediate-duration watch`
    - `4 Add long-end duration`
    - `5 Add convex duration`
 
@@ -122,7 +232,7 @@ macro_daily/reports/YYYY-MM-DD_rates_duration_report.html
    - 反对条件
    - 什么信号会升级或降级档位
 
-7. 生成 Technical Exhaustion Panel
+8. 生成 Technical Exhaustion Panel
 
    输出每项读数与状态：
 
@@ -137,12 +247,13 @@ macro_daily/reports/YYYY-MM-DD_rates_duration_report.html
 
    结论必须和基本面叠加，不允许单靠技术指标给出加仓建议。
 
-8. 写研报
+9. 写研报
 
    研报顺序：
 
    - 今日一句话结论
    - 利率冲击是否罕见
+   - 市场前一交易日在交易什么
    - 哪段曲线在动
    - 驱动归因
    - 市场正在交易什么分歧
@@ -227,6 +338,60 @@ Signal 标签规则：
   "signal": "duration selloff"
 }
 ```
+
+### 模块 1.5：市场昨天在交易什么
+
+定义：把前一交易日和近几日外部叙事消化过程结构化，避免只从本地价格指标倒推“市场共识”。
+
+覆盖来源：
+
+```text
+media: Reuters / Bloomberg / FT / WSJ / MarketWatch 等
+institution: Treasury / Fed / NY Fed / CME / auction result / bank or asset-manager public notes
+community: X / Reddit / professional forum / trader discussion
+```
+
+固定输出：
+
+- `asOf`: 叙事归属市场日。
+- `coverageWindow`: 证据覆盖窗口。
+  - `sourceCoverageStatus`: `ready` / `empty` / `missing_research_input`。
+  - `summary`: 用中文高信息密度说明市场如何消化异动，不得为了首页展示缩短成泛泛而谈。
+  - `sourceMix`: 按 `media / institution / community / official` 汇总来源数量与权重。
+  - `themes`: 加权主题列表，按 `weight` 从高到低排序；每个主题必须保留完整解释和全部有效证据。
+
+主题字段：
+
+```json
+{
+  "rank": 1,
+  "title": "政策路径 / 实际利率重定价",
+  "weight": 34,
+  "stance": "dominant",
+  "interpretation": "市场评论把本轮利率上行解释为 higher-for-longer 或重新定价加息风险，同时本地实际利率曲线确认 5Y-30Y real yield 上行，因此该主题是外部叙事和本地 tape 同向的主导解释。",
+  "linkedNarrativeIds": ["fed_path"],
+  "evidence": [
+    {
+      "sourceType": "media",
+      "sourceName": "Reuters",
+      "publishedAt": "2026-05-15",
+      "url": "https://...",
+      "summary": "Reuters 把短中端收益率上行归因于交易员重新定价政策利率路径；这支持 Fed path 叙事，但仍需和实际利率、breakeven 和曲线形态交叉验证。",
+      "reliability": 0.85,
+      "weight": 0.76
+    }
+  ]
+}
+```
+
+解释规则：
+
+- 这是外部叙事消化层，不等于本地规则化叙事层。
+- 如果媒体/社群说市场在交易 inflation，但本地 breakeven 贡献很弱，报告必须写出这个差异。
+- 如果社群叙事很热但没有权威媒体或机构确认，权重不能排第一。
+- 如果权威媒体与机构叙事分歧，输出 `stance: mixed`，不要强行合并成单一主题。
+- 如果研究输入缺失，输出 `missing_research_input`，首页显示 research-needed 状态。
+- 不允许在生成器、研报或首页渲染层用 `slice(0, 3)` 之类的方式裁掉有效证据；展示空间问题由布局滚动和响应式排版解决，不能牺牲信息量。
 
 ### Module 2：Curve Shape
 
@@ -426,7 +591,7 @@ Narrative JSON 字段：
 0. No trade / wait
 1. Watchlist only
 2. Start 10Y nibble
-3. Add 10Y / intermediate duration
+3. Start 10Y nibble / intermediate-duration watch
 4. Add long-end duration
 5. Add convex duration / STRIPS-like exposure
 ```

@@ -103,7 +103,90 @@ signal
 - 必须同时看近 10 年 percentile 和 2022 后 regime percentile。
 - 示例含义：过去 10 年看是 95 分位，但 2022 后 regime 里只是 70 分位，这两种交易含义不同。
 
-### 4. Market Narrative Ranking
+### 4. 市场昨天在交易什么
+
+目的：
+
+```text
+把前一交易日和近几日的外部叙事消化过程摆在 Rate Shock Tape 和规则化叙事排序之间。
+```
+
+该模块回答：
+
+```text
+市场参与者昨天到底如何解释这次异动？
+哪些解释来自权威媒体/机构？
+哪些解释只是社群讨论或交易员口径？
+这些解释和本地 Rate Shock / Driver Attribution 是否一致？
+```
+
+输入要求：
+
+- 每日任务必须拉取或整理前一交易日与近几日的权威媒体、官方/机构材料、以及社群讨论。
+- 权威媒体包括 Reuters、Bloomberg、Financial Times、WSJ、MarketWatch 等可核验来源。
+- 官方/机构包括 Treasury、Fed、NY Fed、CME/FedWatch、主要投行/资管公开评论、auction result 等。
+- 社群讨论可以包括 X/Twitter、Reddit、专业论坛或交易员讨论，但权重必须低于权威媒体与机构，且必须标注为 community。
+- 若无法联网或没有研究输入，字段写 `missing_research_input`，不要把本地指标归因伪装成“市场共识”。
+- 输出文案必须中文化：`summary`、主题标题、主题解释、证据摘要、缺失状态说明和方法论说明都用中文；来源名、URL、英文机构名和市场缩写可以保留原文。
+- 信息量优先于卡片空间。首页、JSON 和研报都不得为了展示空间删减有效证据或把解释压缩成低信息密度短句；版面问题由滚动、换行和响应式布局解决。
+
+输出到首页的字段为 `marketReaction`：
+
+```json
+{
+  "asOf": "2026-05-15",
+  "coverageWindow": "2026-05-13 to 2026-05-16",
+  "sourceCoverageStatus": "ready",
+  "summary": "市场反应主要集中在政策路径 / 实际利率重定价、能源通胀压力和长端供给 / 拍卖吸收三条线。",
+  "sourceMix": [
+    { "type": "media", "count": 4, "weight": 42 },
+    { "type": "institution", "count": 3, "weight": 43 },
+    { "type": "community", "count": 5, "weight": 15 }
+  ],
+  "themes": [
+    {
+      "rank": 1,
+      "title": "政策路径 / 实际利率重定价",
+      "weight": 34,
+      "stance": "dominant",
+      "interpretation": "市场评论把利率上行解释为 higher-for-longer 或重新定价加息风险；本地 5Y-30Y 实际利率同步上行，说明该叙事有实际利率 tape 支持，而不是单纯情绪归因。",
+      "linkedNarrativeIds": ["fed_path"],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters",
+          "publishedAt": "2026-05-15",
+          "url": "https://...",
+          "summary": "Reuters 报道短中端收益率随政策预期重新定价而上行，市场把最新通胀和 Fed 路径解读为更久维持高利率的风险。",
+          "reliability": 0.85,
+          "weight": 0.9
+        }
+      ]
+    }
+  ]
+}
+```
+
+权重原则：
+
+- 官方/机构：基础 reliability `1.0`。
+- 权威媒体 / wire：基础 reliability `0.85`。
+- 社群讨论：基础 reliability `0.45`。
+- 再乘以证据强度、发布时间接近度、是否与价格/曲线/auction 数据一致。
+- 输出权重归一化到 100%。权重是“市场消化叙事权重”，不是交易建议。
+
+示例主题：
+
+```text
+政策路径 / 实际利率重定价
+能源通胀 / 通胀预期重定价
+Fed 领导层 / 资产负债表机制变化
+财政供给 / 拍卖吸收
+技术动能 / 衰竭
+风险偏好 / 流动性
+```
+
+### 5. Market Narrative Ranking
 
 目的：
 
@@ -149,7 +232,7 @@ Fed funds futures terminal / cuts repricing
 real yield 上行
 ```
 
-### 5. Duration Action Panel
+### 6. Duration Action Panel
 
 目的：
 
@@ -163,7 +246,7 @@ real yield 上行
 0. No trade / wait
 1. Watchlist only
 2. Start 10Y nibble
-3. Add 10Y / intermediate duration
+3. Start 10Y nibble / intermediate-duration watch
 4. Add long-end duration
 5. Add convex duration / STRIPS-like exposure
 ```
@@ -181,7 +264,7 @@ real yield 上行
 - 如果 10Y 冲击极端、real yield 主导、长端 term premium 没失控，可以先考虑 10Y。
 - 只有当 30Y term premium / curve steepening 开始稳定，才考虑加长端。
 
-### 6. Technical Exhaustion Panel
+### 7. Technical Exhaustion Panel
 
 目的：
 
@@ -247,7 +330,8 @@ macro_daily/reports/YYYY-MM-DD_rates_duration_report.md
 
 ```text
 1. Rate Shock Tape
-2. Market Narrative Ranking
-3. Duration Action Panel
-4. Technical Exhaustion Panel
+2. 市场昨天在交易什么
+3. Market Narrative Ranking
+4. Duration Action Panel
+5. Technical Exhaustion Panel
 ```

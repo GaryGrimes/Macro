@@ -1,0 +1,185 @@
+{
+  "asOf": "2026-05-28",
+  "coverageWindow": {
+    "from": "2026-05-26",
+    "to": "2026-05-30"
+  },
+  "summary": "2026-05-28 的市场消化从 2026-05 中旬的长端 selloff 高位转向降温确认：官方 Treasury 曲线显示 2Y、3Y、5Y、10Y、30Y 分别收在 3.99%、4.07%、4.15%、4.45%、4.98%，较 2026-05-22 全线回落，30Y 重新低于 5%。外部叙事主要集中在三条线：一是 Iran 相关能源风险降温推动 yields 回落；二是 GDP 下修和通胀未超预期使 Fed path 压力边际缓和；三是 Reuters 仍强调财政赤字、sticky inflation 和 term premium 对长债避险属性的结构性挑战。因此本地 tape 支持中长端压力缓和和 10Y 观察窗口，但不支持直接把长端高收益率当作无条件加 30Y 或 convex duration 的买点。 2026-05-30 本次自动化刷新后，本地 Treasury/FRED 缓存仍未确认 2026-05-29 的完整美国利率收盘，因此本输入继续解释 2026-05-28 这一最新可确认市场日，不把 2026-05-29 的潜在价格变化写成事实。",
+  "methodology": "主题权重综合官方曲线、权威媒体、机构/日历证据、发布时间接近度，以及证据与 2026-05-28 本地 Treasury tape 的一致性。官方和 Reuters 权重最高；Investing.com 市场快讯作为媒体证据；auction calendar 只说明供给事件窗口，不等于拍卖质量数据；未接入 SOFR/Fed funds futures、ACM/Kim-Wright term premium、auction tail/bid-to-cover/dealer take-down，因此这些项目继续写入缺失数据或 proxy。 2026-05-30 运行时，公共数据刷新未能把官方利率缓存推进到 2026-05-29；因此周末覆盖窗口只用于保留 2026-05-28 收盘后至 2026-05-30 的消化语境，所有价格判断仍锚定 2026-05-28 官方曲线。",
+  "themes": [
+    {
+      "title": "政策路径 / 实际利率重定价缓和",
+      "weight": 31,
+      "stance": "dominant",
+      "interpretation": "2026-05-28 的 GDP 下修和通胀未超预期，使市场把政策路径压力从更鹰派的 higher-for-longer 冲击中拉回。Reuters 盘中记录 2Y 在 4.04%、10Y 在 4.48% 附近，官方日终曲线进一步显示 2Y 3.99%、10Y 4.45%；同时 real yield 曲线显示 5Y、10Y、30Y 分别降至 1.61%、2.06%、2.70%。这说明政策路径和实际折现率仍是主线，但边际方向已从 2026-05 中旬的上行冲击变成降温。",
+      "linkedNarrativeIds": [
+        "fed_path"
+      ],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com",
+          "publishedAt": "2026-05-28",
+          "url": "https://www.investing.com/news/economy-news/inflation-rises-but-isnt-hotter-than-expected-while-gdp-slips-4714644",
+          "summary": "Reuters 报道 2026-05-28 美国 Q1 GDP 被下修，价格压力指标大体符合预期；债券市场反应为 Treasury yields 大体持平，2Y 约 4.04%、10Y 约 4.48%。该证据支持 Fed path 压力边际缓和，而不是新的前端加速上行。",
+          "reliability": 0.85,
+          "weight": 0.88
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates",
+          "publishedAt": "2026-05-28",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+          "summary": "U.S. Treasury 官方日终曲线显示 2026-05-28 的 2Y、3Y、5Y、10Y、30Y 分别为 3.99%、4.07%、4.15%、4.45%、4.98%；较 2026-05-22 全线回落，说明本地 tape 不再是前端或长端单边加速 selloff。",
+          "reliability": 1,
+          "weight": 0.98
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Real Yield Curve",
+          "publishedAt": "2026-05-28",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_real_yield_curve",
+          "summary": "U.S. Treasury real yield curve 显示 2026-05-28 的 5Y、10Y、30Y real yield 分别为 1.61%、2.06%、2.70%，较 2026-05-22 分别下降 12bp、10bp、7bp；这确认了名义利率回落主要带有实际折现率降温特征。",
+          "reliability": 1,
+          "weight": 0.96
+        }
+      ]
+    },
+    {
+      "title": "能源通胀 / Iran 风险溢价降温",
+      "weight": 24,
+      "stance": "dominant",
+      "interpretation": "2026-05-27 至 2026-05-28 的外部市场解释把 Treasury yields 回落与 Iran 谈判/停火延长期待联系起来。该主题通过能源通胀预期影响 Fed path 和 long-end compensation：如果地缘风险继续降温，油价通胀冲击和 breakeven 上行动能会减弱。本地 proxy 也一致：2026-05-28 5Y breakeven 约 2.54%、10Y breakeven 约 2.39%，未显示新的通胀补偿上行冲击。",
+      "linkedNarrativeIds": [
+        "inflation_comp",
+        "fed_path"
+      ],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Investing.com",
+          "publishedAt": "2026-05-28",
+          "url": "https://au.investing.com/news/stock-market-news/us-treasury-yields-edge-lower-on-hopes-for-iran-deal-93CH-4458389",
+          "summary": "Investing.com 在 2026-05-28 00:44 报道 U.S. Treasury yields 因市场乐观预期 Washington 与 Tehran 可能达成协议而下行；10Y yield 下行 2.8bp 至 4.463%，30Y 下行 2.1bp 至 5.004%。该证据把利率回落和能源通胀风险降温联系起来。",
+          "reliability": 0.75,
+          "weight": 0.78
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "MarketScreener",
+          "publishedAt": "2026-05-28",
+          "url": "https://www.marketscreener.com/news/u-s-treasury-yields-fall-after-axios-reports-us-and-iran-reach-deal-to-extend-ceasefire-but-needs-t-ce7f5ddadd8ef523",
+          "summary": "MarketScreener 2026-05-28 快讯称，Axios 报道美国与 Iran 达成延长停火协议、待 Trump 批准后，U.S. Treasury yields 下行，10Y last down 2.8bp at 4.453%。该证据支持地缘能源风险从推高利率转为压低利率的短线叙事。",
+          "reliability": 0.7,
+          "weight": 0.68
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates and Real Yield Curve",
+          "publishedAt": "2026-05-28",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates",
+          "summary": "按 2026-05-28 Treasury nominal minus real yield 估算，5Y breakeven 约 2.54%、10Y breakeven 约 2.39%，均未显示新的通胀补偿冲击；这让 Iran 降温叙事更像是缓和原有通胀风险，而不是生成新的 inflation compensation selloff。",
+          "reliability": 1,
+          "weight": 0.84
+        }
+      ]
+    },
+    {
+      "title": "长端期限溢价 / 财政供给约束仍在",
+      "weight": 22,
+      "stance": "secondary",
+      "interpretation": "长端结构性担忧没有消失，但 2026-05-28 的边际 tape 已从 30Y-led stress 转为高位回落。Reuters 仍强调 sticky inflation、财政赤字、未来 Treasury issuance 和 term premium 让长债避险属性受挑战；但官方曲线显示 30Y 从 2026-05-22 的 5.07% 降到 2026-05-28 的 4.98%，10s30s 维持在约 51bp 至 53bp 的低 50bp 区间，没有新的急剧 bear steepening。该主题应作为不要直接升级 long-end/convex duration 的风险约束，而不是当天的主导 selloff 信号。",
+      "linkedNarrativeIds": [
+        "term_premium"
+      ],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com",
+          "publishedAt": "2026-05-28",
+          "url": "https://www.investing.com/news/economy-news/inflation-challenges-us-treasuries-traditional-role-in-portfolios-4713874",
+          "summary": "Reuters 2026-05-28 分析称，long-dated Treasuries 因 Iran war、通胀补偿、美国经济韧性和财政赤字驱动的供给预期而承压，并指出 10Y term premium 近期升至约 0.86%。该证据支持长期期限溢价仍是长端风险约束。",
+          "reliability": 0.85,
+          "weight": 0.9
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates",
+          "publishedAt": "2026-05-28",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+          "summary": "官方曲线显示 2026-05-28 30Y 收在 4.98%，低于 2026-05-22 的 5.07% 和 2026-05-19 的 5.18%；长端压力仍高，但边际加速已经缓和，不符合新的 30Y-led capitulation。",
+          "reliability": 1,
+          "weight": 0.92
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Tentative Auction Schedule",
+          "publishedAt": "2026-05-28",
+          "url": "https://home.treasury.gov/system/files/221/Tentative-Auction-Schedule.pdf?mod=article_inline",
+          "summary": "Treasury tentative auction schedule 显示 5Y note 在 2026-05-27 auction、7Y note 在 2026-05-28 auction、10Y TIPS settlement 在 2026-05-29。该证据说明供给事件窗口密集，但本地 cache 尚无 auction tail、bid-to-cover、dealer take-down，不能把供给日历直接等同于拍卖吸收恶化。",
+          "reliability": 1,
+          "weight": 0.76
+        }
+      ]
+    },
+    {
+      "title": "增长放缓 / 风险偏好改善的混合信号",
+      "weight": 13,
+      "stance": "mixed",
+      "interpretation": "GDP 下修通常支持 duration，但 Reuters 同时记录市场把较软的核心通胀与较弱 headline growth 解读为 risk-on：压力从 Fed path 缓和而非增长恐慌主导。官方利率日终下行支持 duration，但缺少 HY OAS、VIX、DXY、oil、gold 等新鲜跨资产确认，因此不能把它升级为强 growth scare / recession hedge。",
+      "linkedNarrativeIds": [
+        "growth_scare",
+        "risk_liquidity"
+      ],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com",
+          "publishedAt": "2026-05-28",
+          "url": "https://www.investing.com/news/economy-news/inflation-rises-but-isnt-hotter-than-expected-while-gdp-slips-4714644",
+          "summary": "Reuters 2026-05-28 报道 GDP 下修和核心通胀较软带来 risk-on 反应，市场认为价格压力缓和但劳动力恶化不明显，从而支持较不限制性的政策预期。该证据支持 policy relief 多于 recession hedge。",
+          "reliability": 0.85,
+          "weight": 0.72
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates",
+          "publishedAt": "2026-05-28",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+          "summary": "2026-05-28 官方 10Y 收在 4.45%、30Y 收在 4.98%，较 2026-05-22 下行约 11bp 和 9bp；该价格证据支持 duration relief，但仅凭利率下行无法证明 growth scare 已成为主导叙事。",
+          "reliability": 1,
+          "weight": 0.8
+        }
+      ]
+    },
+    {
+      "title": "技术动能 / 高位降温但未反转确认",
+      "weight": 10,
+      "stance": "secondary",
+      "interpretation": "2026-05-19 至 2026-05-28，10Y 从 4.67% 回落到 4.45%，30Y 从 5.18% 回落到 4.98%，说明此前收益率上行 extension 出现降温。该主题支持把 10Y 纳入 watchlist 或小仓位试探条件，但由于 MOVE、CFTC 和完整 auction 质量数据缺失，技术信号仍只能作为 timing overlay，不能单独变成建仓理由。",
+      "linkedNarrativeIds": [
+        "technical_exhaustion"
+      ],
+      "evidence": [
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates",
+          "publishedAt": "2026-05-28",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+          "summary": "官方曲线显示 10Y 从 2026-05-19 的 4.67% 降到 2026-05-28 的 4.45%，30Y 从 5.18% 降到 4.98%；这给收益率上行衰竭提供价格证据，但仍需技术指标和跨资产风险确认。",
+          "reliability": 1,
+          "weight": 0.82
+        },
+        {
+          "sourceType": "community",
+          "sourceName": "Reddit r/getagraph",
+          "publishedAt": "2026-05-28",
+          "url": "https://www.reddit.com/r/getagraph/comments/1tpwy3g/latest_treasury_rates_20260527/",
+          "summary": "Reddit r/getagraph 发布 2026-05-27 Treasury rates 摘要，显示 5Y 4.17% 并记录日内下行；该社群来源只能作为低权重关注度和方向校验，不能替代官方 Treasury 曲线。",
+          "reliability": 0.45,
+          "weight": 0.18
+        }
+      ]
+    }
+  ]
+}

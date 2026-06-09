@@ -32,6 +32,7 @@
             <div class="rule-chip">
               <span class="rule-label">First Read</span>
               <span class="rule-value" id="hero-base-case">Shock rarity before asset choice</span>
+              <span class="rule-note" id="hero-first-read-note">Run daily Macro task for a live summary.</span>
             </div>
             <div class="rule-chip">
               <span class="rule-label">Narrative</span>
@@ -136,6 +137,10 @@
               </div>
               <p>看 1D / 5D / 21D / 3M 变动、近10年分位、2022 后 regime 分位和波动调整 z-score。</p>
             </div>
+            <div class="rate-shock-guide" aria-label="Rate shock percentile guide">
+              <span>Pctile 读法</span>
+              <p>越高代表同方向变化越罕见、越异常；方向只看 bp 列。70+ 偏高，85+ 极端；低分位表示这次变化更接近常态。2022+ pctile 用 2022 年以来样本衡量 5D shock。</p>
+            </div>
             <div class="rate-table-wrap">
               <table class="rate-shock-table" aria-label="Rate shock tape">
                 <thead>
@@ -143,12 +148,12 @@
                     <th><span class="th-help" data-tip="美债期限点。无可用本地数据的期限会自动隐藏，避免用空行干扰判断。">Tenor</span></th>
                     <th><span class="th-help" data-tip="最新收益率水平。数值越高代表该期限名义利率越高，不单独代表冲击强弱。">Level</span></th>
                     <th><span class="th-help" data-tip="过去1个有效观测日的收益率变化，单位bp。红色为利率上行，绿色为利率下行，颜色越深代表幅度越大。">1D bp</span></th>
-                    <th><span class="th-help" data-tip="1D变化在历史样本中的分位。轴越靠右代表越接近利率上行冲击，越靠左代表越接近利率下行/rally。">1D pctile</span></th>
+                    <th><span class="th-help" data-tip="1D变化幅度在同方向历史样本中的罕见度。pctile越高越异常；方向看左侧bp牌。">1D pctile</span></th>
                     <th><span class="th-help" data-tip="过去5个有效观测日的收益率变化，适合识别短线利率冲击。红涨绿跌，深浅表示幅度。">5D bp</span></th>
-                    <th><span class="th-help" data-tip="5D变化的历史分位。高分位说明近期selloff偏强，低分位说明近期rally偏强。">5D pctile</span></th>
+                    <th><span class="th-help" data-tip="5D变化幅度在同方向历史样本中的罕见度。pctile越高，代表这次5日变化越少见；不代表涨跌方向。">5D pctile</span></th>
                     <th><span class="th-help" data-tip="过去21个有效观测日的收益率变化，约等于一个交易月。用于判断冲击是否已经变成趋势。">21D bp</span></th>
-                    <th><span class="th-help" data-tip="21D变化的历史分位。靠右代表月度利率上行压力强，靠左代表月度利率下行压力强。">21D pctile</span></th>
-                    <th><span class="th-help" data-tip="2022年以来regime样本内的分位，更贴近高通胀/高利率环境。高低含义同pctile轴。">2022+ pctile</span></th>
+                    <th><span class="th-help" data-tip="21D变化幅度在同方向历史样本中的罕见度。pctile越高，越像趋势性冲击而不是普通月度波动。">21D pctile</span></th>
+                    <th><span class="th-help" data-tip="5D变化在2022年以来高通胀/高利率regime中的同方向分位。pctile越高，说明即使放在新regime里也更异常。">2022+ pctile</span></th>
                     <th><span class="th-help" data-tip="波动调整后的5D变化强度。正值为利率上行冲击，负值为利率下行rally；绝对值越大越异常。">z-score</span></th>
                     <th><span class="th-help" data-tip="自动化对该期限近期 tape 的方向归类。bear/selloff 偏利率上行，bull/rally 偏利率下行。">Signal</span></th>
                   </tr>
@@ -156,6 +161,18 @@
                 <tbody id="rate-shock-table-body"></tbody>
               </table>
             </div>
+          </section>
+
+          <section class="diagnostic-section" id="market-reaction-panel">
+            <div class="section-head">
+              <div>
+                <p class="panel-label">模块 1.5</p>
+                <h2>市场昨天在交易什么</h2>
+              </div>
+              <p>汇总前一交易日与近几日权威媒体、机构和社群讨论，按来源可靠度、时间和证据强度整理叙事权重。</p>
+            </div>
+            <div class="market-reaction-summary" id="market-reaction-summary"></div>
+            <div class="market-reaction-grid" id="market-reaction-grid"></div>
           </section>
 
           <section class="diagnostic-section" id="market-narrative-ranking">

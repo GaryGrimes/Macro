@@ -135,7 +135,7 @@ const DEFAULT_DURATION_STEPS = [
   { index: 0, title: "No trade / wait", condition: "利率涨幅不极端、叙事仍在强化或长端风险未释放。", active: false },
   { index: 1, title: "Watchlist only", condition: "数据待更新，先观察叙事权重和曲线形态是否确认。", active: true },
   { index: 2, title: "Start 10Y nibble", condition: "10Y 1W/1M 上行进入高分位，且技术面出现短期 exhaustion。", active: false },
-  { index: 3, title: "Add 10Y / intermediate", condition: "real yield 主导、Fed path repricing 接近充分，30Y 没有独立恶化。", active: false },
+  { index: 3, title: "Start 10Y nibble / intermediate-duration watch", condition: "real yield 主导、Fed path repricing 接近充分，但仍缺 MOVE / auction / positioning 确认。", active: false },
   { index: 4, title: "Add long-end duration", condition: "30Y 极端上行后，5s30s/10s30s steepening 停滞，term premium 放缓。", active: false },
   { index: 5, title: "Add convex duration", condition: "长端风险已 price in，增长/通胀回落信号和技术 exhaustion 同时出现。", active: false },
 ];
@@ -174,6 +174,38 @@ const DEFAULT_TECHNICAL_SIGNALS = [
   { title: "Timing overlay", value: "--", status: "pending", note: "把技术衰竭和基本面归因叠加后再给动作建议。" },
 ];
 
+const DEFAULT_MARKET_REACTION = {
+  asOf: "--",
+  coverageWindow: "--",
+  sourceCoverageStatus: "missing",
+  summary: "等待每日自动化拉取媒体、机构和社群证据后生成市场消化叙事。",
+  sourceMix: [
+    { type: "media", count: 0, weight: 0 },
+    { type: "institution", count: 0, weight: 0 },
+    { type: "community", count: 0, weight: 0 },
+  ],
+  themes: [
+    {
+      rank: 1,
+      title: "等待研究输入",
+      weight: 100,
+      stance: "unavailable",
+      interpretation: "当日没有 market reaction research 输入；不要把指标归因误读成市场共识。",
+      linkedNarrativeIds: [],
+      evidence: [
+        {
+          sourceType: "automation",
+          sourceName: "local dashboard",
+          publishedAt: "--",
+          summary: "每日任务需要先拉取权威媒体、机构和社群讨论，再填充该模块。",
+          reliability: 0,
+          weight: 0,
+        },
+      ],
+    },
+  ],
+};
+
 const DEFAULT_DAILY_DASHBOARD = {
   date: "",
   source: "template",
@@ -181,6 +213,7 @@ const DEFAULT_DAILY_DASHBOARD = {
   reportTitle: "Awaiting daily Macro task",
   reportSummary: "今日 Rate Shock / Narrative / Duration 数据尚未生成；当前展示为空白模板。",
   rateShockRows: DEFAULT_RATE_SHOCK_ROWS,
+  marketReaction: DEFAULT_MARKET_REACTION,
   narratives: DEFAULT_NARRATIVES,
   durationAction: {
     currentIndex: 1,
@@ -336,9 +369,12 @@ document.addEventListener("DOMContentLoaded", () => {
   render();
   loadDailyDashboard();
   loadCachedSnapshot().finally(() => {
-    beginLoadProgress();
-    refreshHomeYieldChart("refresh");
-    refreshDashboard("refresh");
+    updateLoadProgress({
+      phase: "ok",
+      total: getTotalRefreshUnits(),
+      completed: getTotalRefreshUnits(),
+      detail: "已读取本地缓存；需要补数据时点击刷新。",
+    });
   });
 });
 
@@ -369,6 +405,7 @@ function cacheRefs() {
   refs.anchorSummary = document.getElementById("anchor-summary");
   refs.readSummary = document.getElementById("read-summary");
   refs.heroBaseCase = document.getElementById("hero-base-case");
+  refs.heroFirstReadNote = document.getElementById("hero-first-read-note");
   refs.fearSummary = document.getElementById("fear-summary");
   refs.fearReading = document.getElementById("fear-reading");
   refs.fearSourceNote = document.getElementById("fear-source-note");
@@ -389,6 +426,8 @@ function cacheRefs() {
   refs.dailyCacheDate = document.getElementById("daily-cache-date");
   refs.dailyCacheSource = document.getElementById("daily-cache-source");
   refs.rateShockTableBody = document.getElementById("rate-shock-table-body");
+  refs.marketReactionSummary = document.getElementById("market-reaction-summary");
+  refs.marketReactionGrid = document.getElementById("market-reaction-grid");
   refs.narrativeRankingGrid = document.getElementById("narrative-ranking-grid");
   refs.narrativeDetailGrid = document.getElementById("narrative-detail-grid");
   refs.durationActionSummary = document.getElementById("duration-action-summary");
@@ -507,9 +546,9 @@ async function loadCachedSnapshot() {
   });
   await Promise.all([loadCachedDashboard(), refreshHomeYieldChart("cache")]);
   updateLoadProgress({
-    phase: "loading",
-    detail: "本地缓存已载入，开始增量更新远端数据...",
-    completed: 0,
+    phase: "ok",
+    detail: "本地缓存已载入，未自动连接远端数据源。",
+    completed: getTotalRefreshUnits(),
     total: getTotalRefreshUnits(),
   });
 }
@@ -635,6 +674,7 @@ function normalizeDailyDashboard(raw, date) {
       ? source.technical.signals
       : DEFAULT_TECHNICAL_SIGNALS,
   };
+  const marketReaction = normalizeMarketReaction(source.marketReaction);
 
   return {
     ...DEFAULT_DAILY_DASHBOARD,
@@ -643,9 +683,26 @@ function normalizeDailyDashboard(raw, date) {
     rateShockRows: Array.isArray(source.rateShockRows) && source.rateShockRows.length
       ? source.rateShockRows
       : DEFAULT_RATE_SHOCK_ROWS,
+    marketReaction,
     narratives,
     durationAction,
     technical,
+  };
+}
+
+function normalizeMarketReaction(reaction) {
+  if (!reaction || typeof reaction !== "object") {
+    return DEFAULT_MARKET_REACTION;
+  }
+  return {
+    ...DEFAULT_MARKET_REACTION,
+    ...reaction,
+    sourceMix: Array.isArray(reaction.sourceMix) && reaction.sourceMix.length
+      ? reaction.sourceMix
+      : DEFAULT_MARKET_REACTION.sourceMix,
+    themes: Array.isArray(reaction.themes) && reaction.themes.length
+      ? reaction.themes
+      : DEFAULT_MARKET_REACTION.themes,
   };
 }
 
@@ -656,6 +713,7 @@ function renderDailyDiagnostics() {
   renderDailyCacheBanner();
   const dashboard = state.dailyDashboard.data || normalizeDailyDashboard(null, state.dailyDashboard.date);
   renderRateShockTape(dashboard.rateShockRows || DEFAULT_RATE_SHOCK_ROWS);
+  renderMarketReaction(dashboard.marketReaction || DEFAULT_MARKET_REACTION);
   renderNarrativeRanking(dashboard.narratives || DEFAULT_NARRATIVES);
   renderNarrativeDetails(dashboard.narratives || DEFAULT_NARRATIVES);
   renderDurationAction(dashboard.durationAction || DEFAULT_DAILY_DASHBOARD.durationAction);
@@ -745,10 +803,13 @@ function renderPctileRail(value) {
   if (!Number.isFinite(pctile)) {
     return `<span class="rate-empty">--</span>`;
   }
-  const tone = pctile >= 70 ? "up" : pctile <= 30 ? "down" : "flat";
+  const tone = pctile >= 85 ? "extreme" : pctile >= 70 ? "elevated" : pctile <= 30 ? "calm" : "normal";
   return `
     <span class="pctile-cell is-${tone}" title="${escapeHtml(formatPctileTitle(pctile))}">
-      <span class="pctile-rail"><span class="pctile-marker" style="left:${pctile}%"></span></span>
+      <span class="pctile-rail" aria-hidden="true">
+        <span class="pctile-fill" style="width:${pctile}%"></span>
+        <span class="pctile-marker" style="left:${pctile}%"></span>
+      </span>
       <span class="pctile-label">${escapeHtml(String(value))}</span>
     </span>
   `;
@@ -756,18 +817,18 @@ function renderPctileRail(value) {
 
 function formatPctileTitle(pctile) {
   if (pctile >= 85) {
-    return "高分位：利率上行冲击偏极端，接近 selloff tape。";
+    return "极高分位：这次同方向变化幅度很罕见；方向请看对应 bp 列。";
   }
   if (pctile >= 70) {
-    return "偏高分位：利率上行动能强于常态。";
+    return "偏高分位：这次同方向变化大于常态；方向请看对应 bp 列。";
   }
   if (pctile <= 15) {
-    return "低分位：利率下行/ rally 偏极端。";
+    return "极低分位：这次同方向变化并不罕见，冲击强度低。";
   }
   if (pctile <= 30) {
-    return "偏低分位：利率回落动能强于常态。";
+    return "偏低分位：这次同方向变化偏常态，不构成独立冲击。";
   }
-  return "中性分位：当前变化接近历史常态区间。";
+  return "中性分位：当前同方向变化接近历史常态区间。";
 }
 
 function renderSignalPill(value) {
@@ -779,6 +840,95 @@ function renderSignalPill(value) {
       ? "down"
       : "flat";
   return `<span class="signal-pill is-${tone}">${escapeHtml(text)}</span>`;
+}
+
+function renderMarketReaction(reaction) {
+  if (!refs.marketReactionSummary || !refs.marketReactionGrid) {
+    return;
+  }
+  const model = normalizeMarketReaction(reaction);
+  const status = String(model.sourceCoverageStatus || "").toLowerCase();
+  const isMissing = status.includes("missing") || status.includes("unavailable");
+  const sourceMix = Array.isArray(model.sourceMix) ? model.sourceMix : [];
+  const sourceMixText = sourceMix.length
+    ? sourceMix
+        .map((item) => `${formatSourceType(item.type)} ${Number(item.count || 0)} / ${formatWeight(item.weight)}`)
+        .join(" · ")
+    : "来源结构不可用";
+
+  refs.marketReactionSummary.innerHTML = `
+    <div>
+      <span class="reaction-kicker">${escapeHtml(model.asOf || "--")}</span>
+      <h3>${escapeHtml(model.summary || DEFAULT_MARKET_REACTION.summary)}</h3>
+      <p>${escapeHtml(sourceMixText)}</p>
+    </div>
+    <span class="reaction-status is-${isMissing ? "missing" : "ready"}">${escapeHtml(isMissing ? "需要研究输入" : "已加权整理")}</span>
+  `;
+
+  refs.marketReactionGrid.innerHTML = model.themes
+    .map((theme, index) => {
+      const evidence = Array.isArray(theme.evidence) ? theme.evidence : [];
+      const linked = Array.isArray(theme.linkedNarrativeIds) ? theme.linkedNarrativeIds : [];
+      return `
+        <article class="market-reaction-card">
+          <div class="reaction-card-head">
+            <span class="reaction-rank">#${escapeHtml(String(theme.rank || index + 1))}</span>
+            <span class="reaction-weight">${escapeHtml(formatWeight(theme.weight))}</span>
+          </div>
+          <h3>${escapeHtml(theme.title || "未命名市场叙事")}</h3>
+          <p>${escapeHtml(theme.interpretation || "等待研究证据填充。")}</p>
+          <div class="reaction-tags">
+            <span>${escapeHtml(formatReactionStance(theme.stance))}</span>
+            ${linked.map((id) => `<span>${escapeHtml(formatNarrativeId(id))}</span>`).join("")}
+          </div>
+          <ul class="reaction-evidence-list">
+            ${evidence
+              .map((item) => `
+                <li>
+                  <span>${escapeHtml(formatSourceType(item.sourceType))} · ${escapeHtml(item.sourceName || "来源")}</span>
+                  <strong>${escapeHtml(item.publishedAt || "--")}</strong>
+                  <p>${escapeHtml(item.summary || item.quoteOrSummary || "")}</p>
+                </li>
+              `)
+              .join("")}
+          </ul>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function formatWeight(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? `${Math.round(number)}%` : "--";
+}
+
+function formatSourceType(value) {
+  const key = String(value || "").toLowerCase();
+  const labels = {
+    media: "媒体",
+    institution: "机构",
+    community: "社群",
+    official: "官方",
+    automation: "自动化",
+  };
+  return labels[key] || String(value || "来源");
+}
+
+function formatReactionStance(value) {
+  const key = String(value || "").toLowerCase();
+  const labels = {
+    dominant: "主导叙事",
+    secondary: "次要叙事",
+    mixed: "分歧叙事",
+    unavailable: "不可用",
+    empty: "无有效输入",
+  };
+  return labels[key] || String(value || "分歧叙事");
+}
+
+function formatNarrativeId(id) {
+  return NARRATIVE_CN[id]?.title || String(id || "").replaceAll("_", " ");
 }
 
 function renderNarrativeRanking(narratives) {
@@ -810,11 +960,16 @@ function renderNarrativeDetails(narratives) {
     .map((item) => {
       const display = getNarrativeDisplay(item);
       const checks = display.checks;
+      const scoreLogic = getNarrativeScoreLogic(item);
       return `
         <article class="narrative-detail-card">
           <div class="narrative-card-head">
             <h3>${escapeHtml(display.title)}</h3>
             <span class="star-score">${formatStars(item.score)}</span>
+          </div>
+          <div class="score-rationale">
+            <span class="score-rationale-label">${escapeHtml(`${Number(item.score || 0)}星边界`)}</span>
+            <p>${escapeHtml(scoreLogic)}</p>
           </div>
           <ul class="evidence-list">
             ${checks.map((check) => `<li>${escapeHtml(check)}</li>`).join("")}
@@ -829,12 +984,31 @@ function renderNarrativeDetails(narratives) {
 function getNarrativeDisplay(item) {
   const config = NARRATIVE_CN[item.id] || {};
   const checks = Array.isArray(item.checks) && item.checks.length ? item.checks : [];
+  const translatedCore = translateNarrativeText(item.core || "");
+  const translatedInterpretation = translateNarrativeText(item.interpretation || "");
   return {
     title: config.title || translateNarrativeText(item.title || ""),
-    core: config.core || translateNarrativeText(item.core || ""),
-    interpretation: config.interpretation || translateNarrativeText(item.interpretation || ""),
+    core: translatedCore || config.core || "",
+    interpretation: translatedInterpretation || config.interpretation || "",
     checks: checks.map((check) => translateNarrativeText(check)).filter(Boolean),
   };
+}
+
+function getNarrativeScoreLogic(item) {
+  const score = clamp(Math.round(Number(item.score) || 0), 0, 3);
+  const evidenceCount = Array.isArray(item.evidence) ? item.evidence.length : 0;
+  const checkCount = Array.isArray(item.checks) ? item.checks.length : 0;
+  const hasEvidence = evidenceCount > 0 || checkCount > 0;
+  if (score === 0) {
+    return "当前是0星：检查项没有形成同向确认。0星已经是下限；不是1星，因为还缺至少一条清晰、可落到价格或曲线的核心证据。";
+  }
+  if (score === 1) {
+    return `当前是1星：${hasEvidence ? "已有背景或单条证据" : "仅有弱线索"}，但证据方向仍混合。不是0星，因为信号没有完全消失；不是2星，因为还没有两条以上核心证据与价格/曲线确认同向。`;
+  }
+  if (score === 2) {
+    return "当前是2星：至少两条核心证据大体同向，并有价格或曲线信号配合。不是1星，因为已经不只是单条弱证据；不是3星，因为还缺极端分位、跨资产确认或1D/5D持续强化。";
+  }
+  return "当前是3星：多条证据同向，且出现极端分位、跨资产或短线持续性确认。不是2星，因为信号已经从中等确认升级为强确认；3星是当前评分上限。";
 }
 
 function translateNarrativeText(text) {
@@ -854,6 +1028,12 @@ function translateNarrativeText(text) {
     "MOVE index: unavailable": "MOVE 指数：暂无本地数据",
     "CFTC Treasury futures positioning: unavailable": "CFTC 美债期货持仓：暂无本地数据",
     "Timing overlay: No standalone timing signal": "择时叠加：没有独立择时信号",
+    "The strongest policy-path evidence is the 63-observation bear flattening background, not a fresh 5D shock.": "最强证据来自过去63个有效观测里的熊平背景，而不是新的5日冲击。",
+    "Risk appetite is mixed: headline CNN Fear & Greed is in greed, while junk-bond-demand internals are weaker.": "风险偏好信号分化：CNN总分偏贪婪，但垃圾债需求内部项较弱。",
+    "Local curve proxies do not show independent 30Y stress over the 5D window.": "本地曲线代理没有显示30Y在5日窗口内独立承压。",
+    "Technical signals are not strong enough to create or upgrade a duration action without a fundamental shock.": "技术信号不足以单独触发或升级久期动作，仍需基本面冲击配合。",
+    "Inflation compensation is a weak watch item; there is no broad breakeven-led rates selloff in the local 5D tape.": "通胀补偿只是弱观察项，本地5日 tape 没有形成广泛的 breakeven 主导 selloff。",
+    "Risk/liquidity does not dominate the rates signal, but weak credit appetite keeps the duration read conditional.": "风险/流动性不是利率主导信号，但信用偏好偏弱，久期判断仍需保留条件。",
   };
   if (exact[source]) {
     return exact[source];
@@ -907,6 +1087,37 @@ function translateNarrativeText(text) {
   match = source.match(/^20D move percentile: 10Y ([+-]?\d+)bp ([\d%*]+) \/ 30Y ([+-]?\d+)bp ([\d%*]+)$/);
   if (match) {
     return `20日变化分位：10Y ${match[1]}bp ${match[2]} / 30Y ${match[3]}bp ${match[4]}`;
+  }
+  match = source.match(/^Breakevens are positive over 21\/63 observations but softer over the 5D window, so inflation compensation is not the main shock on ([\d-]+)\.$/);
+  if (match) {
+    return `breakeven 在21日/63日窗口仍偏正，但5日窗口转弱；${match[1]} 不是通胀补偿主导的利率冲击。`;
+  }
+  match = source.match(/^Technical indicators do not show a clear yield-up exhaustion setup on ([\d-]+)\.$/);
+  if (match) {
+    return `${match[1]} 的技术指标没有显示明确的收益率上行衰竭形态。`;
+  }
+  match = source.match(/^Policy-path repricing remains a background narrative, but ([\d-]+) does not show a fresh front-end-led shock\.$/);
+  if (match) {
+    return `政策路径重定价仍是背景叙事，但 ${match[1]} 没有出现新的短端主导冲击。`;
+  }
+  match = source.match(/^The absence of 30Y-led bear steepening argues against upgrading long-end duration, but it also removes the main long-end stress veto for ([\d-]+)\.$/);
+  if (match) {
+    return `没有30Y主导的熊陡，不支持升级长端久期；同时也移除了 ${match[1]} 的主要长端压力否决项。`;
+  }
+  match = source.match(/^DGS10 rose ([+-]?\d+)bp over 5D, so a growth-scare \/ recession-hedge rates rally is not confirmed\.$/);
+  if (match) {
+    return `DGS10 5日上行 ${match[1]}bp，因此增长担忧/衰退对冲式利率 rally 没有被确认。`;
+  }
+  match = source.match(/^DGS10 fell ([+-]?\d+)bp over 5D, while CNN risk proxies are mixed\.$/);
+  if (match) {
+    return `DGS10 5日下行 ${match[1]}bp，但 CNN 风险代理信号仍然混合。`;
+  }
+  match = source.match(/^DGS10 rose ([+-]?\d+)bp over 5D, while CNN risk proxies are mixed\.$/);
+  if (match) {
+    return `DGS10 5日上行 ${match[1]}bp，同时 CNN 风险代理信号仍然混合。`;
+  }
+  if (source === "The growth-scare narrative is weak because yields are not rallying over the 5D window and risk proxies are mixed rather than decisively defensive.") {
+    return "增长担忧叙事偏弱，因为5日窗口里收益率没有 rally，风险代理也只是混合而非明显防御。";
   }
   return source
     .replaceAll("Risk appetite", "风险偏好")
@@ -977,21 +1188,195 @@ function renderDurationAction(action) {
 function renderTechnicalPanel(technical) {
   const signals = Array.isArray(technical.signals) && technical.signals.length ? technical.signals : DEFAULT_TECHNICAL_SIGNALS;
   refs.technicalGrid.innerHTML = signals
-    .map((signal) => `
-      <article class="technical-signal">
-        <div class="technical-signal-head">
-          <h3 class="technical-title">${escapeHtml(signal.title || "--")}</h3>
-          <span class="technical-status">${escapeHtml(signal.status || "pending")}</span>
-        </div>
-        <div class="technical-value">${escapeHtml(signal.value ?? "--")}</div>
-        <p>${escapeHtml(signal.note || "等待每日任务填充读数。")}</p>
-      </article>
-    `)
+    .map((signal) => renderTechnicalSignal(signal))
     .join("");
   refs.technicalAdvice.innerHTML = `
     <strong>${escapeHtml(technical.adviceTitle || "Waiting for automation")}</strong>
     <p>${escapeHtml(technical.adviceBody || "技术面只做 timing overlay，需和基本面叠加。")}</p>
   `;
+}
+
+function renderTechnicalSignal(signal) {
+  const title = String(signal.title || "--");
+  if (title.includes("九转")) {
+    return renderNineTurnSignal(signal);
+  }
+  if (title === "RSI") {
+    return renderRsiSignal(signal);
+  }
+  if (title.includes("Bollinger")) {
+    return renderBollingerSignal(signal);
+  }
+  if (title.includes("20D move percentile")) {
+    return renderMovePercentileSignal(signal);
+  }
+  if (title.includes("Timing overlay")) {
+    return renderTimingOverlaySignal(signal);
+  }
+  return renderUnavailableOrSimpleSignal(signal);
+}
+
+function renderTechnicalCard(signal, body, extraClass = "") {
+  return `
+    <article class="technical-signal ${extraClass}">
+      <div class="technical-signal-head">
+        <h3 class="technical-title">${escapeHtml(signal.title || "--")}</h3>
+        <span class="technical-status is-${escapeHtml(normalizeStatus(signal.status))}">${escapeHtml(signal.status || "pending")}</span>
+      </div>
+      ${body}
+      <p>${escapeHtml(signal.note || "等待每日任务填充读数。")}</p>
+    </article>
+  `;
+}
+
+function renderNineTurnSignal(signal) {
+  const match = String(signal.value || "").match(/up\s+(\d+)\s+\/\s+down\s+(\d+)/i);
+  const up = match ? clamp(Number(match[1]), 0, 9) : 0;
+  const down = match ? clamp(Number(match[2]), 0, 9) : 0;
+  const active = Math.max(up, down);
+  const direction = up >= down ? "up" : "down";
+  const dots = Array.from({ length: 9 }, (_, index) => {
+    const isActive = index < active;
+    return `<span class="nine-dot ${isActive ? "is-active" : ""}"></span>`;
+  }).join("");
+  const body = `
+    <div class="nine-turn-visual" aria-label="${escapeHtml(String(signal.value || ""))}">
+      <div class="nine-turn-counts">
+        <span><strong>${up}</strong><small>up</small></span>
+        <span><strong>${down}</strong><small>down</small></span>
+      </div>
+      <div class="nine-dot-row is-${direction}">${dots}</div>
+    </div>
+  `;
+  return renderTechnicalCard(signal, body, "is-visual");
+}
+
+function renderRsiSignal(signal) {
+  const pair = parseTenThirtyPair(signal.value);
+  const body = `
+    <div class="gauge-stack">
+      ${renderPercentGauge("10Y", pair.ten, 0, 100, "30 / 70")}
+      ${renderPercentGauge("30Y", pair.thirty, 0, 100, "30 / 70")}
+    </div>
+  `;
+  return renderTechnicalCard(signal, body, "is-visual");
+}
+
+function renderBollingerSignal(signal) {
+  const pair = parseTenThirtyPair(signal.value);
+  const body = `
+    <div class="gauge-stack">
+      ${renderBipolarGauge("10Y", pair.ten, -3, 3)}
+      ${renderBipolarGauge("30Y", pair.thirty, -3, 3)}
+    </div>
+  `;
+  return renderTechnicalCard(signal, body, "is-visual");
+}
+
+function renderMovePercentileSignal(signal) {
+  const match = String(signal.value || "").match(/10Y\s+([+-]?\d+)bp\s+([\d.]+)%\*?\s+\/\s+30Y\s+([+-]?\d+)bp\s+([\d.]+)%\*?/i);
+  const tenMove = match ? Number(match[1]) : NaN;
+  const tenPct = match ? Number(match[2]) : NaN;
+  const thirtyMove = match ? Number(match[3]) : NaN;
+  const thirtyPct = match ? Number(match[4]) : NaN;
+  const body = `
+    <div class="gauge-stack">
+      ${renderPercentGauge("10Y", tenPct, 0, 100, `${formatSignedBp(tenMove)} / ${formatNumberOrDash(tenPct)}%`)}
+      ${renderPercentGauge("30Y", thirtyPct, 0, 100, `${formatSignedBp(thirtyMove)} / ${formatNumberOrDash(thirtyPct)}%`)}
+    </div>
+  `;
+  return renderTechnicalCard(signal, body, "is-visual");
+}
+
+function renderTimingOverlaySignal(signal) {
+  const status = normalizeStatus(signal.status);
+  const body = `
+    <div class="timing-overlay-visual is-${status}">
+      <span class="timing-orb"></span>
+      <strong>${escapeHtml(signal.value || "--")}</strong>
+    </div>
+  `;
+  return renderTechnicalCard(signal, body, "is-visual is-wide");
+}
+
+function renderUnavailableOrSimpleSignal(signal) {
+  const value = String(signal.value ?? "--");
+  const unavailable = value.toLowerCase().includes("unavailable") || normalizeStatus(signal.status) === "unavailable";
+  const body = unavailable
+    ? `<div class="unavailable-visual"><span></span><strong>unavailable</strong></div>`
+    : `<div class="technical-value">${escapeHtml(value)}</div>`;
+  return renderTechnicalCard(signal, body, unavailable ? "is-unavailable" : "");
+}
+
+function parseTenThirtyPair(value) {
+  const match = String(value || "").match(/10Y\s+([+-]?[\d.]+)\s+\/\s+30Y\s+([+-]?[\d.]+)/i);
+  return {
+    ten: match ? Number(match[1]) : NaN,
+    thirty: match ? Number(match[2]) : NaN,
+  };
+}
+
+function renderPercentGauge(label, value, min, max, annotation) {
+  const pct = Number.isFinite(value) ? clamp(((value - min) / (max - min)) * 100, 0, 100) : 0;
+  return `
+    <div class="technical-gauge">
+      <div class="gauge-meta">
+        <span>${escapeHtml(label)}</span>
+        <strong>${escapeHtml(formatNumberOrDash(value))}</strong>
+      </div>
+      <div class="gauge-track is-percent">
+        <span class="gauge-band is-low"></span>
+        <span class="gauge-band is-high"></span>
+        <span class="gauge-marker" style="left:${pct}%"></span>
+      </div>
+      <small>${escapeHtml(annotation)}</small>
+    </div>
+  `;
+}
+
+function renderBipolarGauge(label, value, min, max) {
+  const pct = Number.isFinite(value) ? clamp(((value - min) / (max - min)) * 100, 0, 100) : 50;
+  const fillWidth = Number.isFinite(value) ? Math.abs(pct - 50) : 0;
+  const fillLeft = value >= 0 ? 50 : 50 - fillWidth;
+  return `
+    <div class="technical-gauge">
+      <div class="gauge-meta">
+        <span>${escapeHtml(label)}</span>
+        <strong>${escapeHtml(formatSignedNumberOrDash(value))}</strong>
+      </div>
+      <div class="gauge-track is-bipolar">
+        <span class="gauge-zero"></span>
+        <span class="gauge-fill" style="left:${fillLeft}%;width:${fillWidth}%"></span>
+        <span class="gauge-marker" style="left:${pct}%"></span>
+      </div>
+      <small>-3 / 0 / +3</small>
+    </div>
+  `;
+}
+
+function normalizeStatus(status) {
+  return String(status || "pending").toLowerCase().replace(/[^a-z0-9]+/g, "-") || "pending";
+}
+
+function formatSignedBp(value) {
+  if (!Number.isFinite(value)) {
+    return "--";
+  }
+  return `${value > 0 ? "+" : ""}${Math.round(value)}bp`;
+}
+
+function formatNumberOrDash(value) {
+  if (!Number.isFinite(value)) {
+    return "--";
+  }
+  return Number(value).toFixed(Math.abs(value) >= 10 ? 0 : 1);
+}
+
+function formatSignedNumberOrDash(value) {
+  if (!Number.isFinite(value)) {
+    return "--";
+  }
+  return `${value > 0 ? "+" : ""}${Number(value).toFixed(2)}`;
 }
 
 function getRankedNarratives(narratives) {
@@ -1859,7 +2244,37 @@ function updateMacroSummary() {
   }
 
   refs.readSummary.textContent = readText;
-  refs.heroBaseCase.textContent = baseText;
+  const firstRead = getHeroFirstRead();
+  refs.heroBaseCase.textContent = firstRead.title || baseText;
+  if (refs.heroFirstReadNote) {
+    refs.heroFirstReadNote.textContent = firstRead.subtitle || "Run daily Macro task for a live summary.";
+  }
+}
+
+function getHeroFirstRead() {
+  const dashboard = state.dailyDashboard?.data || {};
+  if (state.dailyDashboard?.status === "ready" && dashboard.firstRead) {
+    return {
+      title: dashboard.firstRead.title || getHeroBaseCaseText(),
+      subtitle: dashboard.firstRead.subtitle || dashboard.firstRead.summary || dashboard.reportSummary || "",
+    };
+  }
+  if (state.dailyDashboard?.status === "ready") {
+    return {
+      title: getHeroBaseCaseText(),
+      subtitle: dashboard.reportSummary || "",
+    };
+  }
+  if (state.dailyDashboard?.status === "missing") {
+    return {
+      title: "Run daily Macro task",
+      subtitle: "今日数据和研报尚未生成。",
+    };
+  }
+  return {
+    title: "Shock rarity before asset choice",
+    subtitle: "Run daily Macro task for a live summary.",
+  };
 }
 
 function getHeroBaseCaseText() {

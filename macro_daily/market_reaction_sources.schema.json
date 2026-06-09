@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Macro Daily Market Reaction Sources",
+  "type": "object",
+  "required": ["asOf", "coverageWindow"],
+  "properties": {
+    "asOf": {
+      "type": "string",
+      "description": "Market date this reaction digest explains, formatted YYYY-MM-DD."
+    },
+    "coverageWindow": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["from", "to"],
+          "properties": {
+            "from": { "type": "string" },
+            "to": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "methodology": {
+      "type": "string"
+    },
+    "themes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "interpretation", "evidence"],
+        "properties": {
+          "title": { "type": "string" },
+          "weight": { "type": "number" },
+          "stance": { "type": "string" },
+          "interpretation": { "type": "string" },
+          "linkedNarrativeIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "evidence": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/evidenceItem" }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "sources": {
+      "type": "array",
+      "description": "Flat evidence list. Used only when themes are not provided; each source should include theme.",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    },
+    "evidence": {
+      "type": "array",
+      "description": "Alias for sources.",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "evidenceItem": {
+      "type": "object",
+      "required": ["sourceType", "sourceName", "publishedAt", "summary"],
+      "properties": {
+        "theme": { "type": "string" },
+        "sourceType": {
+          "type": "string",
+          "enum": ["official", "institution", "media", "wire", "community", "social", "automation"]
+        },
+        "sourceName": { "type": "string" },
+        "publishedAt": { "type": "string" },
+        "url": { "type": "string" },
+        "summary": { "type": "string" },
+        "quoteOrSummary": { "type": "string" },
+        "reliability": { "type": "number" },
+        "evidenceWeight": { "type": "number" },
+        "weight": { "type": "number" },
+        "linkedNarrativeIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "stance": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}

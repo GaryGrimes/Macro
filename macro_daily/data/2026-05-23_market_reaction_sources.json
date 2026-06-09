@@ -1,0 +1,192 @@
+{
+  "asOf": "2026-05-22",
+  "coverageWindow": {
+    "from": "2026-05-19",
+    "to": "2026-05-23"
+  },
+  "summary": "2026-05-22 的市场消化不是新一轮单边长端失控，而是 2026-05-19 至 2026-05-21 的长端高位、Fed minutes 偏鹰风险和能源通胀叙事被重新校准。官方曲线显示 2026-05-22 DGS10 从 2026-05-21 的 4.57% 降到 4.56%，DGS30 从 5.10% 降到 5.08%，2Y 从 4.09% 降到 4.01%，但 5Y nominal 从 4.25% 升到 4.27%，5Y real yield 从 1.68% 升到 1.73%。这说明长端期限溢价压力仍在高位，但 2026-05-22 的边际变化更像中端实际利率继续重定价、短端和长端从高位回落，而不是全面 duration capitulation。",
+  "methodology": "主题权重综合来源可靠度、发布时间接近度、证据强度，以及证据与 2026-05-22 Treasury 曲线 tape 的一致性。官方和机构证据权重高于媒体，社群讨论只作为低权重背景，不允许单独推成主导叙事。2026-05-23 为本地运行日，覆盖窗口包含 2026-05-22 美国收盘后的周末消化期；本次未能从 shell 直连 FRED，周末媒体增量只保留可核验来源，不用未验证链接补强叙事。",
+  "themes": [
+    {
+      "title": "Fed 路径 / 实际利率重定价",
+      "weight": 32,
+      "stance": "dominant",
+      "interpretation": "Fed minutes 仍是 2026-05-22 市场解释利率高位的核心宏观背景，但本地 tape 显示重定价更集中在 5Y real yield：2026-05-22 的 5Y real yield 升至 1.73%，而 10Y 和 30Y real yield 分别小幅降至 2.16% 和 2.79%。因此该主题支持 higher-for-longer 和实际折现率偏紧的判断，但不支持把 2026-05-22 解读成全曲线同向加速卖出。",
+      "linkedNarrativeIds": [
+        "fed_path"
+      ],
+      "evidence": [
+        {
+          "sourceType": "official",
+          "sourceName": "Federal Reserve FOMC Minutes",
+          "publishedAt": "2026-05-20",
+          "url": "https://www.federalreserve.gov/monetarypolicy/fomcminutes20260429.htm",
+          "summary": "Federal Reserve 2026-04-29 FOMC minutes 在 2026-05-20 发布，讨论通胀高于目标、能源与地缘冲突带来的不确定性，以及若通胀持续高于 2% 时政策可能需要更偏收紧的风险。该证据解释了为什么 2026-05-22 的中端实际利率仍不能简单按买点处理。",
+          "reliability": 1,
+          "weight": 0.98
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Real Yield Curve",
+          "publishedAt": "2026-05-22",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_real_yield_curve",
+          "summary": "U.S. Treasury real yield curve 显示 2026-05-22 的 5Y、10Y、30Y real yield 分别为 1.73%、2.16%、2.79%；相对 2026-05-21，5Y 上行 5bp，但 10Y 和 30Y 分别下行 2bp 和 1bp。该结构支持中端实际利率重定价，而不是长端实际利率同步失控。",
+          "reliability": 1,
+          "weight": 0.94
+        },
+        {
+          "sourceType": "institution",
+          "sourceName": "Wells Fargo Investment Institute",
+          "publishedAt": "2026-05-21",
+          "url": "https://www.wellsfargoadvisors.com/research-analysis/commentary/bond-market-commentary.htm?cid=WF2000034052&linknav=topnav%3AourInsights%3AmarketCommentary%3AbondMarket",
+          "summary": "Wells Fargo 在 2026-05-21 的 bond market commentary 中把 2026-05-20 的收益率下行与 Iran 战争降温乐观情绪和 Fed minutes 同时联系起来，并指出 minutes 显示若通胀保持高位，多数官员认为未来加息可能有必要。该证据说明市场在 2026-05-22 前仍把政策路径风险作为利率高位的重要解释。",
+          "reliability": 1,
+          "weight": 0.82
+        }
+      ]
+    },
+    {
+      "title": "长端期限溢价 / 财政供给与拍卖吸收",
+      "weight": 27,
+      "stance": "dominant",
+      "interpretation": "长端叙事仍是风险约束，但 2026-05-22 的边际 tape 已不是长端加速恶化。官方曲线显示 30Y 从 2026-05-19 的 5.18% 降到 2026-05-22 的 5.08%，10s30s 从约 49bp 小幅走到约 52bp，未出现急剧扩张；20Y auction 仍提供财政供给和投资者吸收能力的观察点。该主题限制长端 duration 加仓，但不足以单独触发追空或完全放弃 10Y 观察。",
+      "linkedNarrativeIds": [
+        "term_premium"
+      ],
+      "evidence": [
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates",
+          "publishedAt": "2026-05-22",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+          "summary": "U.S. Treasury nominal curve 显示 2026-05-22 DGS10 为 4.56%、DGS30 为 5.08%；30Y 仍在 5% 上方，但较 2026-05-19 的 5.18% 已回落 10bp，说明长端压力高位存在但边际加速放缓。",
+          "reliability": 1,
+          "weight": 0.97
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "TreasuryDirect",
+          "publishedAt": "2026-05-20",
+          "url": "https://www.treasurydirect.gov/instit/annceresult/press/preanre/2026/R_20260520_2.pdf",
+          "summary": "TreasuryDirect 2026-05-20 20Y auction result 提供长端供给吸收证据；该拍卖可用来观察高收益率环境下的投资者承接能力，但看板仍缺结构化 auction tail、bid-to-cover 和 dealer take-down cache，因此只能作为 marketReaction 证据和 term premium proxy。",
+          "reliability": 1,
+          "weight": 0.82
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "CNN via KMBC",
+          "publishedAt": "2026-05-19",
+          "url": "https://www.kmbc.com/article/30-year-us-treasury-yield/71350177",
+          "summary": "CNN 报道 30Y Treasury yield 在 2026-05-19 接近 5.2%、为 2007 年以来高位，并把 selloff 归因于通胀、财政赤字、地缘风险和央行政策风险。该来源支持长端期限溢价叙事，但 2026-05-22 官方曲线显示 30Y 已从高点回落。",
+          "reliability": 0.85,
+          "weight": 0.74
+        }
+      ]
+    },
+    {
+      "title": "能源通胀 / 通胀预期重定价",
+      "weight": 18,
+      "stance": "secondary",
+      "interpretation": "能源通胀仍解释 2026-05-19 附近的利率冲击背景，但 2026-05-22 的 breakeven proxy 不支持通胀补偿成为边际主导。按 Treasury nominal minus real yield 估算，2026-05-22 的 5Y breakeven 约 2.54%，较 2026-05-21 下降 3bp；10Y breakeven 约 2.40%，较 2026-05-21 仅上行 1bp。该主题保留为政策路径风险的输入，而不是单独的 duration 卖出主线。",
+      "linkedNarrativeIds": [
+        "inflation_comp"
+      ],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Anadolu Agency",
+          "publishedAt": "2026-05-20",
+          "url": "https://www.aa.com.tr/en/economy/us-treasury-yields-fall-as-trump-says-us-in-final-stages-with-iran/3943786",
+          "summary": "Anadolu Agency 报道 2026-05-20 因美国与 Iran 谈判进展乐观，2Y 到 10Y Treasury yields 下行约 10bp；市场把可能降低能源供应风险理解为缓和通胀压力，这解释了 2026-05-20 至 2026-05-22 breakeven 从高位回吐的外部叙事。",
+          "reliability": 0.8,
+          "weight": 0.72
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Trading Economics",
+          "publishedAt": "2026-05-21",
+          "url": "https://tradingeconomics.com/united-states/government-bond-yield/news/552289",
+          "summary": "Trading Economics 在 2026-05-21 指出，10Y yield 在 2026-05-20 大跌后仍低于 4.6%，市场关注 Iran 战争降温、油价回落和 Fed minutes 中的加息风险；这说明能源通胀叙事从推高收益率转为边际缓和，但并未完全消失。",
+          "reliability": 0.75,
+          "weight": 0.64
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates and Real Yield Curve",
+          "publishedAt": "2026-05-22",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates",
+          "summary": "按 Treasury nominal minus real yield proxy 估算，2026-05-22 的 5Y breakeven 约 2.54%、10Y breakeven 约 2.40%；相对 2026-05-21，5Y 下降约 3bp，10Y 小幅上升约 1bp。该证据显示通胀补偿不是 2026-05-22 的主要上行驱动。",
+          "reliability": 1,
+          "weight": 0.74
+        }
+      ]
+    },
+    {
+      "title": "风险偏好 / 流动性冲击",
+      "weight": 11,
+      "stance": "mixed",
+      "interpretation": "风险偏好证据更像利率、能源和政策路径叙事的二阶传导，而不是独立 funding shock。2026-05-20 Iran 谈判乐观降低能源通胀压力并支持债券反弹；2026-05-22 官方曲线中短端和长端回落，也不符合流动性压力主导下的全曲线无差别抛售。",
+      "linkedNarrativeIds": [
+        "risk_liquidity"
+      ],
+      "evidence": [
+        {
+          "sourceType": "institution",
+          "sourceName": "Wells Fargo Investment Institute",
+          "publishedAt": "2026-05-21",
+          "url": "https://www.wellsfargoadvisors.com/research-analysis/commentary/bond-market-commentary.htm?cid=WF2000034052&linknav=topnav%3AourInsights%3AmarketCommentary%3ABondMarket",
+          "summary": "Wells Fargo 描述 2026-05-20 Treasury yields 因 Iran 乐观情绪下行，2026-05-21 开盘前 yields 又随 PMI、失业申请和 housing starts 等数据等待而略升；该证据支持宏观风险偏好切换，但不支持独立流动性压力成为主线。",
+          "reliability": 1,
+          "weight": 0.58
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "CNN via KMBC",
+          "publishedAt": "2026-05-19",
+          "url": "https://www.kmbc.com/article/30-year-us-treasury-yield/71350177",
+          "summary": "CNN 报道高收益率对美股估值和融资成本形成压力，说明 rates shock 正在向风险资产传导；但文章主因仍是通胀、财政和地缘政治，而不是短端融资市场失灵。",
+          "reliability": 0.85,
+          "weight": 0.48
+        }
+      ]
+    },
+    {
+      "title": "技术动能 / 衰竭",
+      "weight": 12,
+      "stance": "secondary",
+      "interpretation": "30Y 在 2026-05-19 触及 5.18% 后到 2026-05-22 回落到 5.08%，技术层面出现从高位降温的初步证据，但该证据仍需和 real yield、curve shape、MOVE proxy 与风险资产数据一起验证。技术衰竭可以把 10Y 纳入观察或小仓位试探条件，但不能单独升级到长端或 convex duration 加仓。",
+      "linkedNarrativeIds": [
+        "technical_exhaustion"
+      ],
+      "evidence": [
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates",
+          "publishedAt": "2026-05-22",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+          "summary": "U.S. Treasury nominal curve 显示 30Y yield 从 2026-05-19 的 5.18% 回落到 2026-05-22 的 5.08%，10Y 从 4.69% 回落到 4.56%。该路径给技术降温提供价格证据，但不等同于基本面确认买点。",
+          "reliability": 1,
+          "weight": 0.76
+        },
+        {
+          "sourceType": "community",
+          "sourceName": "Reddit r/getagraph",
+          "publishedAt": "2026-05-22",
+          "url": "https://www.reddit.com/r/getagraph/comments/1tkc8hg/latest_treasury_rates_20260521/",
+          "summary": "Reddit r/getagraph 发布 2026-05-21 Treasury rates 摘要，显示 30Y 为 5.10%；这类社群数据可作为低权重情绪和关注度观察，但不能替代 Treasury 官方曲线。",
+          "reliability": 0.45,
+          "weight": 0.2
+        },
+        {
+          "sourceType": "automation",
+          "sourceName": "Local source coverage audit",
+          "publishedAt": "2026-05-23",
+          "url": "macro_daily/data/2026-05-23_market_reaction_sources.json",
+          "summary": "2026-05-23 本地运行时未能通过 shell 直连 FRED；本文件只把可核验的 2026-05-19 至 2026-05-22 官方、机构、媒体和低权重社群证据纳入主题排序。未验证的 2026-05-23 周末市场评论不作为证据。",
+          "reliability": 0.6,
+          "weight": 0.28
+        }
+      ]
+    }
+  ]
+}

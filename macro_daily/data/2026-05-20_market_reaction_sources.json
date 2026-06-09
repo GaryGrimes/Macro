@@ -1,0 +1,183 @@
+{
+  "asOf": "2026-05-19",
+  "coverageWindow": {
+    "from": "2026-05-16",
+    "to": "2026-05-20"
+  },
+  "summary": "市场反应集中在通胀压力重新抬头与 Fed 路径重定价、长端期限溢价压力持续，以及高收益率和油价波动对风险偏好的二阶拖累。",
+  "methodology": "主题权重综合来源可靠度、发布时间接近度、证据强度，以及证据与 2026-05-19 Treasury 曲线 tape 的一致性。社群证据只作为低权重背景色彩，权重上限低于权威媒体和官方证据。",
+  "themes": [
+    {
+      "title": "Fed 路径 / 实际利率重定价",
+      "weight": 32,
+      "stance": "dominant",
+      "interpretation": "权威媒体把本轮利率上行解释为市场重新定价更少降息或潜在加息风险，原因是通胀压力仍高；同时 5Y 到 30Y 实际利率同步上行，说明名义利率 selloff 有实际利率主导成分。",
+      "linkedNarrativeIds": [
+        "fed_path"
+      ],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com",
+          "publishedAt": "2026-05-19",
+          "url": "https://www.investing.com/news/economy-news/analysisinvestors-see-no-letup-in-bond-market-strain-4697446",
+          "summary": "Reuters 报道投资者认为债市压力短期难以缓和，粘性通胀和沉重政府融资需求继续压住长期债券收益率。",
+          "reliability": 0.85,
+          "weight": 0.86
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com Canada",
+          "publishedAt": "2026-05-18",
+          "url": "https://ca.investing.com/news/economy-news/global-bond-rout-deepens-as-inflation-fears-trigger-ratehike-bets-4644508",
+          "summary": "Reuters 将全球债券 selloff 与通胀担忧和加息押注联系起来，能源价格维持高位是市场重新定价的重要背景。",
+          "reliability": 0.85,
+          "weight": 0.82
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury real yield curve",
+          "publishedAt": "2026-05-19",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+          "summary": "2026-05-19 实际利率曲线显示 5Y real yield 为 1.66%、10Y 为 2.18%、30Y 为 2.84%，确认名义利率上行中存在实际利率主导成分。",
+          "reliability": 1,
+          "weight": 0.78
+        }
+      ]
+    },
+    {
+      "title": "长端期限溢价 / 财政供给与拍卖吸收",
+      "weight": 27,
+      "stance": "dominant",
+      "interpretation": "官方曲线数据和市场报道都显示，长端供给与期限溢价叙事仍然活跃：30Y 收益率维持在 5% 以上，10s30s 陡峭化压力仍未完全消失。",
+      "linkedNarrativeIds": [
+        "term_premium"
+      ],
+      "evidence": [
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates",
+          "publishedAt": "2026-05-19",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+          "summary": "2026-05-19 官方曲线显示 DGS10 为 4.67%、DGS30 为 5.18%，30Y 仍是主要期限中收益率最高的一段。",
+          "reliability": 1,
+          "weight": 0.95
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com",
+          "publishedAt": "2026-05-19",
+          "url": "https://www.investing.com/news/economy-news/analysisinvestors-see-no-letup-in-bond-market-strain-4697446",
+          "summary": "Reuters 强调投资者担心财政融资需求和通胀风险继续给长久期债券施压，这支持长端期限溢价压力叙事。",
+          "reliability": 0.85,
+          "weight": 0.84
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "TreasuryDirect",
+          "publishedAt": "2026-05-13",
+          "url": "https://www.treasurydirect.gov/instit/annceresult/press/preanre/2026/R_20260513_2.pdf",
+          "summary": "2026-05-13 30Y 拍卖以 5.046% 高收益率发行、bid-to-cover 为 2.30，这是本地证据集中最近一次直接观察长端供给吸收能力的官方数据。",
+          "reliability": 1,
+          "weight": 0.68
+        }
+      ]
+    },
+    {
+      "title": "能源通胀 / 通胀预期重定价",
+      "weight": 22,
+      "stance": "secondary",
+      "interpretation": "能源相关通胀担忧仍是市场解释的重要部分，但本地 breakeven 贡献弱于实际利率贡献，因此该主题是次要叙事，而不是 5D tape 的主导驱动。",
+      "linkedNarrativeIds": [
+        "inflation_comp"
+      ],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com",
+          "publishedAt": "2026-05-18",
+          "url": "https://www.investing.com/news/economy-news/morning-bid-bonds-get-a-taste-of-oils-demand-destruction-4694627",
+          "summary": "Reuters 描述油价驱动的通胀担忧推高全球收益率，随后能源价格略有缓和；这说明市场曾把债券压力与能源通胀联系起来。",
+          "reliability": 0.85,
+          "weight": 0.78
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via Investing.com",
+          "publishedAt": "2026-05-17",
+          "url": "https://www.investing.com/news/economy-news/dollar-firms-as-oil-climbs-bond-rout-saps-risk-appetite-4694597",
+          "summary": "Reuters 报道油价上涨和债市 selloff 支撑美元并压低风险偏好，把利率上行与通胀压力和风险资产压力同时连接起来。",
+          "reliability": 0.85,
+          "weight": 0.72
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "U.S. Treasury Daily Treasury Rates and real yield curve",
+          "publishedAt": "2026-05-19",
+          "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates",
+          "summary": "按名义利率减实际利率估算，2026-05-19 的 5Y breakeven 约 2.66%、10Y breakeven 约 2.49%；通胀补偿水平偏高，但不是边际上行的最主要驱动。",
+          "reliability": 1,
+          "weight": 0.64
+        }
+      ]
+    },
+    {
+      "title": "风险偏好 / 流动性冲击",
+      "weight": 11,
+      "stance": "mixed",
+      "interpretation": "高收益率和油价波动压制权益和美元以外的风险偏好，但报道没有显示纯粹流动性冲击；主要催化仍然是利率和通胀，而非独立的流动性事件。",
+      "linkedNarrativeIds": [
+        "risk_liquidity"
+      ],
+      "evidence": [
+        {
+          "sourceType": "media",
+          "sourceName": "Reuters via MarketScreener",
+          "publishedAt": "2026-05-19",
+          "url": "https://www.marketscreener.com/news/wall-street-slips-as-elevated-oil-prices-treasury-yields-weigh-ce7d5cdcdf8efa2c",
+          "summary": "Reuters 报道油价和 Treasury yields 处于高位令美股承压，说明利率冲击正在传导到权益风险偏好。",
+          "reliability": 0.85,
+          "weight": 0.62
+        },
+        {
+          "sourceType": "media",
+          "sourceName": "AP News",
+          "publishedAt": "2026-05-19",
+          "url": "https://apnews.com/hub/financial-markets",
+          "summary": "AP 市场报道描述股市下跌与债市压力并存，这更像风险偏好被利率拖累，而不是独立的系统性流动性事件。",
+          "reliability": 0.8,
+          "weight": 0.48
+        }
+      ]
+    },
+    {
+      "title": "技术动能 / 衰竭",
+      "weight": 8,
+      "stance": "secondary",
+      "interpretation": "技术讨论集中在 10Y 和 30Y 上行速度、以及向按揭利率和融资成本的传导，但这只是 timing overlay，权重低于利率、通胀和长端供给叙事。",
+      "linkedNarrativeIds": [
+        "technical_exhaustion"
+      ],
+      "evidence": [
+        {
+          "sourceType": "community",
+          "sourceName": "Reddit r/Bonds",
+          "publishedAt": "2026-05-19",
+          "url": "https://www.reddit.com/r/bonds/",
+          "summary": "社群讨论关注 30Y 收益率高于 5% 究竟是衰竭信号，还是融资成本进入新 regime；该证据只作为低可靠度背景色彩。",
+          "reliability": 0.45,
+          "weight": 0.24
+        },
+        {
+          "sourceType": "community",
+          "sourceName": "Reddit r/MortgageRates",
+          "publishedAt": "2026-05-19",
+          "url": "https://www.reddit.com/r/MortgageRates/",
+          "summary": "按揭利率讨论强调 Treasury selloff 向借贷成本传导，可作为低权重的技术和仓位观察，但不能单独定义市场主线。",
+          "reliability": 0.45,
+          "weight": 0.2
+        }
+      ]
+    }
+  ]
+}

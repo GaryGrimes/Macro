@@ -533,6 +533,7 @@ async function buildTreasuryYieldPayload() {
     updatedAt: latest.date,
     fetchedAt: new Date().toISOString(),
     series: {
+      dgs2: filledNominalRows.map((row) => ({ date: row.date, value: row.dgs2, filled: row.filled })),
       us3y: filledNominalRows.map((row) => ({ date: row.date, value: row.us3y, filled: row.filled })),
       us10y: filledNominalRows.map((row) => ({ date: row.date, value: row.us10y, filled: row.filled })),
       us30y: filledNominalRows.map((row) => ({ date: row.date, value: row.us30y, filled: row.filled })),
@@ -582,18 +583,20 @@ function parseTreasuryNominalXml(xmlText) {
   while ((match = entryPattern.exec(xmlText))) {
     const body = match[1];
     const date = extractXmlTag(body, "NEW_DATE")?.slice(0, 10);
+    const dgs2 = Number.parseFloat(extractXmlTag(body, "BC_2YEAR"));
     const dgs5 = Number.parseFloat(extractXmlTag(body, "BC_5YEAR"));
     const us3y = Number.parseFloat(extractXmlTag(body, "BC_3YEAR"));
     const us10y = Number.parseFloat(extractXmlTag(body, "BC_10YEAR"));
     const us30y = Number.parseFloat(extractXmlTag(body, "BC_30YEAR"));
     if (
       date &&
+      Number.isFinite(dgs2) &&
       Number.isFinite(dgs5) &&
       Number.isFinite(us3y) &&
       Number.isFinite(us10y) &&
       Number.isFinite(us30y)
     ) {
-      rows.push({ date, dgs5, us3y, us10y, us30y, filled: false });
+      rows.push({ date, dgs2, dgs5, us3y, us10y, us30y, filled: false });
     }
   }
   return rows;

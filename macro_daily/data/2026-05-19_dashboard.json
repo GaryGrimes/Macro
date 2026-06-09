@@ -1,0 +1,962 @@
+{
+  "date": "2026-05-19",
+  "marketDate": "2026-05-18",
+  "source": "macro_daily automation",
+  "generatedAt": "2026-05-19T09:44:24+08:00",
+  "reportTitle": "10Y shock is entering a duration watch window",
+  "reportSummary": "2026-05-18 rates show DGS10 5D +19bp, DGS30 5D +16bp, parallel bear / mixed, and duration index 3 with a technical timing overlay.",
+  "firstRead": {
+    "title": "Start 10Y nibble / intermediate-duration watch",
+    "subtitle": "10Y 利率冲击已经进入可试仓区间，但MOVE、拍卖、持仓、期限溢价证据缺失，当前只支持小比例试 7-10Y，不支持正式加满中久期。",
+    "asOf": "2026-05-18",
+    "source": "durationAction + rateShock + driverAttribution"
+  },
+  "marketStatus": "Latest confirmed U.S. rates data is 2026-05-18; 2026-05-19 does not yet have a complete U.S. rates close in local cache.",
+  "rateShockRows": [
+    {
+      "tenor": "2Y",
+      "symbol": "DGS2",
+      "level": "4.07%",
+      "d1": "-2bp",
+      "d1Pctile": "22%",
+      "d5": "+12bp",
+      "d5Pctile": "70%",
+      "d21": "+36bp",
+      "d21Pctile": "77%",
+      "d3m": "+60bp",
+      "d3mPctile": "74%",
+      "regimePctile": "64%",
+      "zScore": "1.1",
+      "signal": "duration selloff",
+      "proxyUsed": true,
+      "historyWindow": "1976-06-01 to 2026-05-18",
+      "comparedTo": {
+        "d1": "2026-05-15",
+        "d5": "2026-05-11",
+        "d21": "2026-04-17",
+        "d3m": "2026-02-18"
+      },
+      "raw": {
+        "d1Bp": -2,
+        "d5Bp": 12,
+        "d21Bp": 36,
+        "d3mBp": 60,
+        "d5Pctile": 69.8,
+        "zScore5D": 1.11
+      }
+    },
+    {
+      "tenor": "3Y",
+      "symbol": "DGS3",
+      "level": "4.14%",
+      "d1": "0bp",
+      "d1Pctile": "20%",
+      "d5": "+18bp",
+      "d5Pctile": "82%",
+      "d21": "+42bp",
+      "d21Pctile": "80%",
+      "d3m": "+64bp",
+      "d3mPctile": "76%",
+      "regimePctile": "80%",
+      "zScore": "1.6",
+      "signal": "duration selloff",
+      "proxyUsed": true,
+      "historyWindow": "1962-01-02 to 2026-05-18",
+      "comparedTo": {
+        "d1": "2026-05-15",
+        "d5": "2026-05-11",
+        "d21": "2026-04-17",
+        "d3m": "2026-02-18"
+      },
+      "raw": {
+        "d1Bp": 0,
+        "d5Bp": 18,
+        "d21Bp": 42,
+        "d3mBp": 64,
+        "d5Pctile": 81.7,
+        "zScore5D": 1.58
+      }
+    },
+    {
+      "tenor": "5Y",
+      "symbol": "DGS5",
+      "level": "4.27%",
+      "d1": "+1bp",
+      "d1Pctile": "30%",
+      "d5": "+20bp",
+      "d5Pctile": "84%",
+      "d21": "+43bp",
+      "d21Pctile": "83%",
+      "d3m": "+61bp",
+      "d3mPctile": "76%",
+      "regimePctile": "82%",
+      "zScore": "1.7",
+      "signal": "duration selloff",
+      "proxyUsed": true,
+      "historyWindow": "1962-01-02 to 2026-05-18",
+      "comparedTo": {
+        "d1": "2026-05-15",
+        "d5": "2026-05-11",
+        "d21": "2026-04-17",
+        "d3m": "2026-02-18"
+      },
+      "raw": {
+        "d1Bp": 1,
+        "d5Bp": 20,
+        "d21Bp": 43,
+        "d3mBp": 61,
+        "d5Pctile": 84.2,
+        "zScore5D": 1.71
+      }
+    },
+    {
+      "tenor": "10Y",
+      "symbol": "DGS10",
+      "level": "4.61%",
+      "d1": "+2bp",
+      "d1Pctile": "50%",
+      "d5": "+19bp",
+      "d5Pctile": "86%",
+      "d21": "+35bp",
+      "d21Pctile": "80%",
+      "d3m": "+52bp",
+      "d3mPctile": "75%",
+      "regimePctile": "85%",
+      "zScore": "1.9",
+      "signal": "duration selloff",
+      "proxyUsed": true,
+      "historyWindow": "1962-01-02 to 2026-05-18",
+      "comparedTo": {
+        "d1": "2026-05-15",
+        "d5": "2026-05-11",
+        "d21": "2026-04-17",
+        "d3m": "2026-02-18"
+      },
+      "raw": {
+        "d1Bp": 2,
+        "d5Bp": 19,
+        "d21Bp": 35,
+        "d3mBp": 52,
+        "d5Pctile": 86.1,
+        "zScore5D": 1.88
+      }
+    },
+    {
+      "tenor": "30Y",
+      "symbol": "DGS30",
+      "level": "5.14%",
+      "d1": "+2bp",
+      "d1Pctile": "38%",
+      "d5": "+16bp",
+      "d5Pctile": "79%",
+      "d21": "+26bp",
+      "d21Pctile": "70%",
+      "d3m": "+43bp",
+      "d3mPctile": "68%",
+      "regimePctile": "80%",
+      "zScore": "1.9",
+      "signal": "duration selloff",
+      "proxyUsed": true,
+      "historyWindow": "1977-02-15 to 2026-05-18",
+      "comparedTo": {
+        "d1": "2026-05-15",
+        "d5": "2026-05-11",
+        "d21": "2026-04-17",
+        "d3m": "2026-02-18"
+      },
+      "raw": {
+        "d1Bp": 2,
+        "d5Bp": 16,
+        "d21Bp": 26,
+        "d3mBp": 43,
+        "d5Pctile": 79.1,
+        "zScore5D": 1.88
+      }
+    }
+  ],
+  "curveShape": {
+    "horizon": "5D",
+    "label": "parallel bear / mixed",
+    "interpretation": "Curve moves are not clean enough to upgrade a 10Y or 30Y duration signal.",
+    "spreads": {
+      "3s10s": {
+        "level": "47bp",
+        "change": "+1bp",
+        "comparedTo": "2026-05-11"
+      },
+      "5s30s": {
+        "level": "87bp",
+        "change": "-4bp",
+        "comparedTo": "2026-05-11"
+      },
+      "10s30s": {
+        "level": "53bp",
+        "change": "-3bp",
+        "comparedTo": "2026-05-11"
+      }
+    },
+    "moves": {
+      "3Y": "+18bp",
+      "5Y": "+20bp",
+      "10Y": "+19bp",
+      "30Y": "+16bp"
+    },
+    "raw": {
+      "d3Bp": 18,
+      "d5Bp": 20,
+      "d10Bp": 19,
+      "d30Bp": 16,
+      "spread3s10ChangeBp": 1,
+      "spread5s30ChangeBp": -4,
+      "spread10s30ChangeBp": -3
+    }
+  },
+  "driverAttribution": {
+    "horizon": "5D",
+    "5Y": {
+      "move": "+20bp",
+      "proxyUsed": false,
+      "realYield": {
+        "contribution": "+18bp",
+        "share": "90%"
+      },
+      "breakeven": {
+        "contribution": "+2bp",
+        "share": "10%"
+      },
+      "residual": {
+        "contribution": "0bp",
+        "share": "0%"
+      },
+      "dominantDriver": "real-yield",
+      "interpretation": "5Y move is real-yield led.",
+      "raw": {
+        "nominalBp": 20,
+        "realYieldBp": 18,
+        "breakevenBp": 2,
+        "residualBp": 0
+      }
+    },
+    "10Y": {
+      "move": "+19bp",
+      "proxyUsed": false,
+      "realYield": {
+        "contribution": "+18bp",
+        "share": "95%"
+      },
+      "breakeven": {
+        "contribution": "+1bp",
+        "share": "5%"
+      },
+      "residual": {
+        "contribution": "0bp",
+        "share": "0%"
+      },
+      "dominantDriver": "real-yield",
+      "interpretation": "10Y move is real-yield led.",
+      "raw": {
+        "nominalBp": 19,
+        "realYieldBp": 18,
+        "breakevenBp": 1,
+        "residualBp": 0
+      }
+    },
+    "30Y": {
+      "move": "+16bp",
+      "proxyUsed": true,
+      "realYield": "unavailable",
+      "breakeven": "unavailable",
+      "termPremium": "unavailable",
+      "proxyEvidence": [
+        "5s30s changed -4bp from 2026-05-11 to 2026-05-18.",
+        "10s30s changed -3bp from 2026-05-11 to 2026-05-18.",
+        "DGS30 changed +16bp from 2026-05-11 to 2026-05-18."
+      ],
+      "interpretation": "30Y did not independently weaken over the 5D window; long-end term-premium stress is not confirmed by local curve proxies.",
+      "raw": {
+        "moveBp": 16,
+        "spread5s30ChangeBp": -4,
+        "spread10s30ChangeBp": -3
+      }
+    },
+    "inflationAnchor": {
+      "t5yifr": "0bp",
+      "comparedTo": "2026-05-11",
+      "source": "FRED T5YIFR",
+      "proxyUsed": false,
+      "note": "T5YIFR moved 0bp from 2026-05-11 to 2026-05-18; source is FRED T5YIFR."
+    }
+  },
+  "crossAssetSignals": {
+    "source": "CNN local cache + FRED public cache",
+    "signals": [
+      {
+        "title": "CNN Fear & Greed",
+        "score": 62.9,
+        "rating": "greed",
+        "updatedAt": "2026-05-15",
+        "latestValue": "unavailable"
+      },
+      {
+        "title": "VIX",
+        "score": 50,
+        "rating": "neutral",
+        "updatedAt": "2026-05-15",
+        "latestValue": 18.43
+      },
+      {
+        "title": "Junk bond demand",
+        "score": 26,
+        "rating": "fear",
+        "updatedAt": "2026-05-15",
+        "latestValue": 1.31
+      },
+      {
+        "title": "Safe haven demand",
+        "score": 89,
+        "rating": "extreme greed",
+        "updatedAt": "2026-05-15",
+        "latestValue": 6.69
+      },
+      {
+        "title": "Stock breadth",
+        "score": 33.2,
+        "rating": "fear",
+        "updatedAt": "2026-05-15",
+        "latestValue": 1044.61
+      },
+      {
+        "title": "S&P 500 momentum",
+        "score": 98.2,
+        "rating": "extreme greed",
+        "updatedAt": "2026-05-15",
+        "latestValue": 7408.5
+      },
+      {
+        "title": "VIXCLS",
+        "type": "volatility",
+        "score": 18.43,
+        "rating": "neutral",
+        "updatedAt": "2026-05-15",
+        "latestValue": 18.43,
+        "unit": "index",
+        "source": "FRED",
+        "change5D": "+7.2%"
+      },
+      {
+        "title": "HY OAS",
+        "type": "credit spread",
+        "score": 2.8,
+        "rating": "greed",
+        "updatedAt": "2026-05-15",
+        "latestValue": 2.8,
+        "unit": "pct",
+        "source": "FRED",
+        "change5D": "-0.4%"
+      },
+      {
+        "title": "Broad dollar",
+        "type": "dollar",
+        "score": 119.28,
+        "rating": "neutral",
+        "updatedAt": "2026-05-15",
+        "latestValue": 119.28,
+        "unit": "index",
+        "source": "FRED",
+        "change5D": "+1.1%"
+      },
+      {
+        "title": "WTI oil",
+        "type": "oil",
+        "score": 101.56,
+        "rating": "falling",
+        "updatedAt": "2026-05-11",
+        "latestValue": 101.56,
+        "unit": "usd",
+        "source": "FRED",
+        "change5D": "-7.5%"
+      },
+      {
+        "title": "Copper",
+        "type": "copper",
+        "score": 12528.71,
+        "rating": "rising",
+        "updatedAt": "2026-03-01",
+        "latestValue": 12528.71,
+        "unit": "usd",
+        "source": "FRED",
+        "change5D": "+16.7%"
+      }
+    ],
+    "interpretation": "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand / HY OAS is fear."
+  },
+  "crossSourceVerification": [
+    {
+      "source": "U.S. Treasury Daily Treasury Yield Curve + Real Yield Curve XML",
+      "role": "primary rates source",
+      "latestDate": "2026-05-18",
+      "fetchedAt": "2026-05-19T01:43:35.425Z",
+      "note": "Used for nominal curve, real-yield curve, breakeven proxies, curve shape, rate shock tape, and technical calculations."
+    },
+    {
+      "source": "FRED T5YIFR",
+      "role": "inflation-forward cross-check",
+      "latestDate": "2026-05-18",
+      "proxyUsed": false,
+      "note": "FRED T5YIFR is available through 2026-05-18."
+    },
+    {
+      "source": "CNN Fear & Greed local proxy",
+      "role": "risk-appetite cross-check",
+      "latestDate": "2026-05-15",
+      "note": "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand / HY OAS is fear."
+    },
+    {
+      "source": "FRED public market data cache",
+      "role": "public history and cross-asset feed",
+      "latestDate": "2026-05-15",
+      "fetchedAt": "2026-05-19T01:43:35.425Z",
+      "note": "Loaded 16 public series for rate history and cross-asset checks."
+    },
+    {
+      "source": "Federal Reserve H.15 / FRED",
+      "role": "official secondary rates cross-check",
+      "latestDate": "checked separately during run",
+      "note": "Used as a sanity check for methodology and release lag. Treasury XML remains the controlling source when it is fresher than H.15/FRED page views."
+    }
+  ],
+  "marketReaction": {
+    "asOf": "2026-05-18",
+    "coverageWindow": "2026-05-15 to 2026-05-19",
+    "sourceCoverageStatus": "ready",
+    "summary": "Market reaction centered on oil-led inflation pressure, renewed Fed-hike pricing, and long-end term-premium/auction absorption; community discussion echoed the long-duration financing shock but was kept low weight.",
+    "inputPath": "macro_daily/data/2026-05-19_market_reaction_sources.json",
+    "methodology": "Themes are weighted by source reliability, recency, evidence strength, and consistency with the 2026-05-18 Treasury curve tape.",
+    "sourceMix": [
+      {
+        "type": "media",
+        "count": 8,
+        "weight": 68
+      },
+      {
+        "type": "community",
+        "count": 4,
+        "weight": 11
+      },
+      {
+        "type": "official",
+        "count": 2,
+        "weight": 21
+      }
+    ],
+    "themes": [
+      {
+        "rank": 1,
+        "title": "Fed path / real-yield repricing",
+        "weight": 31,
+        "stance": "dominant",
+        "interpretation": "Wire and market commentary framed the Treasury selloff as a repricing away from 2026 cuts and toward possible Fed hikes as energy-driven inflation pressure persisted.",
+        "linkedNarrativeIds": [
+          "fed_path"
+        ],
+        "evidence": [
+          {
+            "sourceType": "media",
+            "sourceName": "Reuters via MarketScreener",
+            "publishedAt": "2026-05-15",
+            "url": "https://ca.marketscreener.com/news/dollar-climbs-for-fifth-straight-day-as-fed-rate-hike-bets-grow-ce7f5bd3d988f723",
+            "summary": "Reuters reported that Fed policy expectations had tilted toward possible hikes, with CME FedWatch odds for at least one December hike rising to 49.5% from 14.3% a week earlier.",
+            "reliability": 0.85,
+            "weight": 0.9
+          },
+          {
+            "sourceType": "media",
+            "sourceName": "Reuters via Sahm Capital",
+            "publishedAt": "2026-05-15",
+            "url": "https://www.sahmcapital.com/news/content/treasuries-us-yields-hit-11-month-high-on-rate-hike-bets-inflation-fears-2026-05-15",
+            "summary": "Reuters described U.S. yields reaching multi-month highs as investors priced a higher probability that the Fed may need to hike in response to inflation pressure.",
+            "reliability": 0.85,
+            "weight": 0.82
+          },
+          {
+            "sourceType": "community",
+            "sourceName": "Reddit r/Economics",
+            "publishedAt": "2026-05-18",
+            "url": "https://www.reddit.com/r/Economics/comments/1tew90f/traders_now_see_next_fed_interest_rate_move_as_a/",
+            "summary": "Discussion focused on futures pricing a hike rather than cuts, but this is treated as low-reliability community color.",
+            "reliability": 0.45,
+            "weight": 0.25
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "title": "Energy inflation and inflation-expectation repricing",
+        "weight": 28,
+        "stance": "dominant",
+        "interpretation": "Coverage repeatedly tied the global rates selloff to oil above $100 and inflation expectations from the Middle East energy shock.",
+        "linkedNarrativeIds": [
+          "inflation_comp"
+        ],
+        "evidence": [
+          {
+            "sourceType": "media",
+            "sourceName": "Reuters via Investing.com Canada",
+            "publishedAt": "2026-05-18",
+            "url": "https://ca.investing.com/news/economy-news/global-bond-rout-deepens-as-inflation-fears-trigger-ratehike-bets-4644508",
+            "summary": "Reuters reported that bonds from Tokyo to New York extended losses as rising energy prices fanned inflation fears and rate-hike bets.",
+            "reliability": 0.85,
+            "weight": 0.88
+          },
+          {
+            "sourceType": "media",
+            "sourceName": "Reuters via Investing.com",
+            "publishedAt": "2026-05-18",
+            "url": "https://www.investing.com/news/economy-news/morning-bid-bonds-get-a-taste-of-oils-demand-destruction-4694627",
+            "summary": "Reuters noted 10Y Treasury yields had reached 4.631% and 30Y yields 5.159% during the global bond rout as oil-driven inflation risk dominated the market setup.",
+            "reliability": 0.85,
+            "weight": 0.82
+          },
+          {
+            "sourceType": "media",
+            "sourceName": "Kiplinger",
+            "publishedAt": "2026-05-15",
+            "url": "https://www.kiplinger.com/economic-forecasts/interest-rates",
+            "summary": "Kiplinger linked rising long-term rates to crude oil above $100 and market concern that elevated energy prices would feed longer-term inflation.",
+            "reliability": 0.75,
+            "weight": 0.65
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "title": "Long-end term premium / fiscal supply and auction absorption",
+        "weight": 23,
+        "stance": "mixed",
+        "interpretation": "The long-end narrative was active because 30Y yields remained above 5%, but auction evidence was mixed: the May 13 long-bond sale tailed modestly while indirect demand stayed sizable.",
+        "linkedNarrativeIds": [
+          "term_premium"
+        ],
+        "evidence": [
+          {
+            "sourceType": "official",
+            "sourceName": "U.S. Treasury",
+            "publishedAt": "2026-05-18",
+            "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve",
+            "summary": "Treasury's 2026-05-18 curve showed DGS30 at 5.14% and DGS10 at 4.61%, keeping long-end yield levels elevated.",
+            "reliability": 1,
+            "weight": 0.9
+          },
+          {
+            "sourceType": "official",
+            "sourceName": "TreasuryDirect",
+            "publishedAt": "2026-05-13",
+            "url": "https://www.treasurydirect.gov/instit/annceresult/press/preanre/2026/R_20260513_2.pdf",
+            "summary": "The 30Y auction cleared at a 5.046% high yield with a 2.30 bid-to-cover ratio, giving a direct supply-absorption check for the long end.",
+            "reliability": 1,
+            "weight": 0.82
+          },
+          {
+            "sourceType": "media",
+            "sourceName": "Fazen Markets / InvestingLive summary",
+            "publishedAt": "2026-05-13",
+            "url": "https://fazen.markets/en/us-treasury-25bn-30-year-5-046-percent-auction",
+            "summary": "Auction commentary characterized the result as a modest tail with healthy indirect participation but a tepid overall grade.",
+            "reliability": 0.7,
+            "weight": 0.55
+          },
+          {
+            "sourceType": "community",
+            "sourceName": "Reddit r/NewsExchange",
+            "publishedAt": "2026-05-15",
+            "url": "https://www.reddit.com/r/NewsExchange/comments/1te67d1/the_30year_treasury_yield_just_broke_to_its/",
+            "summary": "Community discussion treated the 30Y move above 5% as a fiscal/inflation-risk signal, but this is low-weight color rather than institutional evidence.",
+            "reliability": 0.45,
+            "weight": 0.18
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "title": "Risk appetite / liquidity shock",
+        "weight": 10,
+        "stance": "mixed",
+        "interpretation": "Equity and dollar coverage showed the bond rout denting sentiment, but the move was not a full risk-off liquidity shock because rates and oil were the primary catalysts.",
+        "linkedNarrativeIds": [
+          "risk_liquidity"
+        ],
+        "evidence": [
+          {
+            "sourceType": "media",
+            "sourceName": "Reuters via Investing.com",
+            "publishedAt": "2026-05-17",
+            "url": "https://www.investing.com/news/economy-news/dollar-firms-as-oil-climbs-bond-rout-saps-risk-appetite-4694597",
+            "summary": "Reuters described the global bond selloff as denting risk appetite while oil and elevated yields drove the cross-asset tone.",
+            "reliability": 0.85,
+            "weight": 0.55
+          },
+          {
+            "sourceType": "media",
+            "sourceName": "Reuters via MeckTimes",
+            "publishedAt": "2026-05-18",
+            "url": "https://mecktimes.com/news/2026/05/18/wall-street-mixed-as-treasury-yields-ease-oil-prices-retreat/",
+            "summary": "Reuters reported that U.S. stocks were mixed after yields and oil eased from intraday pressure, implying risk stress was present but not dominant.",
+            "reliability": 0.75,
+            "weight": 0.45
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "title": "Technical momentum / exhaustion",
+        "weight": 8,
+        "stance": "secondary",
+        "interpretation": "Technical and community commentary focused on the speed of the yield move and mortgage-rate transmission, but this remains a timing overlay.",
+        "linkedNarrativeIds": [
+          "technical_exhaustion"
+        ],
+        "evidence": [
+          {
+            "sourceType": "community",
+            "sourceName": "Reddit r/MortgageRates",
+            "publishedAt": "2026-05-18",
+            "url": "https://www.reddit.com/r/MortgageRates/comments/1tgpapo/daily_mbs_mortgage_rate_monitor_minor_morning/",
+            "summary": "Mortgage-rate commentary described a minor recovery after Friday's sharp selloff and noted the 10Y yield had closed at 4.59% on 2026-05-15.",
+            "reliability": 0.45,
+            "weight": 0.28
+          },
+          {
+            "sourceType": "community",
+            "sourceName": "Reddit r/RealEstate",
+            "publishedAt": "2026-05-18",
+            "url": "https://www.reddit.com/r/RealEstate/comments/1th0jug/the_bond_market_just_killed_the_wait_for_rate/",
+            "summary": "Community discussion emphasized 10Y around 4.6% and 30Y above 5% as a mortgage and financing-cost shock.",
+            "reliability": 0.45,
+            "weight": 0.22
+          }
+        ]
+      }
+    ]
+  },
+  "narratives": [
+    {
+      "id": "technical_exhaustion",
+      "title": "Technical positioning / exhaustion",
+      "score": 2,
+      "updatedAt": "2026-05-18",
+      "core": "RSI and Bollinger z-scores show a yield-up exhaustion setup on 2026-05-18, but it is only a timing overlay.",
+      "checks": [
+        "US10Y 九转: up 5 / down 0",
+        "US30Y 九转: up 5 / down 0",
+        "RSI: 10Y 72.7 / 30Y 72.7",
+        "Bollinger z-score: 10Y +2.39 / 30Y +2.42",
+        "20D move percentile: 10Y +35bp 81% / 30Y +26bp 72%",
+        "MOVE index: unavailable",
+        "CFTC Treasury futures positioning: unavailable",
+        "Timing overlay: Timing support present"
+      ],
+      "interpretation": "Technical signals can support timing only after rate-shock and driver attribution agree; they do not create a standalone trade.",
+      "evidence": [
+        {
+          "time": "2026-05-18",
+          "weight": 2,
+          "text": "10Y RSI 72.7, 30Y RSI 72.7, 10Y Bollinger +2.39."
+        }
+      ]
+    },
+    {
+      "id": "inflation_comp",
+      "title": "Inflation compensation shock",
+      "score": 1,
+      "updatedAt": "2026-05-18",
+      "core": "Breakevens are positive over 21/63 observations but softer over the 5D window, so inflation compensation is not the main shock on 2026-05-18.",
+      "checks": [
+        "5Y breakeven contribution over 5D is +2bp.",
+        "10Y breakeven contribution over 5D is +1bp.",
+        "T5YIFR 5D move is 0bp.",
+        "Oil, gasoline, and commodity basket data are unavailable."
+      ],
+      "interpretation": "Inflation compensation is a weak watch item; there is no broad breakeven-led rates selloff in the local 5D tape.",
+      "evidence": [
+        {
+          "time": "2026-05-18",
+          "weight": 1,
+          "text": "5Y breakeven fell +2bp over 5D while T5YIFR moved 0bp."
+        }
+      ]
+    },
+    {
+      "id": "risk_liquidity",
+      "title": "Risk appetite / liquidity shock",
+      "score": 1,
+      "updatedAt": "2026-05-15",
+      "core": "Risk appetite is mixed: headline CNN Fear & Greed is in greed, while junk-bond-demand internals are weaker.",
+      "checks": [
+        "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand / HY OAS is fear.",
+        "HY OAS is unavailable.",
+        "DXY and funding stress data are unavailable.",
+        "MOVE index is unavailable."
+      ],
+      "interpretation": "Risk/liquidity does not dominate the rates signal, but weak credit appetite keeps the duration read conditional.",
+      "evidence": [
+        {
+          "time": "2026-05-15",
+          "weight": 1,
+          "text": "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand / HY OAS is fear."
+        }
+      ]
+    },
+    {
+      "id": "fed_path",
+      "title": "Fed path repricing",
+      "score": 0,
+      "updatedAt": "2026-05-18",
+      "core": "The strongest policy-path evidence is the 63-observation bear flattening background, not a fresh 5D shock.",
+      "checks": [
+        "DGS3 63-observation move is +64bp.",
+        "DGS3 5D move is +18bp, while DGS10 5D move is +19bp.",
+        "SOFR futures implied cuts are unavailable.",
+        "Fed funds futures implied cuts are unavailable."
+      ],
+      "interpretation": "Policy-path repricing remains a background narrative, but 2026-05-18 does not show a fresh front-end-led shock.",
+      "evidence": [
+        {
+          "time": "2026-05-18",
+          "weight": 1,
+          "text": "3Y is up +64bp over 63 valid observations, while the 5D window is +18bp."
+        }
+      ]
+    },
+    {
+      "id": "growth_scare",
+      "title": "Growth scare / recession hedge",
+      "score": 0,
+      "updatedAt": "2026-05-18",
+      "core": "DGS10 rose +19bp over 5D, so a growth-scare / recession-hedge rates rally is not confirmed.",
+      "checks": [
+        "DGS10 5D move is +19bp.",
+        "DGS10 21-observation move is +35bp.",
+        "10Y breakeven 5D contribution is +1bp.",
+        "CNN Fear & Greed is greed as of 2026-05-15; VIX is neutral and junk bond demand / HY OAS is fear."
+      ],
+      "interpretation": "The growth-scare narrative is weak because yields are not rallying over the 5D window and risk proxies are mixed rather than decisively defensive.",
+      "evidence": [
+        {
+          "time": "2026-05-18",
+          "weight": 1,
+          "text": "DGS10 rose +19bp over 5D, while CNN risk proxies are mixed."
+        }
+      ]
+    },
+    {
+      "id": "term_premium",
+      "title": "Long-end term premium / fiscal supply",
+      "score": 0,
+      "updatedAt": "2026-05-18",
+      "core": "Local curve proxies do not show independent 30Y stress over the 5D window.",
+      "checks": [
+        "DGS30 5D move is +16bp versus DGS10 +19bp.",
+        "5s30s 5D change is -4bp.",
+        "10s30s 5D change is -3bp.",
+        "ACM / Kim-Wright term premium is unavailable.",
+        "Auction tail and bid-to-cover are unavailable.",
+        "MOVE index is unavailable."
+      ],
+      "interpretation": "The absence of 30Y-led bear steepening argues against upgrading long-end duration, but it also removes the main long-end stress veto for 2026-05-18.",
+      "evidence": [
+        {
+          "time": "2026-05-18",
+          "weight": 0,
+          "text": "10s30s flattened -3bp over 5D, so the term-premium proxy is not deteriorating."
+        }
+      ]
+    }
+  ],
+  "durationAction": {
+    "currentIndex": 3,
+    "label": "Start 10Y nibble / intermediate-duration watch",
+    "asOf": "2026-05-18",
+    "explanation": "The duration panel upgrades to intermediate duration because the 10Y shock is extreme, real-yield led, and technically stretched, while 30Y does not show enough independent participation to justify long-end duration.",
+    "reasons": [
+      "10Y 5D move is +19bp with local-cache percentile 86%.",
+      "30Y 5D move is +16bp and 10s30s changed -3bp.",
+      "Technical overlay: Timing signal only.",
+      "Top narratives: Technical positioning / exhaustion score 2; Inflation compensation shock score 1; Risk appetite / liquidity shock score 1."
+    ],
+    "supports": [
+      "5D curve proxies do not show fresh 30Y-led bear steepening.",
+      "10Y shock is extreme in the available local-cache window and is real-yield led.",
+      "Local CNN headline risk appetite is not in broad panic."
+    ],
+    "opposes": [
+      "30Y shock is not extreme enough and long-end confirmation is not strong enough to upgrade beyond intermediate duration.",
+      "Technical exhaustion is present, but it is only a timing overlay and cannot justify long-end duration by itself.",
+      "DGS2, SOFR/Fed funds futures, MOVE, formal term premium, auction data, and CFTC positioning are unavailable."
+    ],
+    "upgradeSignals": [
+      "Move to index 2 if DGS10 5D or 21D selloff reaches >=85th percentile, real yield leads, and technical exhaustion appears.",
+      "Move to index 3 if 10Y shock becomes extreme while 30Y term-premium proxies remain stable.",
+      "Move to index 4 only if 30Y shock is extreme and 5s30s/10s30s steepening stops after term-premium pressure stabilizes.",
+      "Move to index 5 only after long-end stabilization coincides with bull flattening, growth/disinflation confirmation, and exhaustion."
+    ],
+    "downgradeSignals": [
+      "Stay at index 0 if DGS3 or DGS30 accelerates without exhaustion.",
+      "Stay at index 0 if 10s30s bear steepening resumes or auction/MOVE data later show stress."
+    ],
+    "steps": [
+      {
+        "index": 0,
+        "title": "No trade / wait",
+        "active": false
+      },
+      {
+        "index": 1,
+        "title": "Watchlist only",
+        "active": false
+      },
+      {
+        "index": 2,
+        "title": "Start 10Y nibble",
+        "active": false
+      },
+      {
+        "index": 3,
+        "title": "Start 10Y nibble / intermediate-duration watch",
+        "active": true
+      },
+      {
+        "index": 4,
+        "title": "Add long-end duration",
+        "active": false
+      },
+      {
+        "index": 5,
+        "title": "Add convex duration / STRIPS-like exposure",
+        "active": false
+      }
+    ]
+  },
+  "technical": {
+    "asOf": "2026-05-18",
+    "signals": [
+      {
+        "title": "US10Y 九转",
+        "value": "up 5 / down 0",
+        "status": "neutral",
+        "source": "proxy",
+        "note": "Proxy rule compares each yield with its value four valid observations earlier."
+      },
+      {
+        "title": "US30Y 九转",
+        "value": "up 5 / down 0",
+        "status": "neutral",
+        "source": "proxy",
+        "note": "Proxy rule compares each yield with its value four valid observations earlier."
+      },
+      {
+        "title": "RSI",
+        "value": "10Y 72.7 / 30Y 72.7",
+        "status": "exhaustion",
+        "note": "RSI is calculated on yield changes, not bond-price changes."
+      },
+      {
+        "title": "Bollinger z-score",
+        "value": "10Y +2.39 / 30Y +2.42",
+        "status": "exhaustion",
+        "note": "20 valid-observation moving average and standard deviation."
+      },
+      {
+        "title": "20D move percentile",
+        "value": "10Y +35bp 81% / 30Y +26bp 72%",
+        "status": "neutral",
+        "note": "Percentile uses the locally cached public history."
+      },
+      {
+        "title": "MOVE index",
+        "value": "unavailable",
+        "status": "unavailable",
+        "note": "MOVE is not present in local cache."
+      },
+      {
+        "title": "CFTC Treasury futures positioning",
+        "value": "unavailable",
+        "status": "unavailable",
+        "note": "CFTC futures positioning is not present in local cache."
+      },
+      {
+        "title": "Timing overlay",
+        "value": "Timing support present",
+        "status": "watch",
+        "note": "Technical exhaustion must be paired with rate-shock and driver attribution before any duration upgrade."
+      }
+    ],
+    "tenYear": {
+      "label": "US10Y",
+      "rsi": 72.73,
+      "bollingerZ": 2.39,
+      "nineTurn": {
+        "up": 5,
+        "down": 0
+      },
+      "move20dBp": 35,
+      "move20dPercentile": 80.6
+    },
+    "thirtyYear": {
+      "label": "US30Y",
+      "rsi": 72.73,
+      "bollingerZ": 2.42,
+      "nineTurn": {
+        "up": 5,
+        "down": 0
+      },
+      "move20dBp": 26,
+      "move20dPercentile": 71.5
+    },
+    "hasExhaustion": true,
+    "adviceTitle": "Timing signal only",
+    "adviceBody": "Technical signals can support only a conditional timing overlay; they do not create a standalone duration trade."
+  },
+  "dataGaps": [
+    "SOFR futures and Fed funds futures implied cuts are unavailable in local cache.",
+    "ACM / Kim-Wright term premium is unavailable; 5s30s, 10s30s, and auction evidence are used as long-end proxies.",
+    "MOVE index is unavailable in local cache; VIX and CNN credit/sentiment components are used as risk proxies.",
+    "CFTC Treasury futures positioning is unavailable in local cache.",
+    "Gold is unavailable in local cache."
+  ],
+  "dataQuality": {
+    "treasuryCacheFetchedAt": "2026-05-19T01:43:35.425Z",
+    "treasuryHistoryStart": "1962-01-02",
+    "percentileProxyUsed": false,
+    "percentileProxyNote": "Rate shock percentiles use the locally cached 10-year public history.",
+    "publicDataFetchedAt": "2026-05-19T01:43:35.425Z",
+    "feedStatus": {
+      "hasTenYearRatesHistory": true,
+      "rateHistoryStart": "1962-01-02",
+      "requiredRateStart": "2016-05-17",
+      "publicDataFetchedAt": "2026-05-19T01:43:35.425Z",
+      "publicSeriesCount": 16,
+      "hasPolicyPath": false,
+      "hasTermPremium": false,
+      "hasAuction": true,
+      "hasMove": false,
+      "hasCftc": false,
+      "missingCrossAssets": [
+        "Gold"
+      ]
+    },
+    "monthlyPreflight": {
+      "status": "skipped",
+      "month": "2026-05",
+      "reason": "Monthly preflight already completed for 2026-05.",
+      "reportPath": "macro_daily/reports/2026-05_monthly_preflight.md",
+      "jsonPath": "macro_daily/data/2026-05_monthly_preflight.json"
+    },
+    "missingRequiredSources": [
+      "SOFR futures and Fed funds futures implied cuts are unavailable in local cache.",
+      "ACM / Kim-Wright term premium is unavailable; 5s30s, 10s30s, and auction evidence are used as long-end proxies.",
+      "MOVE index is unavailable in local cache; VIX and CNN credit/sentiment components are used as risk proxies.",
+      "CFTC Treasury futures positioning is unavailable in local cache.",
+      "Gold is unavailable in local cache."
+    ]
+  }
+}

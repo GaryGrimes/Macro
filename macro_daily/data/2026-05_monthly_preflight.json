@@ -1,0 +1,87 @@
+{
+  "month": "2026-05",
+  "runDate": "2026-05-19",
+  "generatedAt": "2026-05-19T01:44:24.678Z",
+  "marketDate": "2026-05-18",
+  "cacheChecks": {
+    "status": "warn",
+    "issues": [],
+    "warnings": [
+      "Public cache is missing GOLDAMGBD228NLBM.",
+      "Public cache has 1 fetch errors from the last update."
+    ],
+    "ok": [
+      "Treasury cache covers the 10-year window from 1962-01-02 to 2026-05-18."
+    ]
+  },
+  "codeReview": {
+    "status": "advisory_only",
+    "metrics": [
+      {
+        "file": "macro_daily/scripts/generate_daily_dashboard.js",
+        "lines": 1981,
+        "functions": 79,
+        "unavailableMentions": 95
+      },
+      {
+        "file": "macro_daily/scripts/update_public_data_cache.js",
+        "lines": 352,
+        "functions": 18,
+        "unavailableMentions": 0
+      },
+      {
+        "file": "macro_daily/scripts/monthly_preflight.js",
+        "lines": 379,
+        "functions": 13,
+        "unavailableMentions": 11
+      }
+    ],
+    "suggestions": [
+      {
+        "priority": 1,
+        "title": "Split dashboard generation into data, analytics, narrative, and report modules",
+        "detail": "generate_daily_dashboard.js now owns cache IO, calculations, narrative scoring, action rules, and Markdown rendering. That makes monthly changes riskier than necessary.",
+        "requiresConfirmation": true
+      },
+      {
+        "priority": 1,
+        "title": "Create one feed registry for required sources and dataGaps",
+        "detail": "Missing-source strings are currently assembled in several places. A registry would prevent contradictions such as a feed appearing in cross-asset signals while still being listed as missing.",
+        "requiresConfirmation": true
+      },
+      {
+        "priority": 2,
+        "title": "Separate external marketReaction from rule-based narrative scoring",
+        "detail": "The code already keeps these conceptually separate, but the function signatures pass marketReaction into scoring without using it consistently. Make that boundary explicit.",
+        "requiresConfirmation": true
+      },
+      {
+        "priority": 2,
+        "title": "Move report prose templates out of analytics functions",
+        "detail": "Markdown generation embeds several English and Chinese explanations beside calculation logic. A small report renderer would make wording changes less likely to alter analytics.",
+        "requiresConfirmation": true
+      },
+      {
+        "priority": 3,
+        "title": "Add fixture-based tests for the six fixed narratives and duration index",
+        "detail": "Current verification is mostly post-run validation. A small fixture test would catch score drift before a dashboard file is written.",
+        "requiresConfirmation": true
+      }
+    ],
+    "conflicts": [
+      {
+        "title": "Public data cache can say VIX exists while Technical Exhaustion still says MOVE is unavailable",
+        "detail": "This is acceptable as a proxy distinction, but the report wording should stay precise: VIX is not MOVE, and VIX should not silently replace MOVE."
+      },
+      {
+        "title": "Auction evidence currently lives in marketReaction rather than a structured auction cache",
+        "detail": "The market narrative can cite auctions, but duration rules still cannot use tail/bid-to-cover mechanically until auction data has a first-class schema."
+      },
+      {
+        "title": "FRED-augmented Treasury history and Treasury XML history may overlap",
+        "detail": "The merge prefers FRED for overlapping dates. That is fine for standard DGS series, but it should be documented because Treasury XML remains the freshest controlling source intramonth."
+      }
+    ]
+  },
+  "policy": "This monthly preflight may validate caches and produce recommendations before dashboard generation, but it must not edit code until the user explicitly confirms."
+}

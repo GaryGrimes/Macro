@@ -1,0 +1,106 @@
+{
+  "month": "2026-06",
+  "runDate": "2026-06-02",
+  "generatedAt": "2026-06-02T01:00:40.928Z",
+  "marketDate": "2026-05-28",
+  "cacheChecks": {
+    "status": "warn",
+    "issues": [],
+    "warnings": [
+      "DGS2 latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "DGS3 latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "DGS5 latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "DGS10 latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "DGS30 latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "DFII5 latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "DFII10 latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "DFII30 latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "T5YIE latest point is 2026-05-19, more than 7 calendar days behind marketDate 2026-05-28.",
+      "T10YIE latest point is 2026-05-19, more than 7 calendar days behind marketDate 2026-05-28.",
+      "MOVE_PROXY_RATES_VOL latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "VIXCLS latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "BAMLH0A0HYM2 latest point is 2026-05-18, more than 7 calendar days behind marketDate 2026-05-28.",
+      "DTWEXBGS latest point is 2026-05-15, more than 7 calendar days behind marketDate 2026-05-28.",
+      "DCOILWTICO latest point is 2026-05-11, more than 10 calendar days behind marketDate 2026-05-28.",
+      "GOLD_PROXY_COMEX latest point is 2026-05-15, more than 7 calendar days behind marketDate 2026-05-28.",
+      "Public cache has 1 fetch errors from the last update.",
+      "DNS lookup for fred.stlouisfed.org failed: ENOTFOUND: getaddrinfo ENOTFOUND fred.stlouisfed.org.",
+      "Direct IP connectivity test failed: curl: (7) Failed to connect to 1.1.1.1 port 443 after 0 ms: Couldn't connect to server."
+    ],
+    "ok": [
+      "Treasury cache covers the 10-year window from 1962-01-02 to 2026-05-28.",
+      "Public cache contains all configured FRED/public series.",
+      "CFTC Treasury futures positioning is available through 2026-05-12."
+    ]
+  },
+  "codeReview": {
+    "status": "advisory_only",
+    "metrics": [
+      {
+        "file": "macro_daily/scripts/generate_daily_dashboard.js",
+        "lines": 2069,
+        "functions": 83,
+        "unavailableMentions": 97
+      },
+      {
+        "file": "macro_daily/scripts/update_public_data_cache.js",
+        "lines": 679,
+        "functions": 32,
+        "unavailableMentions": 3
+      },
+      {
+        "file": "macro_daily/scripts/monthly_preflight.js",
+        "lines": 387,
+        "functions": 16,
+        "unavailableMentions": 11
+      }
+    ],
+    "suggestions": [
+      {
+        "priority": 1,
+        "title": "Split dashboard generation into data, analytics, narrative, and report modules",
+        "detail": "generate_daily_dashboard.js now owns cache IO, calculations, narrative scoring, action rules, and Markdown rendering. That makes monthly changes riskier than necessary.",
+        "requiresConfirmation": true
+      },
+      {
+        "priority": 1,
+        "title": "Create one feed registry for required sources and dataGaps",
+        "detail": "Missing-source strings are currently assembled in several places. A registry would prevent contradictions such as a feed appearing in cross-asset signals while still being listed as missing.",
+        "requiresConfirmation": true
+      },
+      {
+        "priority": 2,
+        "title": "Separate external marketReaction from rule-based narrative scoring",
+        "detail": "The code already keeps these conceptually separate, but the function signatures pass marketReaction into scoring without using it consistently. Make that boundary explicit.",
+        "requiresConfirmation": true
+      },
+      {
+        "priority": 2,
+        "title": "Move report prose templates out of analytics functions",
+        "detail": "Markdown generation embeds several English and Chinese explanations beside calculation logic. A small report renderer would make wording changes less likely to alter analytics.",
+        "requiresConfirmation": true
+      },
+      {
+        "priority": 3,
+        "title": "Add fixture-based tests for the six fixed narratives and duration index",
+        "detail": "Current verification is mostly post-run validation. A small fixture test would catch score drift before a dashboard file is written.",
+        "requiresConfirmation": true
+      }
+    ],
+    "conflicts": [
+      {
+        "title": "Public data cache can say VIX exists while Technical Exhaustion still says MOVE is unavailable",
+        "detail": "This is acceptable as a proxy distinction, but the report wording should stay precise: VIX is not MOVE, and VIX should not silently replace MOVE."
+      },
+      {
+        "title": "Auction evidence currently lives in marketReaction rather than a structured auction cache",
+        "detail": "The market narrative can cite auctions, but duration rules still cannot use tail/bid-to-cover mechanically until auction data has a first-class schema."
+      },
+      {
+        "title": "FRED-augmented Treasury history and Treasury XML history may overlap",
+        "detail": "The merge prefers FRED for overlapping dates. That is fine for standard DGS series, but it should be documented because Treasury XML remains the freshest controlling source intramonth."
+      }
+    ]
+  },
+  "policy": "This monthly preflight may validate caches and produce recommendations before dashboard generation, but it must not edit code until the user explicitly confirms."
+}

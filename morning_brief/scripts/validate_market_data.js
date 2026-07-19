@@ -85,7 +85,11 @@ for (const ticker of data.tickers) {
 const htmlFile = path.join(path.dirname(path.dirname(file)), `${path.basename(file).replace("_market_data.js", "_us_market_brief.html")}`);
 if (fs.existsSync(htmlFile)) {
   const html = fs.readFileSync(htmlFile, "utf8");
-  assert(!/tooltip|mousemove|pointermove|bindSvgHover/.test(html), "deprecated hover tooltip logic still present");
+  const pointerMoves = html.match(/onpointermove/g) || [];
+  const pointerLeaves = html.match(/onpointerleave/g) || [];
+  assert(pointerMoves.length >= 4, "core charts must expose pointer hover interactions");
+  assert(pointerLeaves.length >= 4, "core chart tooltips must hide on pointer leave");
+  assert(/chart-tooltip/.test(html), "chart tooltip styling missing");
 }
 
 console.log(`market data validation ok: ${data.asOf} · ${data.tickers.length} tickers`);

@@ -1,0 +1,234 @@
+{
+  "reportDate": "2026-07-18",
+  "coverageDate": "2026-07-17",
+  "tickers": [
+    {
+      "sym": "SPX",
+      "name": "S&P 500",
+      "fredSeries": "SP500",
+      "currentNumeric": 7457.69,
+      "previousNumeric": 7533.77,
+      "openNumeric": 7447.52,
+      "displayValue": "7,457.69",
+      "displayChange": "-1.01%",
+      "direction": "down",
+      "intradayAnchors": [[0.0, 7533.77], [0.08, 7447.52], [0.28, 7431.26], [0.68, 7498.47], [1.0, 7457.69]],
+      "note": "从距离纪录高位不到 0.5% 的位置回落 1.01%；损失集中在 AI/芯片权重，尚未演变为小盘和周期股同步失速。"
+    },
+    {
+      "sym": "DJI",
+      "name": "Dow Jones",
+      "fredSeries": "DJIA",
+      "currentNumeric": 52146.42,
+      "previousNumeric": 52552.97,
+      "displayValue": "52,146.42",
+      "displayChange": "-0.77%",
+      "direction": "down",
+      "note": "Dow 下跌 0.77%，弱于小盘但好于 Nasdaq；油价冲击压制工业和运输，而科技权重较低使其相对抗跌。"
+    },
+    {
+      "sym": "IXIC",
+      "name": "Nasdaq Composite",
+      "fredSeries": "NASDAQCOM",
+      "currentNumeric": 25520.24,
+      "previousNumeric": 25881.94,
+      "displayValue": "25,520.24",
+      "displayChange": "-1.40%",
+      "direction": "down",
+      "note": "四大指数中跌幅最大。AI 估值担忧、芯片股连续第三日承压，使 Nasdaq 成为周五风险再定价的中心。"
+    },
+    {
+      "sym": "RUT",
+      "name": "Russell 2000",
+      "fredSeries": "RU2000PR",
+      "nasdaqProxy": "IWM",
+      "nasdaqAssetClass": "etf",
+      "currentNumeric": 2962.22,
+      "previousNumeric": 2974.57,
+      "displayValue": "2,962.22",
+      "displayChange": "-0.42%",
+      "direction": "down",
+      "note": "小盘仅跌 0.42%，明显跑赢 Nasdaq，说明周五更像拥挤 AI 交易降温，而不是全市场增长预期坍塌。"
+    },
+    {
+      "sym": "VIX",
+      "name": "CBOE VIX",
+      "fredSeries": "VIXCLS",
+      "currentNumeric": 18.77,
+      "previousNumeric": 16.73,
+      "openNumeric": 18.01,
+      "displayValue": "18.77",
+      "displayChange": "+12.19%",
+      "direction": "up",
+      "intradayAnchors": [[0.0, 16.73], [0.08, 18.01], [0.24, 17.68], [0.72, 19.50], [1.0, 18.77]],
+      "note": "VIX 升至 18.77，进入需要认真对待但尚非恐慌的区间；若下周继续站上 20，科技股去拥挤化可能扩散。"
+    },
+    {
+      "sym": "10Y",
+      "name": "10Y UST",
+      "fredSeries": "DGS10",
+      "currentNumeric": 4.55,
+      "previousNumeric": 4.57,
+      "displayValue": "4.55%",
+      "displayChange": "-2bp",
+      "direction": "down",
+      "note": "10Y 回落 2bp，表明周五权益下跌并非由实际折现率继续上冲主导；长端获得避险买盘。"
+    },
+    {
+      "sym": "30Y",
+      "name": "30Y UST",
+      "fredSeries": "DGS30",
+      "currentNumeric": 5.06,
+      "previousNumeric": 5.09,
+      "displayValue": "5.06%",
+      "displayChange": "-3bp",
+      "direction": "down",
+      "note": "30Y 回落 3bp且降幅大于 10Y，长端期限溢价压力短线缓和，曲线呈现明显 flattening。"
+    },
+    {
+      "sym": "BRENT",
+      "name": "Brent Front Month",
+      "fredSeries": "DCOILBRENTEU",
+      "currentNumeric": 88.10,
+      "previousNumeric": 84.23,
+      "displayValue": "$88.10",
+      "displayChange": "+4.59%",
+      "direction": "up",
+      "note": "Brent 单日上涨 4.59%、全周约涨 16%；Gulf 航运风险把油价重新推回债市与权益共同关注的宏观变量。"
+    },
+    {
+      "sym": "WTI",
+      "name": "WTI Front Month",
+      "fredSeries": "DCOILWTICO",
+      "currentNumeric": 82.49,
+      "previousNumeric": 78.95,
+      "displayValue": "$82.49",
+      "displayChange": "+4.48%",
+      "direction": "up",
+      "note": "WTI 上涨 4.48% 至 82.49 美元；若下周继续站稳 82，通胀补偿可能再次向 Fed path 传导。"
+    },
+    {
+      "sym": "GOLD",
+      "name": "Gold Spot",
+      "fredSeries": "GOLDPMGBD228NLBM",
+      "nasdaqProxy": "GLD",
+      "nasdaqAssetClass": "etf",
+      "currentNumeric": 4009.19,
+      "previousNumeric": 3969.89,
+      "displayValue": "$4,009.19",
+      "displayChange": "+0.99%",
+      "direction": "up",
+      "note": "现货黄金小幅回升但仍低于 4,000；地缘避险需求被高实际利率和强美元部分抵消。"
+    },
+    {
+      "sym": "BTC",
+      "name": "Bitcoin",
+      "fredSeries": "CBBTCUSD",
+      "currentNumeric": 63899,
+      "previousNumeric": 63796,
+      "displayValue": "$63,899.00",
+      "displayChange": "+0.16%",
+      "direction": "up",
+      "note": "CoinGecko UTC 日收盘为 63,899 美元，基本横盘；相对 Nasdaq 抗跌，但尚未给出高 beta 风险偏好重新扩张的确认。"
+    }
+  ],
+  "treasury": {
+    "labels": ["1M", "3M", "6M", "1Y", "2Y", "3Y", "5Y", "7Y", "10Y", "20Y", "30Y"],
+    "curves": [
+      {"key": "30d", "label": "30d · 6/17", "color": "#cfc8bc", "width": 2, "values": [3.67, 3.80, 3.87, 3.88, 4.19, 4.20, 4.26, 4.38, 4.50, 5.00, 5.00]},
+      {"key": "7d", "label": "7d · 7/10", "color": "#aaa194", "width": 2.5, "values": [3.70, 3.80, 3.85, 3.94, 4.14, 4.18, 4.24, 4.37, 4.53, 5.04, 5.04]},
+      {"key": "1d", "label": "1d · 7/16", "color": "#777064", "width": 3, "values": [3.76, 3.84, 3.94, 3.99, 4.16, 4.20, 4.28, 4.41, 4.57, 5.09, 5.09]},
+      {"key": "current", "label": "当前 · 7/17", "color": "#b3312c", "width": 4, "values": [3.73, 3.85, 3.96, 4.01, 4.18, 4.21, 4.28, 4.40, 4.55, 5.07, 5.06]}
+    ]
+  },
+  "regime": [
+    {"key": "30d", "label": "30d", "x": 0.66, "y": 0.52, "color": "#cfc8bc"},
+    {"key": "7d", "label": "7d", "x": 0.73, "y": 0.68, "color": "#aaa194"},
+    {"key": "1d", "label": "1d", "x": 0.62, "y": 0.72, "color": "#777064"},
+    {"key": "current", "label": "当前", "x": 0.47, "y": 0.78, "color": "#b3312c"}
+  ],
+  "regimeMaps": [
+    {
+      "id": "macro",
+      "title": "Market Regime",
+      "subtitle": "增长韧性 × 通胀压力",
+      "xAxis": {"name": "增长/风险偏好", "low": "增长承压", "high": "增长韧性"},
+      "yAxis": {"name": "通胀压力", "low": "通胀压力 ↓", "high": "通胀压力 ↑"},
+      "note": "当前点向左上移动：科技风险偏好降温、油价通胀压力上升，但小盘相对抗跌使其尚未进入全面 growth scare。",
+      "points": [
+        {"key": "30d", "label": "30d", "x": 0.66, "y": 0.52, "xDisplay": "韧性 66/100", "yDisplay": "压力 52/100", "color": "#cfc8bc"},
+        {"key": "7d", "label": "7d", "x": 0.73, "y": 0.68, "xDisplay": "韧性 73/100", "yDisplay": "压力 68/100", "color": "#aaa194"},
+        {"key": "1d", "label": "1d", "x": 0.62, "y": 0.72, "xDisplay": "韧性 62/100", "yDisplay": "压力 72/100", "color": "#777064"},
+        {"key": "current", "label": "当前", "x": 0.47, "y": 0.78, "xDisplay": "韧性 47/100", "yDisplay": "压力 78/100", "color": "#b3312c"}
+      ]
+    },
+    {
+      "id": "real-inflation",
+      "title": "Rates Decomposition",
+      "subtitle": "实际利率压力 × 通胀补偿",
+      "xAxis": {"name": "5Y 实际利率", "low": "实际利率低", "high": "实际利率高"},
+      "yAxis": {"name": "5Y Breakeven", "low": "通胀补偿低", "high": "通胀补偿高"},
+      "note": "当前点较 1d 向左上移动：5Y real yield 从 2.04%降至 2.01%，breakeven 从 2.24%升至 2.27%。油价冲击进入通胀补偿，但真实折现率暂未同步上冲。",
+      "points": [
+        {"key": "30d", "label": "30d", "x": 0.30, "y": 0.79, "xDisplay": "1.96%", "yDisplay": "2.31%", "color": "#cfc8bc"},
+        {"key": "7d", "label": "7d", "x": 0.60, "y": 0.57, "xDisplay": "2.02%", "yDisplay": "2.28%", "color": "#aaa194"},
+        {"key": "1d", "label": "1d", "x": 0.70, "y": 0.29, "xDisplay": "2.04%", "yDisplay": "2.24%", "color": "#777064"},
+        {"key": "current", "label": "当前", "x": 0.55, "y": 0.50, "xDisplay": "2.01%", "yDisplay": "2.27%", "color": "#b3312c"}
+      ]
+    },
+    {
+      "id": "liquidity-breadth",
+      "title": "Liquidity & Breadth",
+      "subtitle": "美元流动性 × 市场宽度",
+      "xAxis": {"name": "美元流动性", "low": "美元收紧", "high": "流动性宽松"},
+      "yAxis": {"name": "市场宽度", "low": "宽度收缩", "high": "宽度扩张"},
+      "note": "美元仍在 100 上方，流动性并不宽松；但 Russell 明显跑赢 Nasdaq，使当前点向上修复。这里更像科技去拥挤，而不是全市场同步去杠杆。",
+      "points": [
+        {"key": "30d", "label": "30d", "x": 0.74, "y": 0.58, "xDisplay": "DXY约 99.6", "yDisplay": "宽度 58/100", "color": "#cfc8bc"},
+        {"key": "7d", "label": "7d", "x": 0.42, "y": 0.65, "xDisplay": "DXY 100.90", "yDisplay": "宽度 65/100", "color": "#aaa194"},
+        {"key": "1d", "label": "1d", "x": 0.53, "y": 0.48, "xDisplay": "DXY约 100.5", "yDisplay": "宽度 48/100", "color": "#777064"},
+        {"key": "current", "label": "当前", "x": 0.46, "y": 0.62, "xDisplay": "DXY 100.76", "yDisplay": "宽度 62/100", "color": "#b3312c"}
+      ]
+    },
+    {
+      "id": "fed-term",
+      "title": "Curve Regime",
+      "subtitle": "Fed Path × Term Premium",
+      "xAxis": {"name": "Fed Path / 2Y", "low": "政策转鸽", "high": "政策转鹰"},
+      "yAxis": {"name": "Term Premium Proxy", "low": "期限溢价低", "high": "期限溢价高"},
+      "note": "2Y 周五回升至 4.18%，但 30Y-10Y 代理利差由前一日约 52bp 收窄至 51bp。前端没有明显转鸽，长端供给压力却被避险买盘暂时覆盖。",
+      "points": [
+        {"key": "30d", "label": "30d", "x": 0.55, "y": 0.35, "xDisplay": "2Y 4.20%", "yDisplay": "30s10s 44bp", "color": "#cfc8bc"},
+        {"key": "7d", "label": "7d", "x": 0.58, "y": 0.60, "xDisplay": "2Y 4.21%", "yDisplay": "30s10s 50bp", "color": "#aaa194"},
+        {"key": "1d", "label": "1d", "x": 0.43, "y": 0.68, "xDisplay": "2Y 4.16%", "yDisplay": "30s10s 52bp", "color": "#777064"},
+        {"key": "current", "label": "当前", "x": 0.49, "y": 0.64, "xDisplay": "2Y 4.18%", "yDisplay": "30s10s 51bp", "color": "#b3312c"}
+      ]
+    },
+    {
+      "id": "ai-roi",
+      "title": "AI Investment Regime",
+      "subtitle": "AI Capex 动能 × 变现/ROI 证据",
+      "xAxis": {"name": "AI Capex 动能", "low": "Capex降温", "high": "Capex扩张"},
+      "yAxis": {"name": "变现/ROI 证据", "low": "ROI证据弱", "high": "ROI证据强"},
+      "note": "这是事件与财报口径的解释性评分，不是交易所行情。Kimi K3 引发模型效率担忧后，当前点明显向左下移动；Alphabet/Tesla 的 capex、云收入和利润率将决定能否回升。",
+      "points": [
+        {"key": "30d", "label": "30d", "x": 0.78, "y": 0.64, "xDisplay": "Capex 78/100", "yDisplay": "ROI 64/100", "color": "#cfc8bc"},
+        {"key": "7d", "label": "7d", "x": 0.82, "y": 0.68, "xDisplay": "Capex 82/100", "yDisplay": "ROI 68/100", "color": "#aaa194"},
+        {"key": "1d", "label": "1d", "x": 0.76, "y": 0.58, "xDisplay": "Capex 76/100", "yDisplay": "ROI 58/100", "color": "#777064"},
+        {"key": "current", "label": "当前", "x": 0.67, "y": 0.43, "xDisplay": "Capex 67/100", "yDisplay": "ROI 43/100", "color": "#b3312c"}
+      ]
+    }
+  ],
+  "sources": {
+    "SPX": "AP full market wrap + Reuters market wrap + Yahoo Finance close",
+    "DJI": "AP full market wrap + Reuters market wrap",
+    "IXIC": "AP full market wrap + Reuters market wrap",
+    "RUT": "AP index close summary",
+    "VIX": "Cboe trade data + secondary historical cross-check",
+    "2Y_5Y_10Y_30Y": "U.S. Treasury Daily Treasury Par Yield Curve Rates",
+    "REAL_YIELD": "U.S. Treasury Daily Treasury Par Real Yield Curve Rates",
+    "BRENT_WTI": "Reuters settlement report + DTN settlement cross-check",
+    "GOLD": "GoldPrice.org spot close + COMEX futures context",
+    "BTC": "CoinGecko UTC daily close + CoinCodex range cross-check"
+  }
+}

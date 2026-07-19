@@ -91,6 +91,8 @@ morning_brief/YYYY-MM-DD_us_market_brief.html
    - `7d / 30d / 6m / 1y` 必须展示对应周期的日频走势。`30d` 至少 20 个点，`6m` 至少 45 个点，`1y` 至少 60 个点。若历史数组是交易日序列，6m 使用约 126 个交易日、1y 使用约 252 个交易日；若是自然日缓存，非交易日必须以前值延续。长期图要优先保证趋势方向和最新高低点关系正确；抽样点不得误导读者。
    - S&amp;P/ticker 历史图、Treasury 曲线图、美债期限变化图和 Regime map 必须支持 hover；悬浮框显示对应日期/期限及完整数值，并保持在面板内、不能被裁切或遮挡。静态状态下仍须通过标题、图例、轴标签和图下注释自解释。
    - 美债市场专栏标题下必须有一张 2Y / 5Y / 10Y / 30Y 曲线变化图。
+   - 美债期限变化图固定提供 `1d / 7d / 30d / 6m` 切换。图下列出四个窗口的结构简介，空间不足时用“展开全部分析 / 收起详细分析”控制完整文字；切换期限时标题、曲线、bp 变化、Hover 和对应简介高亮必须同步更新。
+   - “5.1 曲线变化”表按 `期限 / 1d / 7d / 30d / 6m / 含义` 排列。四个窗口只显示该窗口的 bp 变化，避免重复当前收益率；保留正负号和红涨绿跌。“含义”必须概括半年、月、周、日的完整演变，而非只解释 1d。
    - Dashboard 的美债曲线说明用角落按钮展开，不得遮挡曲线、图例或图下注释。
    - Regime map 默认以各时间点的几何重心为视图中心并自动包住点群，支持滚轮及 `− / ↺ / +` 缩放。中性轴离开当前视野时要贴边显示为虚线，不能让读者误把局部视图边缘当成新原点。
    - Regime map 按 `30d → 7d → 1d → 当前` 绘制带箭头的轨迹。点位标签必须动态避让彼此、轨迹和坐标轴文字；可加浅底，但不得覆盖“增长承压 / 增长韧性 / 通胀压力”等轴说明。
@@ -133,11 +135,28 @@ morning_brief/YYYY-MM-DD_us_market_brief.html
 
    建议追加数据一致性检查：
 
-   ```powershell
-   node morning_brief/scripts/audit_market_cache.js morning_brief/data/YYYY-MM-DD_market_data.js
-   node morning_brief/scripts/validate_market_data.js morning_brief/data/YYYY-MM-DD_market_data.js
-   node morning_brief/scripts/validate_html.js morning_brief/YYYY-MM-DD_us_market_brief.html
-   ```
+    ```powershell
+    node morning_brief/scripts/audit_market_cache.js morning_brief/data/YYYY-MM-DD_market_data.js
+    node morning_brief/scripts/validate_market_data.js morning_brief/data/YYYY-MM-DD_market_data.js
+    node morning_brief/scripts/validate_html.js morning_brief/YYYY-MM-DD_us_market_brief.html
+    ```
+
+## 发布与本地数据归档
+
+每次生成的报告必须连同已落盘的本地数据一起进入仓库，不得只提交 HTML。固定归档范围为：
+
+- `morning_brief/YYYY-MM-DD_us_market_brief.html`
+- `morning_brief/data/YYYY-MM-DD_verified_market.json`
+- `morning_brief/data/YYYY-MM-DD_market_data.js`
+- `morning_brief/data/cache/market_history.json`
+
+在完成上述校验后，执行以下命令提交并推送。该脚本只暂存早报报告和数据路径，不会把 Macro 看板或其他未完成工作带入提交：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File morning_brief/scripts/publish_daily_brief.ps1 -ReportDate YYYY-MM-DD -CommitAndPush
+```
+
+若只需要在提交前检查落盘文件及校验结果，不传 `-CommitAndPush`。
 
 ## 每日输出摘要
 

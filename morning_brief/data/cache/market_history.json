@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-19T07:01:35.404563+00:00",
+  "updated_at": "2026-07-19T07:22:33.267970+00:00",
   "note": "Daily dense local cache generated from seed anchors with deterministic daily variation; replace with live source via update_market_cache.py when configured.",
   "asOf": "2026-05-04",
   "series": {
@@ -19115,7 +19115,7 @@
     ]
   },
   "audit": {
-    "generated_at": "2026-07-19T07:01:35.404563+00:00",
+    "generated_at": "2026-07-19T07:22:33.267970+00:00",
     "conclusion": "latest_points_verified_for_core_assets; FRED_history_loaded_and_latest_points_verified",
     "latest_verified_as_of": "2026-07-17",
     "calendar_cache_note": "FRED trading-day observations are forward-filled on non-trading days for chart continuity.",

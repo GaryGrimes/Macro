@@ -371,6 +371,148 @@
       margin: 4px 0 18px;
     }
 
+    .bond-move-head {
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .bond-move-tools {
+      display: grid;
+      justify-items: end;
+      gap: 7px;
+      min-width: 290px;
+    }
+
+    .bond-period-tabs {
+      display: flex;
+      gap: 2px;
+      padding: 2px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--panel-2);
+    }
+
+    .bond-period-tabs button {
+      min-width: 38px;
+      height: 26px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .bond-period-tabs button:hover,
+    .bond-period-tabs button:focus-visible {
+      background: #e4ddd0;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .bond-period-tabs button.active {
+      background: var(--ink);
+      color: #fffdf8;
+    }
+
+    .bond-move-stats {
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .bond-move-stats span + span::before {
+      content: " · ";
+      color: var(--muted);
+    }
+
+    .bond-period-notes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .bond-period-note {
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-left: 3px solid #aaa194;
+      background: #fffdf8;
+    }
+
+    .bond-period-note.active {
+      border-left-color: var(--red);
+      background: #f8f1e7;
+    }
+
+    .bond-period-note-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 3px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .bond-period-note p {
+      display: -webkit-box;
+      overflow: hidden;
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .bond-period-notes.expanded .bond-period-note p {
+      display: block;
+      overflow: visible;
+    }
+
+    .bond-notes-toggle {
+      display: inline-flex;
+      align-items: center;
+      margin: 8px 0 0 auto;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fffdf8;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .bond-notes-toggle:hover,
+    .bond-notes-toggle:focus-visible {
+      background: var(--panel-2);
+      outline: none;
+    }
+
+    .horizon-table th:not(:first-child):not(:last-child),
+    .horizon-table td:not(:first-child):not(:last-child) {
+      white-space: nowrap;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .horizon-table .period-change {
+      font-weight: 700;
+    }
+
+    .table-scroll {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .table-scroll .horizon-table {
+      min-width: 680px;
+    }
+
     .chart-title {
       font-size: 12px;
       text-transform: uppercase;
@@ -547,6 +689,16 @@
       .chain div::after { content: ""; }
       table { font-size: 13px; }
       th, td { padding: 8px 7px; }
+      .bond-move-head {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .bond-move-tools {
+        justify-items: start;
+        min-width: 0;
+      }
+      .bond-move-stats { text-align: left; }
+      .bond-period-notes { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -674,26 +826,37 @@
         <section id="bonds">
           <h2>美债市场专栏</h2>
           <div class="chart-panel bond-move-chart">
-            <div class="chart-head">
+            <div class="chart-head bond-move-head">
               <div>
                 <div class="chart-title">Treasury Curve Move</div>
-                <div class="chart-value">短端上、长端下：扭转式走平</div>
+                <div class="chart-value" id="bondMoveTitle">短端上、长端下：扭转式走平</div>
               </div>
-              <div class="down">2Y +2bp · 5Y 0bp · 10Y -2bp · 30Y -3bp</div>
+              <div class="bond-move-tools">
+                <div class="bond-period-tabs" id="bondPeriodTabs" role="group" aria-label="美债曲线对比期限">
+                  <button type="button" class="active" data-bond-period="1d" aria-pressed="true">1d</button>
+                  <button type="button" data-bond-period="7d" aria-pressed="false">7d</button>
+                  <button type="button" data-bond-period="30d" aria-pressed="false">30d</button>
+                  <button type="button" data-bond-period="6m" aria-pressed="false">6m</button>
+                </div>
+                <div class="bond-move-stats down" id="bondMoveStats">2Y +2bp · 5Y 0bp · 10Y -2bp · 30Y -3bp</div>
+              </div>
             </div>
             <svg id="bondMoveChart" viewBox="0 0 760 310" role="img" aria-label="Treasury 2Y 5Y 10Y 30Y curve move"></svg>
-            <p class="chart-caption">比较 2026-07-16 与 2026-07-17 的 2Y/5Y/10Y/30Y 收益率。油价推高通胀补偿，但避险需求与本周温和通胀数据压低实际利率，长端因此仍能上涨。</p>
+            <div class="bond-period-notes" id="bondPeriodNotes"></div>
+            <button class="bond-notes-toggle" id="bondNotesToggle" type="button" aria-expanded="false">展开全部分析</button>
           </div>
           <h3>5.1 曲线变化</h3>
-          <table>
-            <thead><tr><th>期限</th><th class="num">2026-07-16</th><th class="num">2026-07-17</th><th class="num">变化</th><th>含义</th></tr></thead>
+          <div class="table-scroll" role="region" aria-label="美债期限变化横向对照表" tabindex="0">
+          <table class="horizon-table">
+            <thead><tr><th>期限</th><th>1d</th><th>7d</th><th>30d</th><th>6m</th><th>含义</th></tr></thead>
             <tbody>
-              <tr><td>2Y</td><td class="num">4.16%</td><td class="num">4.18%</td><td class="num up">+2bp</td><td>前端仍保留政策利率尾部风险，市场没有因为风险资产下跌就押注快速宽松。</td></tr>
-              <tr><td>5Y</td><td class="num">4.28%</td><td class="num">4.28%</td><td class="num flat">0bp</td><td>breakeven 上行与 real yield 下行刚好抵消，是周五债市矛盾定价的交汇点。</td></tr>
-              <tr><td>10Y</td><td class="num">4.57%</td><td class="num">4.55%</td><td class="num down">-2bp</td><td>避险买盘与实际利率回落压过油价冲击，成长股下跌并非由折现率上冲主导。</td></tr>
-              <tr><td>30Y</td><td class="num">5.09%</td><td class="num">5.06%</td><td class="num down">-3bp</td><td>长端领涨使曲线走平；下周 20Y 拍卖是 term premium 能否继续缓和的关键测试。</td></tr>
+              <tr><td>2Y</td><td><span class="period-change up">+2bp</span></td><td><span class="period-change down">-3bp</span></td><td><span class="period-change down">-2bp</span></td><td><span class="period-change up">+59bp</span></td><td>半年内降息预期显著撤退，2Y 累计上行最多；近一个月与一周略有修复，但周五重新抬头，说明 Fed path 的尾部风险尚未消失。</td></tr>
+              <tr><td>5Y</td><td><span class="period-change flat">0bp</span></td><td><span class="period-change down">-2bp</span></td><td><span class="period-change up">+1bp</span></td><td><span class="period-change up">+46bp</span></td><td>半年维度跟随政策路径重估上行；近月几乎横盘，本周小幅回落、周五不变，反映 breakeven 上行与 real yield 下行持续对冲。</td></tr>
+              <tr><td>10Y</td><td><span class="period-change down">-2bp</span></td><td><span class="period-change down">-1bp</span></td><td><span class="period-change up">+6bp</span></td><td><span class="period-change up">+31bp</span></td><td>半年收益率仍明显抬升，过去一个月又受油价、供给与期限溢价推动；最近一周及周五则由避险需求和实际利率回落带来小幅修复。</td></tr>
+              <tr><td>30Y</td><td><span class="period-change down">-3bp</span></td><td><span class="period-change flat">0bp</span></td><td><span class="period-change up">+13bp</span></td><td><span class="period-change up">+23bp</span></td><td>半年升幅小于短端，但近一个月成为全曲线压力中心，凸显财政供给与 term premium；本周持平、周五回落只是阶段性 relief，仍待 20Y 拍卖验证。</td></tr>
             </tbody>
           </table>
+          </div>
 
           <h3>5.2 驱动拆分</h3>
           <div class="chain">
@@ -875,6 +1038,7 @@
     const REGIME_MAPS = DATA.regimeMaps;
     let activeTickerIndex = 0;
     let activeRange = "7d";
+    let activeBondPeriod = "1d";
     const regimeZooms = Object.fromEntries((REGIME_MAPS || []).map(map => [map.id, 1]));
     const strip = document.getElementById("tickerStrip");
 
@@ -904,6 +1068,10 @@
         });
       });
       if (!data.treasury?.labels?.length || !Array.isArray(data.treasury.curves)) throw new Error("treasury data missing");
+      if (!Array.isArray(data.treasury.movePeriods) || data.treasury.movePeriods.length !== 4) throw new Error("treasury move periods missing");
+      data.treasury.movePeriods.forEach(period => {
+        if (!period.key || !period.baseDate || !period.currentDate || period.baseValues?.length !== 4) throw new Error("treasury move period invalid");
+      });
       data.treasury.curves.forEach(curve => {
         if (curve.values.length !== data.treasury.labels.length) throw new Error(`${curve.label} curve length mismatch`);
       });
@@ -1173,25 +1341,55 @@
       document.getElementById("curveLegend").innerHTML = curves.map(curve => `<span class="legend-item"><span class="legend-swatch" style="background:${curve.color}; height:${Math.max(2, curve.width)}px"></span>${curve.label}</span>`).join("");
     }
 
+    function formatBondMove(value) {
+      return value > 0 ? `+${value}bp` : `${value}bp`;
+    }
+
+    function bondMoveClass(value) {
+      return value > 0 ? "up" : value < 0 ? "down" : "flat";
+    }
+
+    function renderBondPeriodNotes() {
+      const notes = document.getElementById("bondPeriodNotes");
+      notes.innerHTML = DATA.treasury.movePeriods.map(period => {
+        const currentCurve = DATA.treasury.curves.find(curve => curve.key === "current");
+        const tenors = ["2Y", "5Y", "10Y", "30Y"];
+        const indexes = tenors.map(tenor => DATA.treasury.labels.indexOf(tenor));
+        const changes = indexes.map((index, i) => Math.round((currentCurve.values[index] - period.baseValues[i]) * 100));
+        return `
+          <article class="bond-period-note${period.key === activeBondPeriod ? " active" : ""}" data-bond-note="${period.key}">
+            <div class="bond-period-note-head"><span>${period.label} · ${period.title}</span><span class="${bondMoveClass(changes[3])}">${period.baseDate.slice(5).replace("-", "/")} → ${period.currentDate.slice(5).replace("-", "/")}</span></div>
+            <p>${period.summary} ${period.detail}</p>
+          </article>`;
+      }).join("");
+    }
+
     function drawBondMoveChart() {
       const svg = document.getElementById("bondMoveChart");
       const w = 760, h = 310;
       const padLeft = 62, padRight = 36, padTop = 38, padBottom = 44;
       const tenors = ["2Y", "5Y", "10Y", "30Y"];
       const tenorIndexes = tenors.map(tenor => DATA.treasury.labels.indexOf(tenor));
-      const previousCurve = DATA.treasury.curves.find(curve => curve.key === "1d");
+      const period = DATA.treasury.movePeriods.find(item => item.key === activeBondPeriod);
       const currentCurve = DATA.treasury.curves.find(curve => curve.key === "current");
-      const prevDate = previousCurve.label.split("·").pop().trim();
-      const currentDate = currentCurve.label.split("·").pop().trim();
-      const prev = tenorIndexes.map(index => previousCurve.values[index]);
+      const prevDate = period.baseDate.slice(5).replace("-", "/");
+      const currentDate = period.currentDate.slice(5).replace("-", "/");
+      const prev = period.baseValues;
       const current = tenorIndexes.map(index => currentCurve.values[index]);
       const bp = current.map((v, i) => Math.round((v - prev[i]) * 100));
       const all = prev.concat(current);
       const y = scale(all, padTop, h - padBottom);
       const xs = tenors.map((_, i) => padLeft + i * ((w - padLeft - padRight) / (tenors.length - 1)));
       const line = values => values.map((v, i) => `${xs[i]},${y(v)}`).join(" ");
-      const fmtBp = value => value > 0 ? `+${value}bp` : `${value}bp`;
       const bpColor = value => value > 0 ? "#b3312c" : value < 0 ? "#147b45" : "#66645f";
+      document.getElementById("bondMoveTitle").textContent = period.title;
+      document.getElementById("bondMoveStats").innerHTML = tenors.map((tenor, i) => `<span class="${bondMoveClass(bp[i])}">${tenor} ${formatBondMove(bp[i])}</span>`).join("");
+      document.querySelectorAll("[data-bond-period]").forEach(button => {
+        const selected = button.dataset.bondPeriod === activeBondPeriod;
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-pressed", String(selected));
+      });
+      document.querySelectorAll("[data-bond-note]").forEach(note => note.classList.toggle("active", note.dataset.bondNote === activeBondPeriod));
       svg.innerHTML = `
         <rect width="${w}" height="${h}" fill="#fffdf8"></rect>
         <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${padLeft}" y1="${padTop+i*(h-padTop-padBottom)/3}" x2="${w-padRight}" y2="${padTop+i*(h-padTop-padBottom)/3}"></line>`).join("")}</g>
@@ -1202,7 +1400,7 @@
           <circle cx="${xs[i]}" cy="${y(prev[i])}" r="5" fill="#8a8172"></circle>
           <circle cx="${xs[i]}" cy="${y(current[i])}" r="6" fill="#147b45"></circle>
           <text x="${xs[i]}" y="${h-18}" text-anchor="middle" fill="#171717" font-size="12" font-weight="800">${tenor}</text>
-          <text x="${xs[i]}" y="${Math.min(y(prev[i]), y(current[i])) - 12}" text-anchor="middle" fill="${bpColor(bp[i])}" font-size="12" font-weight="800">${fmtBp(bp[i])}</text>
+          <text x="${xs[i]}" y="${Math.min(y(prev[i]), y(current[i])) - 12}" text-anchor="middle" fill="${bpColor(bp[i])}" font-size="12" font-weight="800">${formatBondMove(bp[i])}</text>
         `).join("")}
         <text x="${padLeft}" y="22" fill="#8a8172" font-size="12">${prevDate}</text>
         <text x="${padLeft + 92}" y="22" fill="#147b45" font-size="12">${currentDate}</text>
@@ -1211,7 +1409,7 @@
       svg.onpointermove = event => {
         const x = svgX(svg, event, w);
         const index = Math.max(0, Math.min(tenors.length - 1, Math.round((x - padLeft) / (w - padLeft - padRight) * (tenors.length - 1))));
-        placeTooltip(svg, event, `<strong>${tenors[index]} 美债</strong><div class="tip-row"><span>${prevDate}</span><span>${prev[index].toFixed(2)}%</span></div><div class="tip-row"><span>${currentDate}</span><span>${current[index].toFixed(2)}%</span></div><div class="tip-row"><span>变化</span><span>${fmtBp(bp[index])}</span></div>`);
+        placeTooltip(svg, event, `<strong>${activeBondPeriod} · ${tenors[index]} 美债</strong><div class="tip-row"><span>${prevDate}</span><span>${prev[index].toFixed(2)}%</span></div><div class="tip-row"><span>${currentDate}</span><span>${current[index].toFixed(2)}%</span></div><div class="tip-row"><span>变化</span><span>${formatBondMove(bp[index])}</span></div>`);
       };
       svg.onpointerleave = () => hideTooltip(svg);
     }
@@ -1354,6 +1552,20 @@
       svg.ondblclick = () => setRegimeZoom(id, 1);
     }
 
+    document.getElementById("bondPeriodTabs").addEventListener("click", event => {
+      const button = event.target.closest("[data-bond-period]");
+      if (!button) return;
+      activeBondPeriod = button.dataset.bondPeriod;
+      drawBondMoveChart();
+    });
+    document.getElementById("bondNotesToggle").addEventListener("click", event => {
+      const notes = document.getElementById("bondPeriodNotes");
+      const expanded = notes.classList.toggle("expanded");
+      event.currentTarget.setAttribute("aria-expanded", String(expanded));
+      event.currentTarget.textContent = expanded ? "收起详细分析" : "展开全部分析";
+    });
+
+    renderBondPeriodNotes();
     drawSpark(DATA.tickers[0]);
     drawBondMoveChart();
     drawCurve();

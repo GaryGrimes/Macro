@@ -69,6 +69,13 @@ function checkNewHighText(ticker) {
 
 assert(data && Array.isArray(data.tickers), "ticker data missing");
 assert(data.asOf, "asOf missing");
+assert(Array.isArray(data.treasury?.movePeriods), "treasury move periods missing");
+assert(data.treasury.movePeriods.map(period => period.key).join(",") === "1d,7d,30d,6m", "treasury move period order invalid");
+for (const period of data.treasury.movePeriods) {
+  assert(Array.isArray(period.baseValues) && period.baseValues.length === 4, `${period.key} treasury base values invalid`);
+  period.baseValues.forEach(value => assert(Number.isFinite(value) && value > 0 && value < 10, `${period.key} treasury value invalid`));
+  assert(period.summary && period.detail, `${period.key} treasury interpretation missing`);
+}
 
 for (const ticker of data.tickers) {
   assert(ticker.sym, "ticker symbol missing");
@@ -90,6 +97,9 @@ if (fs.existsSync(htmlFile)) {
   assert(pointerMoves.length >= 4, "core charts must expose pointer hover interactions");
   assert(pointerLeaves.length >= 4, "core chart tooltips must hide on pointer leave");
   assert(/chart-tooltip/.test(html), "chart tooltip styling missing");
+  assert((html.match(/data-bond-period=/g) || []).length === 4, "bond period controls missing");
+  assert(/bondNotesToggle/.test(html), "bond period analysis toggle missing");
+  assert(/期限<\/th><th>1d<\/th><th>7d<\/th><th>30d<\/th><th>6m<\/th><th>含义/.test(html), "bond horizon table missing");
 }
 
 console.log(`market data validation ok: ${data.asOf} · ${data.tickers.length} tickers`);

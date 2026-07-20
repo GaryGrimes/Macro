@@ -25,6 +25,8 @@ morning_brief/YYYY-MM-DD_us_market_brief.html
 
 ## 执行流程
 
+总优先级：信息搜集与市场解读高于对每个边缘行情点的伪精确。先确认主线、资产强弱顺序、因果传导和下一交易日的验证点，再补足支撑判断所需的关键数据；不要为了填满表格牺牲分析质量。
+
 1. 确认日期
 
    - 用户在香港时区早上运行时，覆盖交易日通常是美国市场上一交易日。
@@ -41,6 +43,7 @@ morning_brief/YYYY-MM-DD_us_market_brief.html
    - `YYYY-MM-DD` 是覆盖交易日。
    - 成功后应更新 `morning_brief/data/cache/market_history.json`。
    - 如果行情源限流、需要 apikey 或网络失败，可以使用已有缓存，但必须在早报的数据说明里标注“使用本地缓存/部分数据需复核”。
+   - 已有当日核验配置时，可运行 `python morning_brief\scripts\build_verified_market_data.py morning_brief\data\YYYY-MM-DD_verified_market.json`，一次完成一年历史缓存、当日序列与页面数据脚本的生成。
 
 3. 核验关键行情
 
@@ -55,7 +58,7 @@ morning_brief/YYYY-MM-DD_us_market_brief.html
    - Brent / WTI 收盘价与涨跌幅；
    - DXY、Gold、BTC。
 
-   红线：如果三大指数强弱顺序、油价、收益率或 BTC 价格无法确认，不要继续写结论。先补数据源。
+   红线：三大指数强弱顺序、油价方向和美债曲线方向必须确认；它们直接决定正文主线。边缘资产的精确小数若暂时无法确认，可以采用可靠近似值，但要标注口径，不得据此写过度精确的结论。
 
    数据一致性要求：
 
@@ -93,10 +96,15 @@ morning_brief/YYYY-MM-DD_us_market_brief.html
    - `1d / 7d / 30d / 6m / 1y` 切换必须可用。
    - `1d` 必须展示日内走势，不得用日频缓存点拼接冒充日内图。每个 ticker 的 `intraday` 至少 30 个点；若没有真实分钟线，必须使用经核验的开盘、盘中关键时段、收盘路径重建，并在数据说明中标注。
    - `7d / 30d / 6m / 1y` 必须展示对应周期的日频走势。`30d` 至少 20 个点，`6m` 至少 45 个点，`1y` 至少 60 个点。若历史数组是交易日序列，6m 使用约 126 个交易日、1y 使用约 252 个交易日；若是自然日缓存，非交易日必须以前值延续。长期图要优先保证趋势方向和最新高低点关系正确；抽样点不得误导读者。
-   - 不做 hover 悬浮框。图表必须在静态状态下自解释：标题、图例、轴标签、关键点标注和图下注释应足够说明读法。
+   - S&amp;P/ticker 历史图、Treasury 曲线图、美债期限变化图和 Regime map 必须支持 hover；悬浮框显示对应日期/期限及完整数值，并保持在面板内、不能被裁切或遮挡。静态状态下仍须通过标题、图例、轴标签和图下注释自解释。
    - 美债市场专栏标题下必须有一张 2Y / 5Y / 10Y / 30Y 曲线变化图。
+   - 美债期限变化图固定提供 `1d / 7d / 30d / 6m` 切换。图下列出四个窗口的结构简介，空间不足时用“展开全部分析 / 收起详细分析”控制完整文字；切换期限时标题、曲线、bp 变化、Hover 和对应简介高亮必须同步更新。
+   - “5.1 曲线变化”表按 `期限 / 1d / 7d / 30d / 6m / 含义` 排列。四个窗口只显示该窗口的 bp 变化，避免重复当前收益率；保留正负号和红涨绿跌。“含义”必须概括半年、月、周、日的完整演变，而非只解释 1d。
    - Dashboard 的美债曲线说明用角落按钮展开，不得遮挡曲线、图例或图下注释。
-   - Regime map 等小图的点位标签必须避让坐标轴文字。右侧点位标签应向左显示，靠近轴线的标签应偏移并可加浅底，避免覆盖“增长承压 / 增长韧性 / 通胀压力”等轴说明。
+   - Regime map 默认以各时间点的几何重心为视图中心并自动包住点群，支持滚轮及 `− / ↺ / +` 缩放。中性轴离开当前视野时要贴边显示为虚线，不能让读者误把局部视图边缘当成新原点。
+   - Regime map 按 `30d → 7d → 1d → 当前` 绘制带箭头的轨迹。点位标签必须动态避让彼此、轨迹和坐标轴文字；可加浅底，但不得覆盖“增长承压 / 增长韧性 / 通胀压力”等轴说明。
+   - Regime 区固定保留五张卡：原始“增长韧性 × 通胀压力”，以及“实际利率 × 通胀补偿”“美元流动性 × 市场宽度”“Fed path × term premium”“AI capex 动能 × 变现/ROI 证据”。五张卡必须共用自动居中、缩放、贴边中性轴、箭头轨迹和 hover 规则。
+   - “实际利率 × 通胀补偿”和“Fed path × term premium”优先使用官方、可复核的利率数据；“美元流动性 × 市场宽度”和“AI capex × ROI”若使用复合评分或事件评分，必须在卡片正文中明确标注口径，不得包装成交易所直接报价。
 
 6. 写作原则
 
@@ -105,6 +113,7 @@ morning_brief/YYYY-MM-DD_us_market_brief.html
    - 先传导链，后观点。
    - 先验证点，后仓位含义。
    - 不做新闻堆叠；每条催化必须有标签、来源层级、信息权重、影响资产和传导逻辑。
+   - 信息搜集优先覆盖：权威收盘综述、主导板块与个股、政策/地缘变化、下一交易日或下一周的官方日历、公司财报与美债供给。正文必须回答“为什么是今天发生”“为什么是这些资产反应”“什么价格会证伪”。
    - 不写模糊的 “Sign-flip 条件” 卡片。若需要反转/失效判断，必须命名为“今日交易假设的失效条件”或同等明确标题，并用表格写清：当前假设、失效触发器、先看资产、解读/动作含义。
    - 失效触发器必须有可观察阈值或时间条件，例如收益率点位、油价点位、VIX 水平、板块相对强弱、开盘后若干小时内是否扩散；不能只写“若走弱/若强硬/若需求弱”。
    - “今天该验证什么”负责列今日观察变量；“交易假设的失效条件”负责说明什么信号会证伪早报主线。两者不能重复。
@@ -118,7 +127,7 @@ morning_brief/YYYY-MM-DD_us_market_brief.html
    - 关键行情没有缩写错误，例如 BTC 不写成 `$80k`，而写完整数字；
    - 图表节点存在；
    - 旧日期、旧价格、旧涨跌幅没有残留。
-   - 页面源码中不得残留已废弃的 `tooltip` / `mousemove` / `pointermove` / `bindSvgHover` 等 hover 逻辑。
+   - 四张核心图的 `pointermove` / `pointerleave` 交互必须存在并可触发；悬浮框不能超出面板或盖住展开按钮。
    - `1d` ticker 图使用 `intraday` 数据；所有 ticker 的 `intraday` 数组至少包含 30 个点。
    - 对 BTC、Gold、Oil、指数、美债收益率分别检查数量级边界，避免把 `81.719` 和 `81719` 混在一张图里。
    - Nasdaq / S&P 500 若在正文中写“创新高”，数据检查必须确认最新点高于此前 `6m / 1y` 历史最高点。
@@ -133,10 +142,28 @@ morning_brief/YYYY-MM-DD_us_market_brief.html
 
    建议追加数据一致性检查：
 
-   ```powershell
-   node morning_brief/scripts/audit_market_cache.js morning_brief/data/YYYY-MM-DD_market_data.js
-   node morning_brief/scripts/validate_market_data.js morning_brief/data/YYYY-MM-DD_market_data.js
-   ```
+    ```powershell
+    node morning_brief/scripts/audit_market_cache.js morning_brief/data/YYYY-MM-DD_market_data.js
+    node morning_brief/scripts/validate_market_data.js morning_brief/data/YYYY-MM-DD_market_data.js
+    node morning_brief/scripts/validate_html.js morning_brief/YYYY-MM-DD_us_market_brief.html
+    ```
+
+## 发布与本地数据归档
+
+每次生成的报告必须连同已落盘的本地数据一起进入仓库，不得只提交 HTML。固定归档范围为：
+
+- `morning_brief/YYYY-MM-DD_us_market_brief.html`
+- `morning_brief/data/YYYY-MM-DD_verified_market.json`
+- `morning_brief/data/YYYY-MM-DD_market_data.js`
+- `morning_brief/data/cache/market_history.json`
+
+在完成上述校验后，执行以下命令提交并推送。该脚本只暂存早报报告和数据路径，不会把 Macro 看板或其他未完成工作带入提交：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File morning_brief/scripts/publish_daily_brief.ps1 -ReportDate YYYY-MM-DD -CommitAndPush
+```
+
+若只需要在提交前检查落盘文件及校验结果，不传 `-CommitAndPush`。
 
 ## 每日输出摘要
 

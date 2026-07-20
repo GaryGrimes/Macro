@@ -1,0 +1,1575 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>美股早报 | 2026-07-18</title>
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #66645f;
+      --line: #d9d2c3;
+      --paper: #f7f3eb;
+      --panel: #fffdf8;
+      --panel-2: #f0eadf;
+      --accent: #b3312c;
+      --accent-2: #126a65;
+      --gold: #a4762a;
+      --green: #147b45;
+      --red: #b3312c;
+      --blue: #244f8f;
+      --shadow: 0 14px 40px rgba(37, 31, 21, .10);
+      font-family: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 24px 52px;
+    }
+
+    header {
+      border-top: 7px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      padding: 22px 0 20px;
+      display: grid;
+      grid-template-columns: 1.4fr .8fr;
+      gap: 24px;
+      align-items: end;
+    }
+
+    .kicker {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--accent);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 4.6vw, 54px);
+      line-height: 1;
+      margin: 0;
+      letter-spacing: 0;
+      max-width: 980px;
+    }
+
+    .deck {
+      font-size: 16px;
+      color: #2a2926;
+      margin-top: 16px;
+      max-width: 980px;
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+    }
+
+    .meta {
+      justify-self: end;
+      text-align: right;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .meta strong {
+      color: var(--ink);
+      display: block;
+      font-size: 15px;
+    }
+
+    .ticker-strip {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 0;
+      background: rgba(247, 243, 235, .94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .ticker {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      min-width: 118px;
+      padding: 8px 10px;
+      cursor: pointer;
+      display: grid;
+      gap: 2px;
+      text-align: left;
+      border-radius: 3px;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+
+    .ticker.active {
+      border-color: var(--ink);
+      box-shadow: inset 0 -3px 0 var(--accent);
+    }
+
+    .ticker .sym { font-weight: 800; font-size: 12px; }
+    .ticker .val { font-variant-numeric: tabular-nums; font-size: 14px; }
+    .ticker .chg { font-variant-numeric: tabular-nums; font-size: 11px; }
+    .up { color: var(--red); }
+    .down { color: var(--green); }
+    .flat { color: var(--muted); }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    section {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 27px;
+      line-height: 1.1;
+      margin: 0 0 16px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 22px 0 8px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    p { margin: 0 0 12px; }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: -8px;
+      margin-bottom: 16px;
+    }
+
+    .lead-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .chart-panel,
+    .side-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      position: relative;
+    }
+
+    .chart-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .chart-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .range-control {
+      display: flex;
+      gap: 3px;
+      border: 1px solid var(--line);
+      background: #f7f2e9;
+      padding: 2px;
+      border-radius: 4px;
+    }
+
+    .range-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 6px;
+      border-radius: 3px;
+    }
+
+    .range-btn.active {
+      background: var(--ink);
+      color: #fffdf8;
+    }
+
+    .data-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-left: 8px;
+      color: var(--accent-2);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .data-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      display: inline-block;
+    }
+
+    .curve-panel {
+      overflow: visible;
+    }
+
+    .curve-toggle {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 4px 7px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .curve-toggle:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .curve-detail {
+      border-top: 1px solid var(--line);
+      display: none;
+      margin-top: 14px;
+      padding: 12px 0 18px;
+      color: #2b2924;
+      font-size: 13px;
+    }
+
+    .curve-panel.open .curve-detail { display: block; }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 2px 0 8px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .legend-swatch {
+      width: 18px;
+      height: 3px;
+      border-radius: 99px;
+      display: inline-block;
+    }
+
+    .chart-caption {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 8px 0 0;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      z-index: 20;
+      display: none;
+      min-width: 126px;
+      max-width: 220px;
+      padding: 8px 10px;
+      border: 1px solid #2a2926;
+      border-radius: 3px;
+      background: rgba(23, 23, 23, .96);
+      color: #fffdf8;
+      box-shadow: 0 8px 22px rgba(0,0,0,.18);
+      font-size: 11px;
+      line-height: 1.45;
+      pointer-events: none;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chart-tooltip strong { color: #fff; }
+    .chart-tooltip .tip-row { display: flex; justify-content: space-between; gap: 14px; }
+
+    .regime-panel { overflow: visible; }
+
+    .regime-subtitle {
+      margin-top: 2px;
+      padding-right: 78px;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .regime-controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 6;
+      display: flex;
+      gap: 3px;
+      padding: 2px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: rgba(255, 253, 248, .94);
+      box-shadow: 0 2px 8px rgba(37, 31, 21, .08);
+    }
+
+    .regime-controls button {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 24px;
+    }
+
+    .regime-controls button:hover,
+    .regime-controls button:focus-visible {
+      background: var(--panel-2);
+      outline: none;
+    }
+
+    .bond-move-chart {
+      margin: 4px 0 18px;
+    }
+
+    .bond-move-head {
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .bond-move-tools {
+      display: grid;
+      justify-items: end;
+      gap: 7px;
+      min-width: 290px;
+    }
+
+    .bond-period-tabs {
+      display: flex;
+      gap: 2px;
+      padding: 2px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--panel-2);
+    }
+
+    .bond-period-tabs button {
+      min-width: 38px;
+      height: 26px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 2px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .bond-period-tabs button:hover,
+    .bond-period-tabs button:focus-visible {
+      background: #e4ddd0;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .bond-period-tabs button.active {
+      background: var(--ink);
+      color: #fffdf8;
+    }
+
+    .bond-move-stats {
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .bond-move-stats span + span::before {
+      content: " · ";
+      color: var(--muted);
+    }
+
+    .bond-period-notes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .bond-period-note {
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-left: 3px solid #aaa194;
+      background: #fffdf8;
+    }
+
+    .bond-period-note.active {
+      border-left-color: var(--red);
+      background: #f8f1e7;
+    }
+
+    .bond-period-note-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 3px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .bond-period-note p {
+      display: -webkit-box;
+      overflow: hidden;
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .bond-period-notes.expanded .bond-period-note p {
+      display: block;
+      overflow: visible;
+    }
+
+    .bond-notes-toggle {
+      display: inline-flex;
+      align-items: center;
+      margin: 8px 0 0 auto;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #fffdf8;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .bond-notes-toggle:hover,
+    .bond-notes-toggle:focus-visible {
+      background: var(--panel-2);
+      outline: none;
+    }
+
+    .horizon-table th:not(:first-child):not(:last-child),
+    .horizon-table td:not(:first-child):not(:last-child) {
+      white-space: nowrap;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .horizon-table .period-change {
+      font-weight: 700;
+    }
+
+    .table-scroll {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .table-scroll .horizon-table {
+      min-width: 680px;
+    }
+
+    .chart-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .chart-value {
+      font-size: 20px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    svg { max-width: 100%; display: block; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border-top: 2px solid var(--ink);
+      font-size: 13px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 9px;
+      vertical-align: top;
+    }
+
+    th {
+      text-align: left;
+      color: #2d2b27;
+      background: var(--panel-2);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    td.num, th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .weight {
+      font-weight: 800;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      background: #fbf7ef;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .callout {
+      margin: 16px 0;
+      padding: 15px 17px;
+      background: #fff8eb;
+      border-left: 4px solid var(--gold);
+      color: #2b2924;
+    }
+
+    .chain {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .chain div {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 12px;
+      min-height: 90px;
+      position: relative;
+    }
+
+    .chain div::after {
+      content: ">";
+      position: absolute;
+      right: -9px;
+      top: 36px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .chain div:last-child::after { content: ""; }
+    .chain strong { display: block; margin-bottom: 4px; }
+    .chain span { color: var(--muted); font-size: 13px; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mini-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 13px;
+    }
+
+    .mini-card b { display: block; margin-bottom: 5px; }
+    .mini-card span { color: var(--muted); font-size: 13px; }
+
+    aside {
+      position: sticky;
+      top: 76px;
+      align-self: start;
+    }
+
+    .brief-box {
+      background: #1f1e1a;
+      color: #f7f3eb;
+      padding: 18px;
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+    }
+
+    .brief-box h2 {
+      color: #f7f3eb;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .brief-box ol {
+      margin: 0;
+      padding-left: 20px;
+      color: #e1d8c6;
+      font-size: 14px;
+    }
+
+    .brief-box li { margin-bottom: 8px; }
+
+    .source-list {
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 16px;
+    }
+
+    .source-list a { color: var(--blue); }
+
+    .mobile-only { display: none; }
+
+    @media (max-width: 980px) {
+      header, main, .lead-grid, .split {
+        grid-template-columns: 1fr;
+      }
+      .meta {
+        justify-self: start;
+        text-align: left;
+      }
+      aside {
+        position: static;
+      }
+      .chain, .cards {
+        grid-template-columns: 1fr;
+      }
+      .chain div::after { content: ""; }
+      table { font-size: 13px; }
+      th, td { padding: 8px 7px; }
+      .bond-move-head {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .bond-move-tools {
+        justify-items: start;
+        min-width: 0;
+      }
+      .bond-move-stats { text-align: left; }
+      .bond-period-notes { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <div class="kicker">Daily U.S. Market Brief · July 18, 2026</div>
+        <h1>美股早报 | AI 去拥挤压低 Nasdaq；油价再注入通胀风险；长端美债仍获避险买盘</h1>
+        <div class="deck">
+          周五的核心不是全市场增长崩塌，而是拥挤 AI 交易与能源通胀风险同时被重新定价：Nasdaq 跌 1.40%、半导体指数较 6 月高点回撤约 20%，但 Russell 2000 只跌 0.42%；Brent 单日再涨 4.59%，能源成为唯一上涨板块。更关键的反证来自债市：5Y breakeven 上行而 5Y real yield 回落，10Y/30Y 名义收益率同步下行，说明市场一边计入油价通胀，一边仍相信本周偏软的 CPI/PPI 足以压低真实政策压力。下周要验证的是，这种“通胀补偿上升、实际利率下降”的分化能否持续，还是油价最终重新推高整条收益率曲线。
+        </div>
+      </div>
+      <div class="meta">
+        <strong>覆盖交易日：2026-07-17</strong>
+        生成时间：2026-07-18 · Asia/Hong Kong<br>
+        页面类型：独立 HTML 早报，不接入 Macro 看板
+      </div>
+    </header>
+
+    <nav class="ticker-strip" aria-label="interactive ticker strip" id="tickerStrip"></nav>
+
+    <main>
+      <div>
+        <section id="dashboard">
+          <h2>固定市场仪表盘</h2>
+          <p class="section-note">读法：权重不是涨跌幅大小，而是它对下一交易日定价主线的解释力。当前最重要的是 AI/芯片去拥挤、Brent 的通胀传导、5Y breakeven 与 real yield 的分化，以及 20Y/TIPS 供给验证。<span class="data-status" id="dataStatus">数据校验中</span></p>
+          <div class="lead-grid">
+            <div class="chart-panel">
+              <div class="chart-head">
+                <div>
+                  <div class="chart-title" id="activeName">S&P 500</div>
+                  <div class="chart-value" id="activeValue">7,457.69</div>
+                </div>
+                <div class="chart-actions">
+                  <div id="activeChange" class="down">-1.01%</div>
+                  <div class="range-control" id="rangeControl" aria-label="ticker range"></div>
+                </div>
+              </div>
+              <svg id="sparkChart" viewBox="0 0 640 260" role="img" aria-label="Selected ticker chart"></svg>
+              <p id="activeNote" class="section-note" style="margin:10px 0 0;">从距离纪录高位不到 0.5% 的位置回落 1.01%；损失集中在 AI/芯片权重，尚未演变为小盘和周期股同步失速。</p>
+            </div>
+            <div class="chart-panel curve-panel" id="curvePanel">
+              <button class="curve-toggle" id="curveToggle" type="button" aria-expanded="false">展开</button>
+              <div class="chart-head">
+                <div>
+                  <div class="chart-title">Treasury Curve</div>
+                  <div class="chart-value">Twist flattening</div>
+                </div>
+                <div class="down">2Y +2bp · 10Y -2bp · 30Y -3bp</div>
+              </div>
+              <div class="legend-row" id="curveLegend"></div>
+              <svg id="curveChart" viewBox="0 0 640 260" role="img" aria-label="Treasury yield curve"></svg>
+              <p class="section-note" style="margin:10px 0 0;">5Y 名义收益率持平在 4.28%，但 5Y real yield 从 2.04% 降至 2.01%，对应 5Y breakeven 从约 2.24% 升至 2.27%。市场计入更多油价通胀，却降低了真实折现率。</p>
+              <div class="curve-detail">
+                <p><strong>为什么是 twist flattening：</strong>2Y 上行 2bp，5Y 持平，10Y/30Y 分别下行 2bp/3bp。短端没有跟随风险资产转弱而明显变鸽，长端却获得避险买盘，2s10s 从约 41bp 收窄至 37bp。</p>
+                <p><strong>真正的债市信息：</strong>油价上涨主要进入 breakeven，而本周偏软的 CPI/PPI 与风险规避压低 real yield。所以下周若 Brent 继续涨、real yield 也开始反弹，这个“长端避险”结构才会被真正破坏；20Y 名义债与 10Y TIPS 拍卖是直接验证点。</p>
+              </div>
+            </div>
+          </div>
+
+          <table style="margin-top:16px;">
+            <thead>
+              <tr><th>资产/指标</th><th class="num">最新/收盘</th><th class="num">变化</th><th class="num">权重</th><th>解释</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Dow Jones</td><td class="num">52,146.42</td><td class="num down">-0.77%</td><td class="num weight">4/5</td><td>工业与运输受油价和风险规避拖累，但跌幅仍小于 Nasdaq，显示压力并非只来自增长预期。</td></tr>
+              <tr><td>S&amp;P 500</td><td class="num">7,457.69</td><td class="num down">-1.01%</td><td class="num weight">5/5</td><td>距纪录高位不远处回撤，更多是拥挤仓位降风险，而不是盈利预期全面塌陷。</td></tr>
+              <tr><td>Nasdaq Composite</td><td class="num">25,520.24</td><td class="num down">-1.40%</td><td class="num weight">5/5</td><td>四大指数中最弱；Moonshot Kimi K3 让市场重新讨论 AI 模型效率与硬件投入回报。</td></tr>
+              <tr><td>Russell 2000</td><td class="num">2,962.22</td><td class="num down">-0.42%</td><td class="num weight">4/5</td><td>显著跑赢 Nasdaq，是“AI 去拥挤而非全面 growth scare”的关键证据。</td></tr>
+              <tr><td>VIX</td><td class="num">18.77</td><td class="num up">+12.19%</td><td class="num weight">4/5</td><td>风险保护需求升温，但未越过 20；下周能否回落决定卖压是事件性还是结构性。</td></tr>
+              <tr><td>2Y / 5Y UST</td><td class="num">4.18% / 4.28%</td><td class="num up">+2bp / 0bp</td><td class="num weight">4/5</td><td>短端没有明显转鸽，说明市场仍保留中期加息尾部风险。</td></tr>
+              <tr><td>10Y UST</td><td class="num">4.55%</td><td class="num down">-2bp</td><td class="num weight">5/5</td><td>长端避险买盘抵消油价冲击；本周低通胀数据仍在压低 real yield。</td></tr>
+              <tr><td>30Y UST</td><td class="num">5.06%</td><td class="num down">-3bp</td><td class="num weight">5/5</td><td>降幅大于 10Y，曲线 flatten；下周 20Y 拍卖将测试 term premium 是否真能稳定。</td></tr>
+              <tr><td>5Y Breakeven</td><td class="num">约 2.27%</td><td class="num up">+3bp</td><td class="num weight">5/5</td><td>油价风险进入通胀补偿，但幅度尚未推翻本周温和 CPI/PPI 形成的锚。</td></tr>
+              <tr><td>5Y Real Yield</td><td class="num">2.01%</td><td class="num down">-3bp</td><td class="num weight">5/5</td><td>真实折现率回落，是长端收益率下行和黄金反弹的共同解释。</td></tr>
+              <tr><td>Brent / WTI</td><td class="num">$88.10 / $82.49</td><td class="num up">+4.59% / +4.48%</td><td class="num weight">5/5</td><td>Gulf 基础设施与航运风险升温，Brent 全周约涨 16%，能源成为唯一上涨板块。</td></tr>
+              <tr><td>DXY</td><td class="num">100.76</td><td class="num up">+0.05%</td><td class="num weight">3/5</td><td>美元日内基本持平、周线走弱，暂未与油价形成第二重流动性收紧。</td></tr>
+              <tr><td>Gold Spot</td><td class="num">$4,009.19</td><td class="num up">+0.99%</td><td class="num weight">3/5</td><td>黄金跟随 real yield 回落反弹，但仍录得六周最大周跌幅，说明避险与利率逻辑仍在拉扯。</td></tr>
+              <tr><td>BTC</td><td class="num">$63,899.00</td><td class="num up">+0.16%</td><td class="num weight">3/5</td><td>相对 Nasdaq 抗跌但接近横盘；尚不足以确认高 beta 风险偏好重新扩张。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="equity-review">
+          <h2>美股复盘主线</h2>
+          <h3>3.1 指数表现</h3>
+          <p>周五不是无差别风险规避，而是科技权重主导的去拥挤：Nasdaq Composite 跌 1.40%，明显弱于 S&amp;P 500 的 1.01%、Dow 的 0.77%和 Russell 2000 的 0.42%。Russell 的相对抗跌很关键，它说明市场主要在下调 AI 交易的拥挤度和估值，而不是同时押注美国内需或增长骤然失速。</p>
+
+          <h3>3.2 市场宽度</h3>
+          <p>宽度弱于指数表面，但并未达到恐慌状态：能源是 S&amp;P 500 唯一上涨板块，半导体指数连续第三日下跌并较 6 月高点回撤约 20%，VIX 升至 18.77，却仍低于通常对应更广泛强制减仓的 20 区域。全球科技股同步下挫，说明这轮卖压已从单一公司扩散到 AI 资本开支和回报率这条共同叙事。</p>
+
+          <h3>3.3 板块表现</h3>
+          <p>能源受 Brent 单日上涨 4.59%支撑，成为唯一正收益板块；科技和半导体领跌，工业、运输和可选消费同时受到燃料成本与风险偏好降温的压制。公用事业和其他防御板块相对抗跌，但这更像资金暂时降低组合 beta，而不是市场已经转向衰退交易。</p>
+
+          <h3>3.4 权重股/主题股</h3>
+          <p>中国 Moonshot 发布 Kimi K3 后，市场重新交易“更高模型效率是否削弱硬件投入的边际回报”。它并不直接证明 AI capex 周期结束，却提高了投资者对收入兑现、利用率和毛利率的要求。Nvidia 跌 2.2%、Applied Materials 跌 5.6%，反映卖压已从模型开发商传到算力和设备链；下周 Alphabet、Tesla 的资本开支口径将成为第一轮现实检验。</p>
+
+          <h3>3.5 个股事件</h3>
+          <div class="cards">
+            <div class="mini-card"><b>Netflix -7.3%</b><span>收入轻微不及预期、指引偏弱，提醒市场即便是高质量成长股，估值也需要更干净的兑现。</span></div>
+            <div class="mini-card"><b>Intuitive Surgical -14.1%</b><span>业绩超预期仍遭抛售，焦点转向手术量增长；这是一种典型的高预期重估。</span></div>
+            <div class="mini-card"><b>全球半导体共振</b><span>台股、日股与美股芯片链同步走弱，说明卖压针对的是 AI 投入回报框架，而非一则孤立新闻。</span></div>
+          </div>
+        </section>
+
+        <section id="catalysts">
+          <h2>下周催化与事件分层</h2>
+          <p class="section-note">周一宏观日历清淡，价格本身就是信息；真正决定去拥挤是否扩散的，是油价、国债拍卖与大型科技资本开支口径。</p>
+          <table>
+            <thead>
+              <tr><th>时间/状态</th><th>事件</th><th>标签</th><th>来源层级</th><th class="num">权重</th><th>影响资产</th><th>传导逻辑</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>周一全天</td><td>宏观数据真空下的仓位再平衡</td><td><span class="tag">市场结构</span></td><td>市场价格</td><td class="num weight">4/5</td><td>SOX、Nasdaq、RUT、VIX</td><td>若没有新利空而半导体仍领跌、VIX 站上 20，说明卖压来自仓位和估值，而非单一新闻。</td></tr>
+              <tr><td>全天</td><td>Gulf 航运与能源基础设施风险</td><td><span class="tag">能源/地缘</span></td><td>Reuters/AP 多源交叉</td><td class="num weight">5/5</td><td>油、breakeven、运输、能源</td><td>Brent 是否突破 90 美元，决定油价冲击会停留在通胀补偿，还是进一步推高实际利率与 Fed path。</td></tr>
+              <tr><td>整周</td><td>Fed 议息前静默期</td><td><span class="tag">央行反应函数</span></td><td>官方/高置信</td><td class="num weight">4/5</td><td>UST、美元、股指</td><td>缺少官员口头引导后，市场更依赖数据和价格自行校准；日内波动可能被拍卖与财报放大。</td></tr>
+              <tr><td>周三/周四</td><td>20Y 名义债与 10Y TIPS 拍卖</td><td><span class="tag">国债供给</span></td><td>U.S. Treasury</td><td class="num weight">5/5</td><td>10Y/30Y、TLT、breakeven</td><td>20Y 测试 term premium，TIPS 测试市场对油价通胀冲击的真实需求；弱拍卖会结束周五的长端 relief。</td></tr>
+              <tr><td>周三盘后</td><td>Alphabet / Tesla 财报</td><td><span class="tag">AI capex</span></td><td>公司公告</td><td class="num weight">5/5</td><td>mega-cap、semis、AI infra</td><td>资本开支、云收入和 AI 变现将回答“更高效率是否降低硬件回报”这一周五核心疑问。</td></tr>
+              <tr><td>周四/周五</td><td>工业财报、ECB 决议与美国初值 PMI</td><td><span class="tag">增长验证</span></td><td>官方/公司公告</td><td class="num weight">4/5</td><td>工业、小盘、美元、曲线</td><td>如果 PMI 走弱且小盘转为跑输，AI 去拥挤才可能升级为更广泛的 growth scare。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="bonds">
+          <h2>美债市场专栏</h2>
+          <div class="chart-panel bond-move-chart">
+            <div class="chart-head bond-move-head">
+              <div>
+                <div class="chart-title">Treasury Curve Move</div>
+                <div class="chart-value" id="bondMoveTitle">短端上、长端下：扭转式走平</div>
+              </div>
+              <div class="bond-move-tools">
+                <div class="bond-period-tabs" id="bondPeriodTabs" role="group" aria-label="美债曲线对比期限">
+                  <button type="button" class="active" data-bond-period="1d" aria-pressed="true">1d</button>
+                  <button type="button" data-bond-period="7d" aria-pressed="false">7d</button>
+                  <button type="button" data-bond-period="30d" aria-pressed="false">30d</button>
+                  <button type="button" data-bond-period="6m" aria-pressed="false">6m</button>
+                </div>
+                <div class="bond-move-stats down" id="bondMoveStats">2Y +2bp · 5Y 0bp · 10Y -2bp · 30Y -3bp</div>
+              </div>
+            </div>
+            <svg id="bondMoveChart" viewBox="0 0 760 310" role="img" aria-label="Treasury 2Y 5Y 10Y 30Y curve move"></svg>
+            <div class="bond-period-notes" id="bondPeriodNotes"></div>
+            <button class="bond-notes-toggle" id="bondNotesToggle" type="button" aria-expanded="false">展开全部分析</button>
+          </div>
+          <h3>5.1 曲线变化</h3>
+          <div class="table-scroll" role="region" aria-label="美债期限变化横向对照表" tabindex="0">
+          <table class="horizon-table">
+            <thead><tr><th>期限</th><th>1d</th><th>7d</th><th>30d</th><th>6m</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td>2Y</td><td><span class="period-change up">+2bp</span></td><td><span class="period-change down">-3bp</span></td><td><span class="period-change down">-2bp</span></td><td><span class="period-change up">+59bp</span></td><td>半年内降息预期显著撤退，2Y 累计上行最多；近一个月与一周略有修复，但周五重新抬头，说明 Fed path 的尾部风险尚未消失。</td></tr>
+              <tr><td>5Y</td><td><span class="period-change flat">0bp</span></td><td><span class="period-change down">-2bp</span></td><td><span class="period-change up">+1bp</span></td><td><span class="period-change up">+46bp</span></td><td>半年维度跟随政策路径重估上行；近月几乎横盘，本周小幅回落、周五不变，反映 breakeven 上行与 real yield 下行持续对冲。</td></tr>
+              <tr><td>10Y</td><td><span class="period-change down">-2bp</span></td><td><span class="period-change down">-1bp</span></td><td><span class="period-change up">+6bp</span></td><td><span class="period-change up">+31bp</span></td><td>半年收益率仍明显抬升，过去一个月又受油价、供给与期限溢价推动；最近一周及周五则由避险需求和实际利率回落带来小幅修复。</td></tr>
+              <tr><td>30Y</td><td><span class="period-change down">-3bp</span></td><td><span class="period-change flat">0bp</span></td><td><span class="period-change up">+13bp</span></td><td><span class="period-change up">+23bp</span></td><td>半年升幅小于短端，但近一个月成为全曲线压力中心，凸显财政供给与 term premium；本周持平、周五回落只是阶段性 relief，仍待 20Y 拍卖验证。</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>5.2 驱动拆分</h3>
+          <div class="chain">
+            <div><strong>Breakeven</strong><span>5Y 约由 2.24%升至 2.27%，油价上涨首先进入通胀补偿。</span></div>
+            <div><strong>Real yield</strong><span>5Y 由 2.04%降至 2.01%，10Y 由 2.35%降至 2.31%，风险规避与温和通胀数据压低真实折现率。</span></div>
+            <div><strong>Term premium</strong><span>30Y 降幅大于 10Y，表明长端供给压力当日被避险买盘暂时覆盖。</span></div>
+            <div><strong>Fed path</strong><span>2Y 反而上行 2bp，说明政策路径没有同步转鸽，曲线并非在交易衰退式降息。</span></div>
+            <div><strong>Treasury supply</strong><span>周三 20Y、周四 10Y TIPS 拍卖将分别检验久期与通胀保护需求。</span></div>
+          </div>
+
+          <h3>5.3 昨天发生了什么</h3>
+          <div class="callout">
+            第一脚：油价跳涨，把 5Y breakeven 推高约 3bp；第二脚：本周偏软的 CPI/PPI 与权益避险需求让 5Y/10Y real yield 下行；第三脚：长端名义债继续获得买盘，2s10s 由约 41bp 收窄到 37bp。结论不是“债市忽略油价”，而是市场把油价风险暂时装进通胀补偿，同时仍愿意持有实际久期。
+          </div>
+
+          <h3>5.4 对工具的含义</h3>
+          <table>
+            <thead><tr><th>工具/方向</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td>名义债</td><td>周五长端提供了组合缓冲，但油价若继续突破、拍卖若明显 tail，收益率仍可能快速反向。</td></tr>
+              <tr><td>TIPS</td><td>breakeven 上行而 real yield 下行，对 TIPS 相对名义债更友好；周四拍卖需求可直接验证。</td></tr>
+              <tr><td>TLT</td><td>受益于 30Y 下行和曲线走平，但这仍是战术性久期机会，不是财政供给风险消失。</td></tr>
+              <tr><td>短票/SGOV</td><td>2Y 上行说明前端 carry 仍有吸引力，防守仓不必急于大幅延长久期。</td></tr>
+              <tr><td>VGSH</td><td>5Y 名义收益率持平，波动低于长端；适合希望保留 carry、降低拍卖风险的中间方案。</td></tr>
+              <tr><td>曲线交易</td><td>周五是 twist flattening；若油价突破 90 且 2Y/5Y继续上行，平坦化可能延续。</td></tr>
+              <tr><td>Inflation hedge</td><td>能源和 TIPS 比单纯做多黄金更直接；黄金仍会受美元与 real yield 双重约束。</td></tr>
+            </tbody>
+          </table>
+
+          <h3>5.5 当前交易假设的失效条件</h3>
+          <p class="section-note">基准判断：AI 去拥挤仍是局部重估，油价冲击主要停留在 breakeven，长端暂未转为失控。下面的触发器决定这三条判断是否需要升级。</p>
+          <table>
+            <thead><tr><th>当前假设</th><th>失效触发器</th><th>先看资产</th><th>解读/动作含义</th></tr></thead>
+            <tbody>
+              <tr><td>油价冲击止于通胀补偿</td><td>Brent 站上 $90 或 WTI 站上 $84，并维持到纽约午盘</td><td>5Y breakeven、XLE、运输股</td><td>若 real yield 也转升，冲击就从相对价格扩散为更全面的折现率压力。</td></tr>
+              <tr><td>长端仍有避险属性</td><td>10Y 重新站上 4.60%，或 30Y 站上 5.10%</td><td>TLT、Nasdaq、住房链</td><td>说明油价或供给风险压过避险需求，股债对冲效率下降。</td></tr>
+              <tr><td>实际利率继续提供缓冲</td><td>5Y real yield 回到 2.06%以上</td><td>Gold、NVDA、ARKK</td><td>成长股会同时面对盈利预期和折现率的双重压缩，去拥挤可能加速。</td></tr>
+              <tr><td>AI 卖压仍属局部</td><td>SOX 再创新低，且 Alphabet/Tesla 资本开支口径不能带来稳定</td><td>SOX、NVDA、设备与服务器链</td><td>说明市场开始下调整个 AI 资本回报周期，而不是只消化拥挤仓位。</td></tr>
+              <tr><td>增长没有同步恶化</td><td>VIX 站上 20 且 Russell 开始跑输 S&amp;P 500</td><td>RUT、信用利差、周期股</td><td>局部科技重估将升级为广泛风险规避，需要降低对小盘相对强势的信任。</td></tr>
+              <tr><td>供给压力暂时受控</td><td>20Y 拍卖明显 tail，或 10Y TIPS 需求疲弱</td><td>20Y/30Y、TLT、breakeven</td><td>前者重启 term premium，后者说明市场不愿为当前通胀保护支付价格。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="verify">
+          <h2>下周该验证什么</h2>
+          <table>
+            <thead><tr><th>需要验证的变量</th><th>观察阈值/方向</th><th>含义</th></tr></thead>
+            <tbody>
+              <tr><td>Brent / WTI</td><td>90 / 84 美元是否被有效突破</td><td>突破且 breakeven 同升，油价冲击开始进入更广泛的利率定价。</td></tr>
+              <tr><td>SOX 与 Nasdaq</td><td>无新利空时能否停止创出相对新低</td><td>不能稳定说明 AI 去拥挤仍由仓位驱动，反弹不宜轻易外推。</td></tr>
+              <tr><td>Russell 相对 S&amp;P</td><td>小盘是否继续跑赢</td><td>继续跑赢支持“局部科技重估”；转为跑输则增长担忧扩散。</td></tr>
+              <tr><td>5Y breakeven / real yield</td><td>前者上、后者下的组合能否维持</td><td>这是区分油价通胀补偿与全面折现率冲击的最干净指标。</td></tr>
+              <tr><td>2s10s 曲线</td><td>约 37bp 是否继续收窄</td><td>平坦化延续说明前端政策风险仍在，而长端保有避险买盘。</td></tr>
+              <tr><td>20Y / 10Y TIPS 拍卖</td><td>tail、bid-to-cover 与间接投标占比</td><td>分别验证 term premium 和通胀保护需求。</td></tr>
+              <tr><td>Alphabet / Tesla 财报</td><td>资本开支、AI 收入与利润率口径</td><td>决定 Kimi K3 引发的是短期情绪冲击，还是 AI 回报率框架重估。</td></tr>
+              <tr><td>周五美国 PMI</td><td>增长分项是否明显转弱</td><td>若与小盘跑输同时出现，市场主线才会从 AI 去拥挤转为 growth scare。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="themes">
+          <h2>板块和主题异动</h2>
+          <table>
+            <thead><tr><th>主题</th><th class="num">昨日表现</th><th>催化</th><th>判断</th></tr></thead>
+            <tbody>
+              <tr><td>半导体 / AI infra</td><td class="num down">弱</td><td>模型效率、资本回报率担忧</td><td>半导体已进入技术性回撤区；先看止跌和财报口径，不急于把估值压缩等同于需求崩塌。</td></tr>
+              <tr><td>能源</td><td class="num up">强</td><td>Brent +4.59%、航运风险</td><td>短线最清晰的相对强势，但油价越高，越可能反过来压制其余周期资产。</td></tr>
+              <tr><td>小盘</td><td class="num flat">相对抗跌</td><td>科技去拥挤而非全面增长恐慌</td><td>Russell 跑赢 Nasdaq 是本期最重要的宽度信号；下周需要继续确认。</td></tr>
+              <tr><td>运输 / 航空</td><td class="num down">承压</td><td>燃油成本与航运不确定性</td><td>若油价守在高位，利润率压力会比普通风险偏好回落更持久。</td></tr>
+              <tr><td>黄金 / 防御</td><td class="num up">相对强</td><td>real yield 回落、避险需求</td><td>仍是组合缓冲，但周线较弱说明美元和真实利率约束并未消失。</td></tr>
+              <tr><td>加密资产</td><td class="num flat">横盘</td><td>BTC 相对科技股抗跌</td><td>是边际韧性而非风险偏好扩张；需要价格与流动性同步改善才算确认。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="portfolio">
+          <h2>对重点持仓/关注资产的影响</h2>
+          <table>
+            <thead><tr><th>资产/方向</th><th>影响</th></tr></thead>
+            <tbody>
+              <tr><td>NVDA / AI infra</td><td>市场不再只问需求增长，而开始问每一美元 capex 的回报。短线估值承压，财报中的利用率、收入转化和毛利率比订单标题更重要。</td></tr>
+              <tr><td>TSM / semis</td><td>全球同步下跌放大 beta 风险；若亚洲科技股周一仍弱，美股开盘前就会得到第一轮信号。</td></tr>
+              <tr><td>META / mega-cap</td><td>现金流和 AI 变现能力会提高防守价值，但 Alphabet 的 capex 与云收入将重新设定整个 mega-cap 的门槛。</td></tr>
+              <tr><td>MSTR / BTC</td><td>BTC 相对抗跌是正面细节，却没有形成高 beta 扩张；更适合作为风险温度计，而非单独的 risk-on 证据。</td></tr>
+              <tr><td>SGOV / VGSH</td><td>2Y 仍上行、5Y 持平，短端 carry 的防守价值没有消失；不必为了单日避险行情急着延长久期。</td></tr>
+              <tr><td>长债 / TLT</td><td>周五受益于 real yield 回落和曲线走平；下周 20Y 拍卖与 Brent 90 美元关口决定这段保护能否持续。</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="source-list">
+          <strong>数据与来源说明：</strong>
+          周五收盘、板块与个股主线以 AP 和 Reuters 市场综述交叉；美债名义与实际收益率使用 U.S. Treasury 官方日度曲线，并以 nominal - real 估算 breakeven；油价与黄金使用 Reuters 结算口径，VIX 使用 Cboe，BTC 使用 CoinGecko UTC 日收。图表历史由本地一年日频缓存生成，非交易日以前值延续，以便保持日历连续；Russell 与黄金的历史段使用 IWM/GLD 官方历史代理缩放，当前显示值则使用核验后的现货/指数值。1d 图为关键时点重建，用于展示路径而非替代终端逐笔数据。本文重点是传导链和验证点，不追求伪精确。
+          <br>
+          参考入口：
+          <a href="https://apnews.com/article/stocks-markets-ai-iran-trump-rates-65449e9565fba441a617f9517e097f5a">AP U.S. market wrap</a> ·
+          <a href="https://in.marketscreener.com/news/global-stocks-drop-on-growing-semiconductor-rout-oil-set-for-weekly-gain-ce7f51dad981f123">Reuters global markets</a> ·
+          <a href="https://www.brecorder.com/news/40430625">Reuters oil settlement</a> ·
+          <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_yield_curve">U.S. Treasury Daily Treasury Rates</a> ·
+          <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?field_tdr_date_value=2026&type=daily_treasury_real_yield_curve">U.S. Treasury Real Yield Curve</a> ·
+          <a href="https://www.fhlbny.com/w/fi/msd/2026/260717">FHLB NY rates weekly</a> ·
+          <a href="https://www.schaeffersresearch.com/content/news/2026/07/16/the-week-ahead-q2-earnings-season-hits-full-stride">Week ahead calendar</a>
+        </section>
+      </div>
+
+      <aside>
+        <div class="brief-box">
+          <h2>下周导航</h2>
+          <ol>
+            <li>周五核心不是全市场崩盘，而是 AI 交易去拥挤；Russell 相对抗跌是最重要的反证。</li>
+            <li>油价上涨进入 breakeven，但 real yield 下行；先看 Brent 90 与 5Y real yield 2.06%。</li>
+            <li>周三 Alphabet/Tesla 财报将直接验证 AI capex 的收入转化与回报率。</li>
+            <li>周三 20Y、周四 10Y TIPS 拍卖，决定长端 relief 与通胀保护需求能否延续。</li>
+          </ol>
+        </div>
+        <div class="side-panel regime-panel" data-regime-card="macro" style="margin-top:16px;">
+          <div class="chart-title">Market Regime</div>
+          <div class="regime-subtitle">增长韧性 × 通胀压力</div>
+          <div class="regime-controls" aria-label="regime map zoom controls">
+            <button type="button" data-regime-action="out" data-regime-id="macro" title="缩小" aria-label="缩小">−</button>
+            <button type="button" data-regime-action="reset" data-regime-id="macro" title="重置视图" aria-label="重置视图">↺</button>
+            <button type="button" data-regime-action="in" data-regime-id="macro" title="放大" aria-label="放大">+</button>
+          </div>
+          <svg id="regimeChart" class="regime-chart" data-regime-id="macro" viewBox="0 0 320 250" role="img" aria-label="growth and inflation regime map"></svg>
+          <p class="section-note" style="margin:10px 0 0;">横轴：左侧代表增长/风险偏好承压，右侧代表增长/风险偏好仍有韧性；纵轴：越上方代表通胀压力越强。当前点向左上移动：科技风险偏好降温、油价通胀压力上升，但小盘相对抗跌使其尚未进入全面 growth scare。</p>
+        </div>
+        <div class="side-panel regime-panel" data-regime-card="real-inflation" style="margin-top:16px;">
+          <div class="chart-title">Rates Decomposition</div>
+          <div class="regime-subtitle">实际利率压力 × 通胀补偿</div>
+          <div class="regime-controls" aria-label="rates regime zoom controls">
+            <button type="button" data-regime-action="out" data-regime-id="real-inflation" title="缩小" aria-label="缩小">−</button>
+            <button type="button" data-regime-action="reset" data-regime-id="real-inflation" title="重置视图" aria-label="重置视图">↺</button>
+            <button type="button" data-regime-action="in" data-regime-id="real-inflation" title="放大" aria-label="放大">+</button>
+          </div>
+          <svg id="regimeChartRealInflation" class="regime-chart" data-regime-id="real-inflation" viewBox="0 0 320 250" role="img" aria-label="real yield and breakeven regime map"></svg>
+          <p class="section-note" style="margin:10px 0 0;">当前点较 1d 向左上移动：5Y real yield 从 2.04%降至 2.01%，breakeven 从 2.24%升至 2.27%。油价冲击进入通胀补偿，但真实折现率暂未同步上冲。</p>
+        </div>
+        <div class="side-panel regime-panel" data-regime-card="liquidity-breadth" style="margin-top:16px;">
+          <div class="chart-title">Liquidity &amp; Breadth</div>
+          <div class="regime-subtitle">美元流动性 × 市场宽度</div>
+          <div class="regime-controls" aria-label="liquidity regime zoom controls">
+            <button type="button" data-regime-action="out" data-regime-id="liquidity-breadth" title="缩小" aria-label="缩小">−</button>
+            <button type="button" data-regime-action="reset" data-regime-id="liquidity-breadth" title="重置视图" aria-label="重置视图">↺</button>
+            <button type="button" data-regime-action="in" data-regime-id="liquidity-breadth" title="放大" aria-label="放大">+</button>
+          </div>
+          <svg id="regimeChartLiquidityBreadth" class="regime-chart" data-regime-id="liquidity-breadth" viewBox="0 0 320 250" role="img" aria-label="dollar liquidity and market breadth regime map"></svg>
+          <p class="section-note" style="margin:10px 0 0;">美元仍在 100 上方，流动性并不宽松；但 Russell 明显跑赢 Nasdaq，使当前点向上修复。这里更像科技去拥挤，而不是全市场同步去杠杆。</p>
+        </div>
+        <div class="side-panel regime-panel" data-regime-card="fed-term" style="margin-top:16px;">
+          <div class="chart-title">Curve Regime</div>
+          <div class="regime-subtitle">Fed Path × Term Premium</div>
+          <div class="regime-controls" aria-label="curve regime zoom controls">
+            <button type="button" data-regime-action="out" data-regime-id="fed-term" title="缩小" aria-label="缩小">−</button>
+            <button type="button" data-regime-action="reset" data-regime-id="fed-term" title="重置视图" aria-label="重置视图">↺</button>
+            <button type="button" data-regime-action="in" data-regime-id="fed-term" title="放大" aria-label="放大">+</button>
+          </div>
+          <svg id="regimeChartFedTerm" class="regime-chart" data-regime-id="fed-term" viewBox="0 0 320 250" role="img" aria-label="Fed path and term premium regime map"></svg>
+          <p class="section-note" style="margin:10px 0 0;">2Y 周五回升至 4.18%，但 30Y-10Y 代理利差由前一日约 52bp 收窄至 51bp。前端没有明显转鸽，长端供给压力却被避险买盘暂时覆盖。</p>
+        </div>
+        <div class="side-panel regime-panel" data-regime-card="ai-roi" style="margin-top:16px;">
+          <div class="chart-title">AI Investment Regime</div>
+          <div class="regime-subtitle">AI Capex 动能 × 变现/ROI 证据</div>
+          <div class="regime-controls" aria-label="AI investment regime zoom controls">
+            <button type="button" data-regime-action="out" data-regime-id="ai-roi" title="缩小" aria-label="缩小">−</button>
+            <button type="button" data-regime-action="reset" data-regime-id="ai-roi" title="重置视图" aria-label="重置视图">↺</button>
+            <button type="button" data-regime-action="in" data-regime-id="ai-roi" title="放大" aria-label="放大">+</button>
+          </div>
+          <svg id="regimeChartAiRoi" class="regime-chart" data-regime-id="ai-roi" viewBox="0 0 320 250" role="img" aria-label="AI capex and return on investment regime map"></svg>
+          <p class="section-note" style="margin:10px 0 0;">这是事件与财报口径的解释性评分，不是交易所行情。Kimi K3 引发模型效率担忧后，当前点明显向左下移动；Alphabet/Tesla 的 capex、云收入和利润率将决定能否回升。</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="data/2026-07-18_market_data.js?v=20260718"></script>
+  <script>
+    const DATA = window.MORNING_BRIEF_DATA;
+    const REGIME_MAPS = DATA.regimeMaps;
+    let activeTickerIndex = 0;
+    let activeRange = "7d";
+    let activeBondPeriod = "1d";
+    const regimeZooms = Object.fromEntries((REGIME_MAPS || []).map(map => [map.id, 1]));
+    const strip = document.getElementById("tickerStrip");
+
+    function validateData(data) {
+      if (!data || !Array.isArray(data.tickers) || !data.tickers.length) throw new Error("ticker data missing");
+      if (!Array.isArray(data.ranges) || !data.ranges.includes("1d")) throw new Error("range data missing");
+      data.tickers.forEach(t => {
+        data.ranges.forEach(range => {
+          if (!Array.isArray(t.ranges?.[range]) || t.ranges[range].length < 2) {
+            throw new Error(`${t.sym} ${range} series invalid`);
+          }
+          t.ranges[range].forEach(value => {
+            if (!Number.isFinite(value)) throw new Error(`${t.sym} ${range} contains non numeric value`);
+          });
+        });
+        if (!Array.isArray(t.history) || t.history.length < 250) {
+          throw new Error(`${t.sym} daily history missing`);
+        }
+        t.history.forEach(point => {
+          if (!point.date || !Number.isFinite(point.value)) throw new Error(`${t.sym} daily history invalid`);
+        });
+        if (!Array.isArray(t.intraday) || t.intraday.length < 2) {
+          throw new Error(`${t.sym} intraday data missing`);
+        }
+        t.intraday.forEach(point => {
+          if (!point.time || !Number.isFinite(point.value)) throw new Error(`${t.sym} intraday data invalid`);
+        });
+      });
+      if (!data.treasury?.labels?.length || !Array.isArray(data.treasury.curves)) throw new Error("treasury data missing");
+      if (!Array.isArray(data.treasury.movePeriods) || data.treasury.movePeriods.length !== 4) throw new Error("treasury move periods missing");
+      data.treasury.movePeriods.forEach(period => {
+        if (!period.key || !period.baseDate || !period.currentDate || period.baseValues?.length !== 4) throw new Error("treasury move period invalid");
+      });
+      data.treasury.curves.forEach(curve => {
+        if (curve.values.length !== data.treasury.labels.length) throw new Error(`${curve.label} curve length mismatch`);
+      });
+      if (!Array.isArray(data.regimeMaps) || data.regimeMaps.length < 5) throw new Error("regime maps missing");
+      data.regimeMaps.forEach(map => {
+        if (!map.id || !Array.isArray(map.points) || map.points.length < 4) throw new Error(`${map.id || "unknown"} regime map invalid`);
+        map.points.forEach(point => {
+          if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) throw new Error(`${map.id} regime point invalid`);
+        });
+      });
+    }
+
+    function setStatus(text, ok = true) {
+      const status = document.getElementById("dataStatus");
+      status.textContent = text;
+      status.style.color = ok ? "var(--accent-2)" : "var(--red)";
+    }
+
+    function marketClass(direction) {
+      if (direction === "up") return "up";
+      if (direction === "down") return "down";
+      return "flat";
+    }
+
+    function marketColor(direction) {
+      if (direction === "up") return "#b3312c";
+      if (direction === "down") return "#147b45";
+      return "#66645f";
+    }
+
+    try {
+      validateData(DATA);
+      const days = Math.min(...DATA.tickers.map(t => t.history.length));
+      setStatus(`本地日频/日内缓存已加载并校验 · ${days}天 · ${DATA.asOf}`);
+    } catch (error) {
+      setStatus(`数据校验失败：${error.message}`, false);
+      throw error;
+    }
+
+    DATA.tickers.forEach((t, index) => {
+      const button = document.createElement("button");
+      button.className = "ticker" + (index === activeTickerIndex ? " active" : "");
+      button.innerHTML = `<span class="sym">${t.sym}</span><span class="val">${t.value}</span><span class="chg ${marketClass(t.direction)}">${t.change}</span>`;
+      button.addEventListener("click", () => selectTicker(index));
+      strip.appendChild(button);
+    });
+
+    const rangeControl = document.getElementById("rangeControl");
+    DATA.ranges.forEach(range => {
+      const button = document.createElement("button");
+      button.className = "range-btn" + (range === activeRange ? " active" : "");
+      button.textContent = range;
+      button.addEventListener("click", event => {
+        event.stopPropagation();
+        activeRange = range;
+        document.querySelectorAll(".range-btn").forEach(btn => btn.classList.toggle("active", btn.textContent === range));
+        drawSpark(DATA.tickers[activeTickerIndex]);
+      });
+      rangeControl.appendChild(button);
+    });
+
+    document.getElementById("curveToggle").addEventListener("click", event => {
+      event.stopPropagation();
+      const panel = document.getElementById("curvePanel");
+      const open = panel.classList.toggle("open");
+      event.currentTarget.textContent = open ? "收起" : "展开";
+      event.currentTarget.setAttribute("aria-expanded", String(open));
+    });
+
+    function setRegimeZoom(id, nextZoom) {
+      regimeZooms[id] = Math.max(.72, Math.min(3.2, nextZoom));
+      drawRegime(id);
+    }
+
+    document.querySelectorAll("[data-regime-action]").forEach(button => {
+      button.addEventListener("click", () => {
+        const id = button.dataset.regimeId;
+        const action = button.dataset.regimeAction;
+        if (action === "reset") setRegimeZoom(id, 1);
+        if (action === "in") setRegimeZoom(id, regimeZooms[id] * 1.25);
+        if (action === "out") setRegimeZoom(id, regimeZooms[id] / 1.25);
+      });
+    });
+
+    function scale(values, minPix, maxPix) {
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const span = max - min || 1;
+      return v => maxPix - ((v - min) / span) * (maxPix - minPix);
+    }
+
+    function chartTooltip(svg) {
+      const panel = svg.closest(".chart-panel, .side-panel");
+      let tip = panel.querySelector(":scope > .chart-tooltip");
+      if (!tip) {
+        tip = document.createElement("div");
+        tip.className = "chart-tooltip";
+        panel.appendChild(tip);
+      }
+      return { panel, tip };
+    }
+
+    function placeTooltip(svg, event, html) {
+      const { panel, tip } = chartTooltip(svg);
+      tip.innerHTML = html;
+      tip.style.display = "block";
+      const panelRect = panel.getBoundingClientRect();
+      const left = Math.min(panel.clientWidth - 238, Math.max(8, event.clientX - panelRect.left + 14));
+      const top = Math.max(8, event.clientY - panelRect.top - tip.offsetHeight - 12);
+      tip.style.left = `${left}px`;
+      tip.style.top = `${top}px`;
+    }
+
+    function hideTooltip(svg) {
+      chartTooltip(svg).tip.style.display = "none";
+    }
+
+    function svgX(svg, event, viewWidth) {
+      const rect = svg.getBoundingClientRect();
+      return (event.clientX - rect.left) * viewWidth / rect.width;
+    }
+
+    function formatChartValue(ticker, value) {
+      if (["10Y", "30Y"].includes(ticker.sym)) return `${value.toFixed(2)}%`;
+      if (ticker.sym === "VIX") return value.toFixed(2);
+      const prefix = ["BRENT", "WTI", "GOLD", "BTC"].includes(ticker.sym) ? "$" : "";
+      return `${prefix}${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function parseChange(change) {
+      return Number(String(change).replace("%", ""));
+    }
+
+    function rangeDays(range) {
+      return { "1d": 1, "7d": 7, "30d": 30, "6m": 183, "1y": 366 }[range] || 7;
+    }
+
+    function hasOnlyTradingDays(history) {
+      return history.every(point => {
+        const day = new Date(`${point.date}T00:00:00Z`).getUTCDay();
+        return day !== 0 && day !== 6;
+      });
+    }
+
+    function historyForRange(ticker) {
+      if (activeRange === "1d") return ticker.intraday.map(point => ({ ...point, label: point.time }));
+      const tradingDayCounts = { "7d": 7, "30d": 30, "6m": 126, "1y": 252 };
+      const count = hasOnlyTradingDays(ticker.history)
+        ? Math.min(ticker.history.length, tradingDayCounts[activeRange] || 7)
+        : Math.min(ticker.history.length, rangeDays(activeRange) + 1);
+      return ticker.history.slice(-count).map(point => ({ ...point, label: fmtDateLabel(point.date) }));
+    }
+
+    function fmtDateLabel(date) {
+      const [year, month, day] = date.split("-");
+      return `${month}/${day}/${year.slice(2)}`;
+    }
+
+    function drawSpark(ticker) {
+      const svg = document.getElementById("sparkChart");
+      const w = 640, h = 260, pad = 34;
+      const series = historyForRange(ticker);
+      const values = series.map(point => point.value);
+      const xs = values.map((_, i) => pad + i * ((w - pad * 2) / (values.length - 1 || 1)));
+      const y = scale(values, pad, h - pad);
+      const points = values.map((v, i) => `${xs[i]},${y(v)}`).join(" ");
+      const area = `${pad},${h-pad} ${points} ${w-pad},${h-pad}`;
+      const color = marketColor(ticker.direction);
+      const markers = series.filter((_, i) => i === 0 || i === series.length - 1 || i % Math.ceil(series.length / 6) === 0);
+      const caption = activeRange === "1d" ? "1d · 日内走势 · 09:30-16:00 ET" : `${activeRange} · 日频缓存 · 最近收盘点为 ${DATA.asOf}`;
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${pad}" y1="${pad+i*(h-pad*2)/3}" x2="${w-pad}" y2="${pad+i*(h-pad*2)/3}"></line>`).join("")}</g>
+        <polygon points="${area}" fill="${color}" opacity=".10"></polygon>
+        ${values.map((v, i) => `<circle cx="${xs[i]}" cy="${y(v)}" r="${activeRange === "1y" ? .65 : activeRange === "6m" ? .8 : 1}" fill="${color}" opacity=".36"></circle>`).join("")}
+        <polyline points="${points}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        ${markers.map(point => {
+          const i = series.indexOf(point);
+          return `<circle cx="${xs[i]}" cy="${y(point.value)}" r="${i === values.length-1 ? 4 : 2.5}" fill="${color}"></circle>`;
+        }).join("")}
+        <text x="${pad}" y="${h-10}" fill="#66645f" font-size="11">${caption}</text>
+      `;
+      const hoverLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      hoverLine.setAttribute("y1", pad);
+      hoverLine.setAttribute("y2", h - pad);
+      hoverLine.setAttribute("stroke", "#171717");
+      hoverLine.setAttribute("stroke-width", "1");
+      hoverLine.setAttribute("stroke-dasharray", "3 3");
+      hoverLine.style.display = "none";
+      const hoverDot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      hoverDot.setAttribute("r", "5");
+      hoverDot.setAttribute("fill", color);
+      hoverDot.setAttribute("stroke", "#fffdf8");
+      hoverDot.setAttribute("stroke-width", "2");
+      hoverDot.style.display = "none";
+      svg.append(hoverLine, hoverDot);
+      svg.onpointermove = event => {
+        const x = svgX(svg, event, w);
+        const index = Math.max(0, Math.min(series.length - 1, Math.round((x - pad) / (w - pad * 2) * (series.length - 1))));
+        const point = series[index];
+        hoverLine.setAttribute("x1", xs[index]);
+        hoverLine.setAttribute("x2", xs[index]);
+        hoverLine.style.display = "block";
+        hoverDot.setAttribute("cx", xs[index]);
+        hoverDot.setAttribute("cy", y(point.value));
+        hoverDot.style.display = "block";
+        placeTooltip(svg, event, `<strong>${ticker.name}</strong><div class="tip-row"><span>${point.label}</span><span>${formatChartValue(ticker, point.value)}</span></div>`);
+      };
+      svg.onpointerleave = () => {
+        hoverLine.style.display = "none";
+        hoverDot.style.display = "none";
+        hideTooltip(svg);
+      };
+    }
+
+    function selectTicker(index) {
+      activeTickerIndex = index;
+      const ticker = DATA.tickers[index];
+      document.querySelectorAll(".ticker").forEach((el, i) => el.classList.toggle("active", i === index));
+      document.getElementById("activeName").textContent = ticker.name;
+      document.getElementById("activeValue").textContent = ticker.value;
+      const change = document.getElementById("activeChange");
+      change.textContent = ticker.change;
+      change.className = marketClass(ticker.direction);
+      document.getElementById("activeNote").textContent = ticker.note;
+      drawSpark(ticker);
+    }
+
+    function drawCurve() {
+      const svg = document.getElementById("curveChart");
+      const w = 640, h = 260, pad = 38;
+      const labels = DATA.treasury.labels;
+      const curves = DATA.treasury.curves;
+      const all = curves.flatMap(curve => curve.values);
+      const y = scale(all, pad, h - pad);
+      const xs = labels.map((_, i) => pad + i * ((w - pad * 2) / (labels.length - 1)));
+      function path(vals) { return vals.map((v,i) => `${xs[i]},${y(v)}`).join(" "); }
+      svg.innerHTML = `
+        <rect x="0" y="0" width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${pad}" y1="${pad+i*(h-pad*2)/3}" x2="${w-pad}" y2="${pad+i*(h-pad*2)/3}"></line>`).join("")}</g>
+        ${curves.map(curve => `<polyline points="${path(curve.values)}" fill="none" stroke="${curve.color}" stroke-width="${curve.width}" stroke-linecap="round" stroke-linejoin="round"></polyline>`).join("")}
+        ${curves.map(curve => curve.values.map((v,i) => `<circle cx="${xs[i]}" cy="${y(v)}" r="${curve.key === "current" ? 4 : 3}" fill="${curve.color}"></circle>`).join("")).join("")}
+        ${labels.map((label,i) => `<text x="${xs[i]}" y="${h-12}" text-anchor="middle" fill="#66645f" font-size="11">${label}</text>`).join("")}
+        <text x="${w-pad}" y="20" text-anchor="end" fill="#66645f" font-size="11">Daily Treasury par yield curve · local</text>
+      `;
+      const hoverLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      hoverLine.setAttribute("y1", pad);
+      hoverLine.setAttribute("y2", h - pad);
+      hoverLine.setAttribute("stroke", "#171717");
+      hoverLine.setAttribute("stroke-width", "1");
+      hoverLine.setAttribute("stroke-dasharray", "3 3");
+      hoverLine.style.display = "none";
+      svg.appendChild(hoverLine);
+      svg.onpointermove = event => {
+        const x = svgX(svg, event, w);
+        const index = Math.max(0, Math.min(labels.length - 1, Math.round((x - pad) / (w - pad * 2) * (labels.length - 1))));
+        hoverLine.setAttribute("x1", xs[index]);
+        hoverLine.setAttribute("x2", xs[index]);
+        hoverLine.style.display = "block";
+        const rows = curves.map(curve => `<div class="tip-row"><span>${curve.label}</span><span>${curve.values[index].toFixed(2)}%</span></div>`).join("");
+        placeTooltip(svg, event, `<strong>${labels[index]} 美债收益率</strong>${rows}`);
+      };
+      svg.onpointerleave = () => {
+        hoverLine.style.display = "none";
+        hideTooltip(svg);
+      };
+      document.getElementById("curveLegend").innerHTML = curves.map(curve => `<span class="legend-item"><span class="legend-swatch" style="background:${curve.color}; height:${Math.max(2, curve.width)}px"></span>${curve.label}</span>`).join("");
+    }
+
+    function formatBondMove(value) {
+      return value > 0 ? `+${value}bp` : `${value}bp`;
+    }
+
+    function bondMoveClass(value) {
+      return value > 0 ? "up" : value < 0 ? "down" : "flat";
+    }
+
+    function renderBondPeriodNotes() {
+      const notes = document.getElementById("bondPeriodNotes");
+      notes.innerHTML = DATA.treasury.movePeriods.map(period => {
+        const currentCurve = DATA.treasury.curves.find(curve => curve.key === "current");
+        const tenors = ["2Y", "5Y", "10Y", "30Y"];
+        const indexes = tenors.map(tenor => DATA.treasury.labels.indexOf(tenor));
+        const changes = indexes.map((index, i) => Math.round((currentCurve.values[index] - period.baseValues[i]) * 100));
+        return `
+          <article class="bond-period-note${period.key === activeBondPeriod ? " active" : ""}" data-bond-note="${period.key}">
+            <div class="bond-period-note-head"><span>${period.label} · ${period.title}</span><span class="${bondMoveClass(changes[3])}">${period.baseDate.slice(5).replace("-", "/")} → ${period.currentDate.slice(5).replace("-", "/")}</span></div>
+            <p>${period.summary} ${period.detail}</p>
+          </article>`;
+      }).join("");
+    }
+
+    function drawBondMoveChart() {
+      const svg = document.getElementById("bondMoveChart");
+      const w = 760, h = 310;
+      const padLeft = 62, padRight = 36, padTop = 38, padBottom = 44;
+      const tenors = ["2Y", "5Y", "10Y", "30Y"];
+      const tenorIndexes = tenors.map(tenor => DATA.treasury.labels.indexOf(tenor));
+      const period = DATA.treasury.movePeriods.find(item => item.key === activeBondPeriod);
+      const currentCurve = DATA.treasury.curves.find(curve => curve.key === "current");
+      const prevDate = period.baseDate.slice(5).replace("-", "/");
+      const currentDate = period.currentDate.slice(5).replace("-", "/");
+      const prev = period.baseValues;
+      const current = tenorIndexes.map(index => currentCurve.values[index]);
+      const bp = current.map((v, i) => Math.round((v - prev[i]) * 100));
+      const all = prev.concat(current);
+      const y = scale(all, padTop, h - padBottom);
+      const xs = tenors.map((_, i) => padLeft + i * ((w - padLeft - padRight) / (tenors.length - 1)));
+      const line = values => values.map((v, i) => `${xs[i]},${y(v)}`).join(" ");
+      const bpColor = value => value > 0 ? "#b3312c" : value < 0 ? "#147b45" : "#66645f";
+      document.getElementById("bondMoveTitle").textContent = period.title;
+      document.getElementById("bondMoveStats").innerHTML = tenors.map((tenor, i) => `<span class="${bondMoveClass(bp[i])}">${tenor} ${formatBondMove(bp[i])}</span>`).join("");
+      document.querySelectorAll("[data-bond-period]").forEach(button => {
+        const selected = button.dataset.bondPeriod === activeBondPeriod;
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-pressed", String(selected));
+      });
+      document.querySelectorAll("[data-bond-note]").forEach(note => note.classList.toggle("active", note.dataset.bondNote === activeBondPeriod));
+      svg.innerHTML = `
+        <rect width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <g stroke="#e3dccf" stroke-width="1">${[0,1,2,3].map(i => `<line x1="${padLeft}" y1="${padTop+i*(h-padTop-padBottom)/3}" x2="${w-padRight}" y2="${padTop+i*(h-padTop-padBottom)/3}"></line>`).join("")}</g>
+        <polyline points="${line(prev)}" fill="none" stroke="#8a8172" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        <polyline points="${line(current)}" fill="none" stroke="#147b45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        ${tenors.map((tenor, i) => `
+          <line x1="${xs[i]}" y1="${y(prev[i])}" x2="${xs[i]}" y2="${y(current[i])}" stroke="${bpColor(bp[i])}" stroke-width="1.4" stroke-dasharray="3 3" opacity=".65"></line>
+          <circle cx="${xs[i]}" cy="${y(prev[i])}" r="5" fill="#8a8172"></circle>
+          <circle cx="${xs[i]}" cy="${y(current[i])}" r="6" fill="#147b45"></circle>
+          <text x="${xs[i]}" y="${h-18}" text-anchor="middle" fill="#171717" font-size="12" font-weight="800">${tenor}</text>
+          <text x="${xs[i]}" y="${Math.min(y(prev[i]), y(current[i])) - 12}" text-anchor="middle" fill="${bpColor(bp[i])}" font-size="12" font-weight="800">${formatBondMove(bp[i])}</text>
+        `).join("")}
+        <text x="${padLeft}" y="22" fill="#8a8172" font-size="12">${prevDate}</text>
+        <text x="${padLeft + 92}" y="22" fill="#147b45" font-size="12">${currentDate}</text>
+        <text x="${w-padRight}" y="22" text-anchor="end" fill="#66645f" font-size="12">收益率，%</text>
+      `;
+      svg.onpointermove = event => {
+        const x = svgX(svg, event, w);
+        const index = Math.max(0, Math.min(tenors.length - 1, Math.round((x - padLeft) / (w - padLeft - padRight) * (tenors.length - 1))));
+        placeTooltip(svg, event, `<strong>${activeBondPeriod} · ${tenors[index]} 美债</strong><div class="tip-row"><span>${prevDate}</span><span>${prev[index].toFixed(2)}%</span></div><div class="tip-row"><span>${currentDate}</span><span>${current[index].toFixed(2)}%</span></div><div class="tip-row"><span>变化</span><span>${formatBondMove(bp[index])}</span></div>`);
+      };
+      svg.onpointerleave = () => hideTooltip(svg);
+    }
+
+    function drawRegime(id) {
+      const config = REGIME_MAPS.find(map => map.id === id);
+      const svg = document.querySelector(`.regime-chart[data-regime-id="${id}"]`);
+      if (!config || !svg) return;
+      const dataPoints = config.points;
+      const w = 320, h = 250;
+      const plot = { left: 34, right: 290, top: 28, bottom: 218 };
+      const centroid = dataPoints.reduce((sum, point) => ({ x: sum.x + point.x, y: sum.y + point.y }), { x: 0, y: 0 });
+      centroid.x /= dataPoints.length;
+      centroid.y /= dataPoints.length;
+      const xValues = dataPoints.map(point => point.x);
+      const yValues = dataPoints.map(point => point.y);
+      const xRange = Math.max(...xValues) - Math.min(...xValues);
+      const yRange = Math.max(...yValues) - Math.min(...yValues);
+      const plotAspect = (plot.right - plot.left) / (plot.bottom - plot.top);
+      const baseSpanY = Math.max(.36, yRange * 1.5);
+      const baseSpanX = Math.max(.42, xRange * 1.5, baseSpanY * plotAspect);
+      const spanX = baseSpanX / regimeZooms[id];
+      const spanY = baseSpanY / regimeZooms[id];
+      const xMin = centroid.x - spanX / 2;
+      const yMin = centroid.y - spanY / 2;
+      const mapX = value => plot.left + (value - xMin) / spanX * (plot.right - plot.left);
+      const mapY = value => plot.bottom - (value - yMin) / spanY * (plot.bottom - plot.top);
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+      const rawAxisX = mapX(.5);
+      const rawAxisY = mapY(.5);
+      const axisX = clamp(rawAxisX, plot.left, plot.right);
+      const axisY = clamp(rawAxisY, plot.top, plot.bottom);
+      const xAxisClamped = rawAxisX < plot.left || rawAxisX > plot.right;
+      const yAxisClamped = rawAxisY < plot.top || rawAxisY > plot.bottom;
+      const plotted = dataPoints.map(point => ({ ...point, px: mapX(point.x), py: mapY(point.y) }));
+      const visible = point => point.px >= plot.left - 8 && point.px <= plot.right + 8 && point.py >= plot.top - 8 && point.py <= plot.bottom + 8;
+
+      function arrowSegment(from, to) {
+        const dx = to.px - from.px;
+        const dy = to.py - from.py;
+        const length = Math.hypot(dx, dy) || 1;
+        const ux = dx / length;
+        const uy = dy / length;
+        return {
+          x1: from.px + ux * 9,
+          y1: from.py + uy * 9,
+          x2: to.px - ux * 12,
+          y2: to.py - uy * 12
+        };
+      }
+
+      const arrows = plotted.slice(0, -1).map((point, index) => {
+        const segment = arrowSegment(point, plotted[index + 1]);
+        return `<line x1="${segment.x1}" y1="${segment.y1}" x2="${segment.x2}" y2="${segment.y2}" stroke="#7a7165" stroke-width="2" opacity=".78" marker-end="url(#regimeArrow-${id})"></line>`;
+      }).join("");
+
+      const occupied = [];
+      const preferences = {
+        "30d": [{ dx: -12, dy: 20, anchor: "end" }, { dx: 12, dy: 20, anchor: "start" }],
+        "7d": [{ dx: 12, dy: 5, anchor: "start" }, { dx: 12, dy: 20, anchor: "start" }],
+        "1d": [{ dx: 12, dy: -11, anchor: "start" }, { dx: -12, dy: -11, anchor: "end" }],
+        "current": [{ dx: -12, dy: -10, anchor: "end" }, { dx: 12, dy: -10, anchor: "start" }]
+      };
+      const fallbackOffsets = [
+        { dx: 12, dy: 5, anchor: "start" }, { dx: -12, dy: 5, anchor: "end" },
+        { dx: 12, dy: 20, anchor: "start" }, { dx: -12, dy: 20, anchor: "end" },
+        { dx: 12, dy: -11, anchor: "start" }, { dx: -12, dy: -11, anchor: "end" }
+      ];
+
+      function labelMarkup(point) {
+        if (!visible(point)) return "";
+        const width = point.key === "current" ? 38 : 30;
+        const height = 18;
+        const candidates = [...(preferences[point.key] || []), ...fallbackOffsets];
+        let choice = candidates[0];
+        let box = null;
+        for (const candidate of candidates) {
+          const tx = point.px + candidate.dx;
+          const ty = point.py + candidate.dy;
+          const candidateBox = {
+            x: candidate.anchor === "end" ? tx - width - 5 : tx - 5,
+            y: ty - 13,
+            width: width + 10,
+            height
+          };
+          const inside = candidateBox.x >= 2 && candidateBox.x + candidateBox.width <= w - 2 && candidateBox.y >= 2 && candidateBox.y + candidateBox.height <= h - 2;
+          const overlaps = occupied.some(other => !(candidateBox.x + candidateBox.width + 3 < other.x || other.x + other.width + 3 < candidateBox.x || candidateBox.y + candidateBox.height + 3 < other.y || other.y + other.height + 3 < candidateBox.y));
+          if (inside && !overlaps) {
+            choice = candidate;
+            box = candidateBox;
+            break;
+          }
+        }
+        if (!box) {
+          const tx = point.px + choice.dx;
+          const ty = point.py + choice.dy;
+          box = { x: choice.anchor === "end" ? tx - width - 5 : tx - 5, y: ty - 13, width: width + 10, height };
+        }
+        occupied.push(box);
+        const tx = point.px + choice.dx;
+        const ty = point.py + choice.dy;
+        return `
+          <rect x="${box.x}" y="${box.y}" width="${box.width}" height="${box.height}" rx="2" fill="#fffdf8" opacity=".94"></rect>
+          <text x="${tx}" y="${ty}" text-anchor="${choice.anchor}" fill="#171717" font-size="11" font-weight="${point.key === "current" ? 800 : 650}">${point.label}</text>
+        `;
+      }
+
+      const axisLabelY = yAxisClamped ? (axisY === plot.top ? axisY + 14 : axisY - 7) : axisY - 7;
+      const verticalAnchor = axisX === plot.left ? "start" : axisX === plot.right ? "end" : "middle";
+      const verticalLabelX = axisX === plot.left ? axisX + 3 : axisX === plot.right ? axisX - 3 : axisX;
+      svg.innerHTML = `
+        <rect width="${w}" height="${h}" fill="#fffdf8"></rect>
+        <defs>
+          <marker id="regimeArrow-${id}" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3.5 L0,7 Z" fill="#7a7165"></path></marker>
+          <clipPath id="regimePlotClip-${id}"><rect x="${plot.left}" y="${plot.top}" width="${plot.right - plot.left}" height="${plot.bottom - plot.top}"></rect></clipPath>
+        </defs>
+        <rect x="${plot.left}" y="${plot.top}" width="${plot.right - plot.left}" height="${plot.bottom - plot.top}" fill="#fffdf8" stroke="#eee7da"></rect>
+        <line x1="${axisX}" y1="${plot.top}" x2="${axisX}" y2="${plot.bottom}" stroke="#d2cabd" stroke-width="1.2" ${xAxisClamped ? 'stroke-dasharray="4 3"' : ""}></line>
+        <line x1="${plot.left}" y1="${axisY}" x2="${plot.right}" y2="${axisY}" stroke="#d2cabd" stroke-width="1.2" ${yAxisClamped ? 'stroke-dasharray="4 3"' : ""}></line>
+        <text x="${verticalLabelX}" y="18" text-anchor="${verticalAnchor}" fill="#66645f" font-size="10.5">${config.yAxis.high}</text>
+        <text x="${verticalLabelX}" y="240" text-anchor="${verticalAnchor}" fill="#66645f" font-size="10.5">${config.yAxis.low}</text>
+        <text x="${plot.left + 3}" y="${axisLabelY}" fill="#66645f" font-size="10.5">${config.xAxis.low}</text>
+        <text x="${plot.right - 3}" y="${axisLabelY}" text-anchor="end" fill="#66645f" font-size="10.5">${config.xAxis.high}</text>
+        <g clip-path="url(#regimePlotClip-${id})">${arrows}</g>
+        ${plotted.filter(visible).map(point => `<circle cx="${point.px}" cy="${point.py}" r="${point.key === "current" ? 9 : 7}" fill="${point.color}" stroke="#fffdf8" stroke-width="2"></circle>`).join("")}
+        ${plotted.map(labelMarkup).join("")}
+      `;
+      svg.onpointermove = event => {
+        const rect = svg.getBoundingClientRect();
+        const x = (event.clientX - rect.left) * w / rect.width;
+        const y = (event.clientY - rect.top) * h / rect.height;
+        const nearest = plotted.map(point => ({ point, distance: Math.hypot(x - point.px, y - point.py) })).sort((a, b) => a.distance - b.distance)[0].point;
+        placeTooltip(svg, event, `<strong>${nearest.label}</strong><div class="tip-row"><span>${config.xAxis.name}</span><span>${nearest.xDisplay || `${Math.round(nearest.x * 100)}/100`}</span></div><div class="tip-row"><span>${config.yAxis.name}</span><span>${nearest.yDisplay || `${Math.round(nearest.y * 100)}/100`}</span></div>`);
+      };
+      svg.onpointerleave = () => hideTooltip(svg);
+      svg.onwheel = event => {
+        event.preventDefault();
+        setRegimeZoom(id, regimeZooms[id] * (event.deltaY < 0 ? 1.12 : 1 / 1.12));
+      };
+      svg.ondblclick = () => setRegimeZoom(id, 1);
+    }
+
+    document.getElementById("bondPeriodTabs").addEventListener("click", event => {
+      const button = event.target.closest("[data-bond-period]");
+      if (!button) return;
+      activeBondPeriod = button.dataset.bondPeriod;
+      drawBondMoveChart();
+    });
+    document.getElementById("bondNotesToggle").addEventListener("click", event => {
+      const notes = document.getElementById("bondPeriodNotes");
+      const expanded = notes.classList.toggle("expanded");
+      event.currentTarget.setAttribute("aria-expanded", String(expanded));
+      event.currentTarget.textContent = expanded ? "收起详细分析" : "展开全部分析";
+    });
+
+    renderBondPeriodNotes();
+    drawSpark(DATA.tickers[0]);
+    drawBondMoveChart();
+    drawCurve();
+    REGIME_MAPS.forEach(map => drawRegime(map.id));
+  </script>
+</body>
+</html>

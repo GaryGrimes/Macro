@@ -1,5 +1,9 @@
 .cache/
 __pycache__/
+
+# The morning brief's persisted inputs and local history are part of the report audit trail.
+!morning_brief/data/
+!morning_brief/data/**
 *.py[cod]
 
 vendor_py/

@@ -14,12 +14,37 @@ $reportHtml = Join-Path $repoRoot "morning_brief\$ReportDate`_us_market_brief.ht
 $marketData = Join-Path $repoRoot "morning_brief\data\$ReportDate`_market_data.js"
 $verifiedData = Join-Path $repoRoot "morning_brief\data\$ReportDate`_verified_market.json"
 $historyCache = Join-Path $repoRoot "morning_brief\data\cache\market_history.json"
-$artifacts = @($reportHtml, $marketData, $verifiedData, $historyCache)
+$futuData = Join-Path $repoRoot "morning_brief\data\futu\$ReportDate"
+$artifacts = @($reportHtml, $marketData, $verifiedData, $historyCache, $futuData)
 
 foreach ($artifact in $artifacts) {
   if (-not (Test-Path -LiteralPath $artifact)) {
     throw "Missing daily brief artifact: $artifact"
   }
+}
+
+$futuManifest = Join-Path $futuData 'manifest.json'
+if (-not (Test-Path -LiteralPath $futuManifest)) {
+  throw "Missing Futu fetch manifest: $futuManifest"
+}
+$futuStatus = (Get-Content -LiteralPath $futuManifest -Raw | ConvertFrom-Json).status
+if ($futuStatus -notin @('complete', 'not_published')) {
+  throw "Futu fetch is incomplete: status=$futuStatus"
+}
+
+$futuReview = Join-Path $futuData 'absorption_review.json'
+if (-not (Test-Path -LiteralPath $futuReview)) {
+  throw "Missing Futu absorption review: $futuReview"
+}
+$reviewStatus = (Get-Content -LiteralPath $futuReview -Raw | ConvertFrom-Json).status
+if ($reviewStatus -notin @('complete', 'skipped_not_published')) {
+  throw "Futu absorption review is incomplete: status=$reviewStatus"
+}
+if ($futuStatus -eq 'complete' -and $reviewStatus -ne 'complete') {
+  throw 'Futu article was fetched but not absorbed.'
+}
+if ($futuStatus -eq 'not_published' -and $reviewStatus -ne 'skipped_not_published') {
+  throw 'Futu article was not published but the review status is inconsistent.'
 }
 
 Push-Location $repoRoot

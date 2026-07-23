@@ -1,0 +1,220 @@
+{
+  "status": "complete",
+  "target_date": "2026-07-23",
+  "retrieved_at": "2026-07-23T01:27:26.783107+00:00",
+  "topic_id": "162",
+  "topic_url": "https://news.futunn.com/news-topics/162/futu-morning-post",
+  "topic_api": "https://news.futunn.com/news-site-api/topic/get-topics-news-list?topicsId=162&pageSize=48",
+  "selection_rule": "published in Asia/Shanghai on target_date and title starts with 富途早报",
+  "article": {
+    "title": "富途早报 | 巨头业绩亮眼！惟“加速烧钱”令市场分歧；美伊互放狠话，升息预期重燃；百度已就主要转换向港交所提出申请",
+    "url": "https://news.futunn.com/post/76445887/futu-morning-brief-tech-giants-deliver-strong-earnings-but-accelerated",
+    "source": "富途资讯",
+    "published_at": "2026-07-23T08:17:30+08:00",
+    "abstract": "科技巨头加码数据中心业务，OpenAI被曝大幅提高算力支出预测；禁止特朗普发币！美参议院最快下周就Clarity Act投票。",
+    "body_sha256": "47dcd2285ed0a600dfb556ab3445a4d823eb306d9a0bf516a445ad840f64d0db",
+    "text_characters": 5381
+  },
+  "images": [
+    {
+      "url": "https://newsfile.futunn.com/news-thumbnail/20260723/public/17847651672814699612475-17847651672809071589416.jpeg",
+      "alt": "富途专题封面图",
+      "role": "cover",
+      "file": "images/001_3c768d1d01.jpg",
+      "content_type": "image/jpeg",
+      "bytes": 231313,
+      "sha256": "3c768d1d01e63d9fdbfaad3e4a7b79d1469a2924b1b4bb9a4da08e9103001bdc"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847628522047686646958-17847628522043530841227.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/002_0fa525d582.png",
+      "content_type": "image/png",
+      "bytes": 91046,
+      "sha256": "0fa525d58215d5cecccbaae08707ed1da1ba14799561e03bb65d1b214aa666f5"
+    },
+    {
+      "url": "https://record.futunn.com/news-editor-imgs/20260723/public/17847700492382805955089.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/003_6adc3d4c10.png",
+      "content_type": "image/png",
+      "bytes": 35,
+      "sha256": "6adc3d4c1056996e4e8b765a62604c78b1f867cceb3b15d0b9bedb7c4857f992"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847640500679193452492-17847640500668276911778.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/004_bcbbfdc41f.png",
+      "content_type": "image/png",
+      "bytes": 8803,
+      "sha256": "bcbbfdc41f0ac3115d093c3249c56202c64722eed67088f5f157cde30236b301"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847640802594644613726-17847640802594354900456.jpeg",
+      "alt": "",
+      "role": "body",
+      "file": "images/005_758e467ab1.jpg",
+      "content_type": "image/jpeg",
+      "bytes": 73575,
+      "sha256": "758e467ab1caf49a5eab099566bb32cf317c14038754127bee3c27ab297d3b83"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847640922037870682681-17847640922022703558959.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/006_9bfe83d6f4.png",
+      "content_type": "image/png",
+      "bytes": 30122,
+      "sha256": "9bfe83d6f44c78dce658234f4b25339bfcfd36c4964b82c6bc78bc9a4a1bdf42"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847641126477584034191-17847641126477911728575.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/007_bf847e3899.png",
+      "content_type": "image/png",
+      "bytes": 60208,
+      "sha256": "bf847e3899fc22a3b9b4333793f06213959c6ca2292aa168e500b7969245a8c1"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847641308016464848589-1784764130800531297690.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/008_5328f27a18.png",
+      "content_type": "image/png",
+      "bytes": 53888,
+      "sha256": "5328f27a18841d86729fc2b6f5eb2160468c37851d255c20e0c39a1bb24c85a3"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847641649871451749586-17847641649865606250499.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/009_228604d348.png",
+      "content_type": "image/png",
+      "bytes": 48417,
+      "sha256": "228604d3486b5fc9fe8b68dd07881fbc699a3215c3723011511fb4cce0573050"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847641775212901071776-17847641775205077747598.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/010_2dc4359504.png",
+      "content_type": "image/png",
+      "bytes": 47766,
+      "sha256": "2dc4359504265ec069c7cf21077eddcab5955136c621b97bf3140c2b66b06d2a"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847641883507858576565-17847641883504162851124.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/011_99661213fe.png",
+      "content_type": "image/png",
+      "bytes": 52090,
+      "sha256": "99661213fe3299e44786d6bd87c5389d2ca36166e4daf9b184e2375355715228"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847642011762385458024-17847642011765570720405.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/012_062d025be1.png",
+      "content_type": "image/png",
+      "bytes": 49738,
+      "sha256": "062d025be106ad7a9d3e2974094be98a25df9c5589a68d78d9e99a39ebf235cc"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847642591397872844203-17847642591382595294522.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/013_156ea3bead.png",
+      "content_type": "image/png",
+      "bytes": 138136,
+      "sha256": "156ea3bead20223e478ff82270327129314c9eb882d40cee694564e13643ac8e"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847642938801609414092-17847642938799679765134.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/014_586300ae62.png",
+      "content_type": "image/png",
+      "bytes": 145253,
+      "sha256": "586300ae621e1d665bcd42ab7ba5365ae70edb7f5a1bc0cfc019c3ce1fa1f185"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847643072909357291626-17847643072898537127215.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/015_ceb0cd4d2a.png",
+      "content_type": "image/png",
+      "bytes": 131794,
+      "sha256": "ceb0cd4d2a1076c0693ae17953731082f8609f20abf6e20e9e84088c47c6d1bd"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847643347275497052961-17847643347269732371572.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/016_5c545a46d1.png",
+      "content_type": "image/png",
+      "bytes": 150049,
+      "sha256": "5c545a46d181efcc13b289f928e2bf0c3c5ae62a7f5ab74b8b2aec905f63a084"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847645182164845748024-1784764518215215795688.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/017_946de21659.png",
+      "content_type": "image/png",
+      "bytes": 134653,
+      "sha256": "946de21659cb3f67314a085215379c9055043ad803048f4e9fec81ee397b68d6"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847645918634475770625-17847645918621547506776.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/018_3667922b95.png",
+      "content_type": "image/png",
+      "bytes": 144755,
+      "sha256": "3667922b952ce8f6169e5170c63da3295f99e535d4b224a7e7ad043f2aac73e2"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260723/public/17847553438251402910135-1784755343824717427802.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/019_ec0a71c7ed.png",
+      "content_type": "image/png",
+      "bytes": 153435,
+      "sha256": "ec0a71c7edee7856e46a72ebe035050920097c78f41414e0c3aa37d7e11db3a0"
+    },
+    {
+      "url": "https://newsfile.futunn.com/public/NN-PersistNewsContentImage/7781/20260722/SouthNorthBoundFlowAutoNews_20260722_southbound",
+      "alt": "",
+      "role": "body",
+      "file": "images/020_b91e4ede33.png",
+      "content_type": "image/png",
+      "bytes": 635425,
+      "sha256": "b91e4ede339e8a0d51d87d132ba9290848d65eac8f81d2feaf6edc3d3691644f"
+    },
+    {
+      "url": "https://emoticon.futunn.com/small_emoticon/v2_240316/80px/038.png?imageMogr2/quality/minsize/1/ignore-error/1/format/webp",
+      "alt": "webp",
+      "role": "body",
+      "file": "images/021_61dcc6f18c.webp",
+      "content_type": "image/webp",
+      "bytes": 3038,
+      "sha256": "61dcc6f18cd2c5968212c1f1e5641e3ed1817be23de2a26cbaf0b5117a457f08"
+    },
+    {
+      "url": "https://postimg.futunn.com/news-editor-imgs/20260327/public/17745707787698700428831-17745707787682440651939.png",
+      "alt": "",
+      "role": "body",
+      "file": "images/022_fdfee14847.png",
+      "content_type": "image/png",
+      "bytes": 2121356,
+      "sha256": "fdfee14847c5f1c5fd68df7d4702f01f83c64589e201fad144f27af9b6630f68"
+    }
+  ],
+  "errors": [],
+  "image_candidates": 22
+}

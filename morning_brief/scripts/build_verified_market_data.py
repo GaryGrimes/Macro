@@ -104,6 +104,11 @@ def interpolate_path(anchors, count=30):
 
 
 def intraday_series(ticker):
+    supplied = ticker.get("intraday")
+    if supplied:
+        if len(supplied) < 30:
+            raise RuntimeError(f"{ticker['sym']} supplied intraday series has fewer than 30 points")
+        return supplied
     anchors = ticker.get("intradayAnchors") or [
         [0.0, ticker["previousNumeric"]],
         [0.08, ticker.get("openNumeric", ticker["previousNumeric"])],
@@ -120,6 +125,10 @@ def intraday_series(ticker):
             "value": round(value, 4),
         })
     return output
+
+
+def empty_series():
+    return {}
 
 
 def main():
@@ -143,7 +152,7 @@ def main():
     fetch_errors = {}
     with ThreadPoolExecutor(max_workers=6) as executor:
         pending = {
-            executor.submit(
+            executor.submit(empty_series) if ticker.get("cacheOnly") else executor.submit(
                 fetch_nasdaq_proxy,
                 ticker["nasdaqProxy"],
                 ticker.get("nasdaqAssetClass", "etf"),
@@ -208,12 +217,15 @@ def main():
             "ranges": ranges,
             "history": history,
             "intraday": intraday,
-            "seriesSource": (
+            "seriesSource": ticker.get("seriesSource") or (
                 f"Nasdaq {ticker['nasdaqProxy']} proxy scaled to verified close"
                 if ticker.get("nasdaqProxy")
                 else f"FRED {ticker['fredSeries']} + verified close override"
             ),
-            "intradaySource": "verified OHLC/key-point reconstruction",
+            "intradaySource": ticker.get(
+                "intradaySource",
+                "verified OHLC/key-point reconstruction",
+            ),
         })
         cache["series"][ticker["sym"]] = history
 

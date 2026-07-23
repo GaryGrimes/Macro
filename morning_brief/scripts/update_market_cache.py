@@ -1,25 +1,39 @@
 import csv
+import io
 import json
-import os
 import sys
+import time
+import urllib.parse
 import urllib.request
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE_DIR = ROOT / "data" / "cache"
 CACHE_FILE = CACHE_DIR / "market_history.json"
-OUTPUT_JS = ROOT / "data" / "2026-05-05_market_data.js"
 
 
 SYMBOLS = {
-    "SPX": {"name": "S&P 500", "source": "stooq", "code": "^spx"},
-    "NDX": {"name": "Nasdaq", "source": "stooq", "code": "^ndq"},
-    "RUT": {"name": "Russell 2000", "source": "stooq", "code": "^rut"},
-    "VIX": {"name": "CBOE VIX", "source": "stooq", "code": "^vix"},
-    "BTC": {"name": "Bitcoin", "source": "stooq", "code": "btcusd"},
+    "SPX": {"name": "S&P 500", "yahoo": "^GSPC", "fred": "SP500"},
+    "DJI": {"name": "Dow Jones", "yahoo": "^DJI", "fred": "DJIA"},
+    "IXIC": {"name": "Nasdaq Composite", "yahoo": "^IXIC", "fred": "NASDAQCOM"},
+    "RUT": {"name": "Russell 2000", "yahoo": "^RUT"},
+    "VIX": {"name": "CBOE VIX", "yahoo": "^VIX", "fred": "VIXCLS"},
+    "10Y": {"name": "10Y UST", "yahoo": "^TNX", "fred": "DGS10"},
+    "30Y": {"name": "30Y UST", "yahoo": "^TYX", "fred": "DGS30"},
+    "BRENT": {"name": "Brent Front Month", "yahoo": "BZ=F", "fred": "DCOILBRENTEU"},
+    "WTI": {"name": "WTI Front Month", "yahoo": "CL=F", "fred": "DCOILWTICO"},
+    "GOLD": {"name": "Gold", "yahoo": "GC=F"},
+    "BTC": {"name": "Bitcoin", "yahoo": "BTC-USD"},
+    "DXY": {"name": "U.S. Dollar Index", "yahoo": "DX-Y.NYB"},
+    "UPS": {"name": "UPS", "yahoo": "UPS"},
+    "AMD": {"name": "AMD", "yahoo": "AMD"},
 }
+
+NEW_YORK = ZoneInfo("America/New_York")
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) MacroMorningBrief/1.0"
 
 
 def daterange(start, end):
@@ -33,19 +47,67 @@ def parse_date(value):
     return datetime.strptime(value, "%Y-%m-%d").date()
 
 
-def stooq_daily(code):
-    apikey = os.environ.get("STOOQ_APIKEY")
-    url = f"https://stooq.com/q/d/l/?s={code}&i=d"
-    if apikey:
-        url += f"&apikey={apikey}"
-    with urllib.request.urlopen(url, timeout=20) as response:
-        text = response.read().decode("utf-8", errors="replace")
-    rows = csv.DictReader(text.splitlines())
-    out = {}
-    for row in rows:
-        if row.get("Close") and row["Close"] != "No data":
-            out[row["Date"]] = float(row["Close"])
-    return out
+def open_url(url):
+    request = urllib.request.Request(
+        url,
+        headers={"User-Agent": USER_AGENT, "Accept": "application/json,text/plain,*/*"},
+    )
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    with opener.open(request, timeout=30) as response:
+        return response.read().decode("utf-8", errors="replace")
+
+
+def yahoo_daily(code, start, end, scale=1.0):
+    symbol = urllib.parse.quote(code, safe="")
+    period1 = int(datetime.combine(start, datetime.min.time(), tzinfo=timezone.utc).timestamp())
+    period2 = int(datetime.combine(end + timedelta(days=1), datetime.min.time(), tzinfo=timezone.utc).timestamp())
+    query = urllib.parse.urlencode({
+        "period1": period1,
+        "period2": period2,
+        "interval": "1d",
+        "events": "history",
+    })
+    errors = []
+    for host in ("query2.finance.yahoo.com", "query1.finance.yahoo.com"):
+        url = f"https://{host}/v8/finance/chart/{symbol}?{query}"
+        try:
+            payload = json.loads(open_url(url))
+            result = payload.get("chart", {}).get("result") or []
+            if not result:
+                raise RuntimeError(payload.get("chart", {}).get("error") or "empty result")
+            timestamps = result[0].get("timestamp") or []
+            closes = result[0].get("indicators", {}).get("quote", [{}])[0].get("close") or []
+            output = {}
+            for stamp, value in zip(timestamps, closes):
+                if value is None:
+                    continue
+                day = datetime.fromtimestamp(stamp, NEW_YORK).date()
+                if start <= day <= end:
+                    output[day.isoformat()] = float(value) * scale
+            if not output:
+                raise RuntimeError("no daily closes in requested window")
+            return output, host
+        except Exception as exc:
+            errors.append(f"{host}: {exc}")
+            time.sleep(0.25)
+    raise RuntimeError("; ".join(errors))
+
+
+def fred_daily(series_id, start, end):
+    query = urllib.parse.urlencode({
+        "id": series_id,
+        "cosd": start.isoformat(),
+        "coed": end.isoformat(),
+    })
+    text = open_url(f"https://fred.stlouisfed.org/graph/fredgraph.csv?{query}")
+    output = {}
+    for row in csv.DictReader(io.StringIO(text)):
+        value = row.get(series_id)
+        if value and value != ".":
+            output[row["observation_date"]] = float(value)
+    if not output:
+        raise RuntimeError("no FRED observations in requested window")
+    return output
 
 
 def load_cache():
@@ -79,15 +141,17 @@ def pct_change(latest, prev):
 
 
 def fmt_price(value, sym):
-    if sym == "BTC":
-        return f"~${value / 1000:.0f}k"
+    if sym in {"10Y", "30Y"}:
+        return f"{value:.2f}%"
+    if sym in {"BRENT", "WTI", "GOLD", "BTC", "UPS", "AMD"}:
+        return f"${value:,.2f}"
     if value >= 1000:
         return f"{value:,.2f}"
     return f"{value:.2f}"
 
 
-def build_js(cache, as_of):
-    data = json.loads(OUTPUT_JS.read_text(encoding="utf-8").split("=", 1)[1].strip().rstrip(";"))
+def build_js(cache, as_of, output_js):
+    data = json.loads(output_js.read_text(encoding="utf-8").split("=", 1)[1].strip().rstrip(";"))
     by_symbol = {ticker["sym"]: ticker for ticker in data["tickers"]}
     for sym, cfg in SYMBOLS.items():
         series = cache["series"].get(sym, [])
@@ -99,33 +163,65 @@ def build_js(cache, as_of):
         ticker = by_symbol[sym]
         ticker["value"] = fmt_price(latest, sym)
         if change is not None:
-            ticker["change"] = f"{change:+.2f}%"
+            ticker["change"] = f"{(latest - prev) * 100:+.0f}bp" if sym in {"10Y", "30Y"} else f"{change:+.2f}%"
             ticker["direction"] = "up" if change > 0 else "down" if change < 0 else "flat"
         ticker["history"] = series
     data["asOf"] = as_of.isoformat()
     body = "window.MORNING_BRIEF_DATA = " + json.dumps(data, ensure_ascii=False, indent=2) + ";\n"
-    OUTPUT_JS.write_text(body, encoding="utf-8")
+    output_js.write_text(body, encoding="utf-8")
 
 
 def main():
     as_of = parse_date(sys.argv[1]) if len(sys.argv) > 1 else date.today()
+    output_js = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else None
+    if output_js and not output_js.exists():
+        raise SystemExit(f"output data file does not exist: {output_js}")
     start = as_of - timedelta(days=366)
     cache = load_cache()
     cache.setdefault("series", {})
+    source_status = {}
+    failures = []
     for sym, cfg in SYMBOLS.items():
+        raw = {}
+        source = None
+        errors = []
         try:
-            raw = stooq_daily(cfg["code"])
+            raw, source = yahoo_daily(cfg["yahoo"], start - timedelta(days=10), as_of, cfg.get("yahoo_scale", 1.0))
         except Exception as exc:
-            print(f"warning: {sym} fetch failed: {exc}", file=sys.stderr)
-            raw = {}
+            errors.append(f"Yahoo: {exc}")
+        if not raw and cfg.get("fred"):
+            try:
+                raw = fred_daily(cfg["fred"], start - timedelta(days=10), as_of)
+                source = f"FRED {cfg['fred']}"
+            except Exception as exc:
+                errors.append(f"FRED: {exc}")
         dense = forward_fill_daily(raw, start, as_of)
         if dense:
             cache["series"][sym] = dense
-        elif sym not in cache["series"]:
-            print(f"warning: {sym} has no live data and no existing cache", file=sys.stderr)
+            latest_date = dense[-1]["date"]
+            source_status[sym] = {"source": source, "latest": latest_date}
+            print(f"{sym}: {source} · {len(dense)} points through {latest_date}")
+            if latest_date != as_of.isoformat():
+                failures.append(f"{sym} source is stale: latest={latest_date}, expected={as_of}")
+        else:
+            source_status[sym] = {"source": "existing cache", "errors": errors}
+            failures.append(f"{sym} fetch failed: {'; '.join(errors)}")
+    cache["audit"] = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "conclusion": "latest_points_verified" if not failures else "source_refresh_incomplete",
+        "latest_verified_as_of": as_of.isoformat() if not failures else None,
+        "sources": source_status,
+        "non_trading_day_policy": "Non-crypto series are forward-filled only after a source observation exists.",
+    }
+    cache["note"] = "Daily dense local cache refreshed from Yahoo Finance with FRED official-series fallback."
+    if not failures:
+        cache["asOf"] = as_of.isoformat()
     save_cache(cache)
-    build_js(cache, as_of)
-    print(f"updated {CACHE_FILE} and {OUTPUT_JS}")
+    if output_js:
+        build_js(cache, as_of, output_js)
+    print(f"updated {CACHE_FILE}" + (f" and {output_js}" if output_js else ""))
+    if failures:
+        raise SystemExit("market refresh incomplete:\n- " + "\n- ".join(failures))
 
 
 if __name__ == "__main__":

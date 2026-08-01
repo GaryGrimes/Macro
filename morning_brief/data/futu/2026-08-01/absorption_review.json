@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "report_date": "2026-08-01",
+  "reviewed_at": "2026-08-01T09:23:37+08:00",
+  "status": "skipped_not_published",
+  "futu_fetch_status": "not_published",
+  "selection_rule": "北京时间当日发布且标题以‘富途早报’开头的最新文章",
+  "reason": "公开专题返回的 48 条候选中没有符合当日日期和标题前缀的文章；未使用昨日或更早文章替代。",
+  "items": [],
+  "image_review": {
+    "downloaded_images": 0,
+    "substantive_checked": [],
+    "excluded_as_decorative_or_noninformational": []
+  },
+  "included_summary": "无当日富途材料，纳入 0 项。",
+  "excluded_summary": "不存在可审核的同日候选；昨日及更早文章按规则排除。",
+  "impact_on_report": "不改变独立研究结论；报告明确披露富途未发布和零图片状态。"
+}

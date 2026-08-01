@@ -1,0 +1,13 @@
+{
+  "status": "not_published",
+  "target_date": "2026-08-01",
+  "retrieved_at": "2026-08-01T01:06:00.299503+00:00",
+  "topic_id": "162",
+  "topic_url": "https://news.futunn.com/news-topics/162/futu-morning-post",
+  "topic_api": "https://news.futunn.com/news-site-api/topic/get-topics-news-list?topicsId=162&pageSize=48",
+  "selection_rule": "published in Asia/Shanghai on target_date and title starts with 富途早报",
+  "article": null,
+  "images": [],
+  "errors": [],
+  "candidate_count": 48
+}

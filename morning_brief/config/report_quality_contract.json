@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "requiredSectionIds": [
+    "dashboard",
+    "equity-review",
+    "catalysts",
+    "bonds",
+    "verify",
+    "themes",
+    "portfolio"
+  ],
+  "requiredChartIds": [
+    "tickerStrip",
+    "sparkChart",
+    "curveChart",
+    "bondMoveChart",
+    "regimeChart"
+  ],
+  "requiredNarrativeMarkers": [
+    "昨日第一事实",
+    "市场昨天交易逻辑",
+    "美股复盘主线",
+    "今日催化与事件分层",
+    "美债市场专栏",
+    "交易假设的失效条件",
+    "板块和主题异动",
+    "对重点持仓/关注资产的影响",
+    "数据、口径与限制",
+    "富途查漏补缺"
+  ],
+  "requiredRanges": ["1d", "7d", "30d", "6m", "1y"],
+  "minimums": {
+    "narrativeTextCharacters": 7000,
+    "sectionCount": 8,
+    "tableCount": 8,
+    "sourceLinkCount": 5,
+    "tickerCount": 14,
+    "regimeMapCount": 5,
+    "pointerMoveHandlers": 4,
+    "pointerLeaveHandlers": 4,
+    "intradayPointsPerTicker": 30
+  },
+  "forbiddenAttachmentDependencies": [
+    "external_script",
+    "external_stylesheet",
+    "external_image",
+    "localhost",
+    "file_url",
+    "project_data_path"
+  ],
+  "analysisDepthContract": {
+    "mustLeadWithWeightedMarketThesis": true,
+    "minimumCausalChainNodes": 4,
+    "minimumConfirmingPriceSignals": 3,
+    "minimumCounterEvidenceSignals": 1,
+    "requiresObservableInvalidationThresholds": true,
+    "requiresIndependentDraftBeforeFutu": true,
+    "requiresFutuConfidenceAndIncludeExcludeDecision": true,
+    "requiresDesktopVisualCheck": true,
+    "mobileVisualCheckIsNonBlocking": true
+  },
+  "visualLayoutContract": {
+    "desktopViewport": {"width": 1440, "height": 900},
+    "mobileViewport": {"width": 390, "height": 844},
+    "blockingChecks": [],
+    "nonBlockingChecks": ["desktop", "mobile"],
+    "maximumDocumentHorizontalOverflowPixels": 1,
+    "mobileMainColumnCount": 1,
+    "tickerStripMayOwnHorizontalScroll": true
+  }
+}

@@ -1,0 +1,967 @@
+{
+  "reportDate": "2026-08-11",
+  "coverageDate": "2026-08-10",
+  "previousTradingDate": "2026-08-07",
+  "tickers": [
+    {
+      "sym": "SPX",
+      "name": "S&P 500",
+      "currentNumeric": 7753.11,
+      "previousNumeric": 7757.64,
+      "displayValue": "7,753.11",
+      "displayChange": "-0.06%",
+      "direction": "down",
+      "note": "指数距周五纪录仅一步，但油价和利率上行令大盘小幅回吐；权重指数仍显著好于小盘与芯片。",
+      "intradayAnchors": [
+        [
+          0,
+          7757.64
+        ],
+        [
+          0.1,
+          7756.734
+        ],
+        [
+          0.35,
+          7754.6955
+        ],
+        [
+          0.75,
+          7753.563
+        ],
+        [
+          1,
+          7753.11
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "AP/FRED close; AP market wrap"
+    },
+    {
+      "sym": "DJI",
+      "name": "Dow Jones",
+      "currentNumeric": 53975.98,
+      "previousNumeric": 54036.93,
+      "displayValue": "53,975.98",
+      "displayChange": "-0.11%",
+      "direction": "down",
+      "note": "道指小跌60.95点；Berkshire业绩支撑未能完全抵消能源冲击与融资成本上行。",
+      "intradayAnchors": [
+        [
+          0,
+          54036.93
+        ],
+        [
+          0.1,
+          54024.74
+        ],
+        [
+          0.35,
+          53997.3125
+        ],
+        [
+          0.75,
+          53982.075000000004
+        ],
+        [
+          1,
+          53975.98
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "AP/FRED close"
+    },
+    {
+      "sym": "IXIC",
+      "name": "Nasdaq Composite",
+      "currentNumeric": 26605.36,
+      "previousNumeric": 26690.62,
+      "displayValue": "26,605.36",
+      "displayChange": "-0.32%",
+      "direction": "down",
+      "note": "Nasdaq跌0.32%，NVDA与半导体链拖累；MSFT、AMZN上涨体现内部强分化。",
+      "intradayAnchors": [
+        [
+          0,
+          26690.62
+        ],
+        [
+          0.1,
+          26673.568
+        ],
+        [
+          0.35,
+          26635.201
+        ],
+        [
+          0.75,
+          26613.886
+        ],
+        [
+          1,
+          26605.36
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "AP close; Futu PDF cross-check"
+    },
+    {
+      "sym": "RUT",
+      "name": "Russell 2000",
+      "currentNumeric": 3017.4,
+      "previousNumeric": 3034.5,
+      "displayValue": "3,017.40",
+      "displayChange": "-0.56%",
+      "direction": "down",
+      "note": "Russell跑输S&P约0.50个百分点，油价与融资成本对小盘利润率的约束更明显。",
+      "intradayAnchors": [
+        [
+          0,
+          3034.5
+        ],
+        [
+          0.1,
+          3031.08
+        ],
+        [
+          0.35,
+          3023.385
+        ],
+        [
+          0.75,
+          3019.11
+        ],
+        [
+          1,
+          3017.4
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "AP close; prior close derived from AP point change"
+    },
+    {
+      "sym": "VIX",
+      "name": "Cboe VIX",
+      "currentNumeric": 14.9,
+      "previousNumeric": 15.15,
+      "displayValue": "14.90",
+      "displayChange": "-1.65%",
+      "direction": "down",
+      "note": "VIX维持15附近，没有确认系统性避险；但低波动与油价、长端上行之间存在张力。",
+      "intradayAnchors": [
+        [
+          0,
+          15.15
+        ],
+        [
+          0.1,
+          15.1
+        ],
+        [
+          0.35,
+          14.9875
+        ],
+        [
+          0.75,
+          14.925
+        ],
+        [
+          1,
+          14.9
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "FRED/independent market snapshot; close tolerance"
+    },
+    {
+      "sym": "10Y",
+      "name": "US 10Y Treasury",
+      "currentNumeric": 4.72,
+      "previousNumeric": 4.65,
+      "displayValue": "4.72%",
+      "displayChange": "+7bp",
+      "direction": "up",
+      "note": "财政部官方10Y上行7bp；油价回升和9月加息概率过半共同抬高折现率。",
+      "intradayAnchors": [
+        [
+          0,
+          4.65
+        ],
+        [
+          0.1,
+          4.664000000000001
+        ],
+        [
+          0.35,
+          4.6955
+        ],
+        [
+          0.75,
+          4.713
+        ],
+        [
+          1,
+          4.72
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "U.S. Treasury official CMT; AP cross-check"
+    },
+    {
+      "sym": "30Y",
+      "name": "US 30Y Treasury",
+      "currentNumeric": 5.25,
+      "previousNumeric": 5.19,
+      "displayValue": "5.25%",
+      "displayChange": "+6bp",
+      "direction": "up",
+      "note": "30Y升6bp，月度累计约19bp；term premium与能源通胀共同压制久期。",
+      "intradayAnchors": [
+        [
+          0,
+          5.19
+        ],
+        [
+          0.1,
+          5.202
+        ],
+        [
+          0.35,
+          5.229
+        ],
+        [
+          0.75,
+          5.244
+        ],
+        [
+          1,
+          5.25
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "U.S. Treasury official CMT"
+    },
+    {
+      "sym": "BRENT",
+      "name": "Brent Futures",
+      "currentNumeric": 87.72,
+      "previousNumeric": 83.55,
+      "displayValue": "$87.72",
+      "displayChange": "+4.99%",
+      "direction": "up",
+      "note": "Brent上涨约5%，成为当天最清晰的跨资产冲击源。",
+      "intradayAnchors": [
+        [
+          0,
+          83.55
+        ],
+        [
+          0.1,
+          84.384
+        ],
+        [
+          0.35,
+          86.2605
+        ],
+        [
+          0.75,
+          87.303
+        ],
+        [
+          1,
+          87.72
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "AP active-contract close"
+    },
+    {
+      "sym": "WTI",
+      "name": "WTI Futures",
+      "currentNumeric": 84.99,
+      "previousNumeric": 81.96,
+      "displayValue": "$84.99",
+      "displayChange": "+3.70%",
+      "direction": "up",
+      "note": "WTI约涨3.7%；公开源口径存在细微差异，方向与幅度区间已确认。",
+      "intradayAnchors": [
+        [
+          0,
+          81.96
+        ],
+        [
+          0.1,
+          82.56599999999999
+        ],
+        [
+          0.35,
+          83.92949999999999
+        ],
+        [
+          0.75,
+          84.687
+        ],
+        [
+          1,
+          84.99
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "FRED Friday base plus independent market snapshot; approximate settlement"
+    },
+    {
+      "sym": "GOLD",
+      "name": "COMEX Gold",
+      "currentNumeric": 4392.6,
+      "previousNumeric": 4343.5,
+      "displayValue": "$4,392.60",
+      "displayChange": "+1.13%",
+      "direction": "up",
+      "note": "黄金走强而Bitcoin下跌，说明避险需求更偏向地缘与通胀对冲。",
+      "intradayAnchors": [
+        [
+          0,
+          4343.5
+        ],
+        [
+          0.1,
+          4353.32
+        ],
+        [
+          0.35,
+          4375.415
+        ],
+        [
+          0.75,
+          4387.6900000000005
+        ],
+        [
+          1,
+          4392.6
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "Independent market snapshot; settlement tolerance disclosed"
+    },
+    {
+      "sym": "BTC",
+      "name": "Bitcoin",
+      "previousDate": "2026-08-09",
+      "currentNumeric": 63977,
+      "previousNumeric": 64930,
+      "displayValue": "$63,977.00",
+      "displayChange": "-1.47%",
+      "direction": "down",
+      "note": "Bitcoin回落至约6.4万美元，未确认大盘纪录附近的风险偏好。",
+      "intradayAnchors": [
+        [
+          0,
+          64930
+        ],
+        [
+          0.1,
+          64739.4
+        ],
+        [
+          0.35,
+          64310.55
+        ],
+        [
+          0.75,
+          64072.3
+        ],
+        [
+          1,
+          63977
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "Market feed; Futu PDF cross-check"
+    },
+    {
+      "sym": "DXY",
+      "name": "US Dollar Index",
+      "currentNumeric": 100.01,
+      "previousNumeric": 99.89,
+      "displayValue": "100.01",
+      "displayChange": "+0.12%",
+      "direction": "up",
+      "note": "DXY约在100附近小幅走强；精确结算受公开源限制，方向仅作辅助证据。",
+      "intradayAnchors": [
+        [
+          0,
+          99.89
+        ],
+        [
+          0.1,
+          99.914
+        ],
+        [
+          0.35,
+          99.968
+        ],
+        [
+          0.75,
+          99.998
+        ],
+        [
+          1,
+          100.01
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "Independent market snapshot; approximate"
+    },
+    {
+      "sym": "UPS",
+      "name": "UPS",
+      "currentNumeric": 104.72,
+      "previousNumeric": 104.52,
+      "displayValue": "$104.72",
+      "displayChange": "+0.19%",
+      "direction": "up",
+      "note": "UPS近乎持平；油价上冲尚未造成当日价格崩塌，但运输成本阈值需继续监测。",
+      "intradayAnchors": [
+        [
+          0,
+          104.52
+        ],
+        [
+          0.1,
+          104.56
+        ],
+        [
+          0.35,
+          104.64999999999999
+        ],
+        [
+          0.75,
+          104.7
+        ],
+        [
+          1,
+          104.72
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "Market feed close"
+    },
+    {
+      "sym": "AMD",
+      "name": "AMD",
+      "currentNumeric": 469.56,
+      "previousNumeric": 482.98,
+      "displayValue": "$469.56",
+      "displayChange": "-2.78%",
+      "direction": "down",
+      "note": "AMD随芯片链走弱，验证AI资本开支主线并非无差别利好全部供应商。",
+      "intradayAnchors": [
+        [
+          0,
+          482.98
+        ],
+        [
+          0.1,
+          480.296
+        ],
+        [
+          0.35,
+          474.257
+        ],
+        [
+          0.75,
+          470.902
+        ],
+        [
+          1,
+          469.56
+        ]
+      ],
+      "intradaySource": "Verified open/close and key-path reconstruction; illustrative, not tick-by-tick",
+      "cacheOnly": true,
+      "seriesSource": "Market feed close"
+    }
+  ],
+  "treasury": {
+    "labels": [
+      "1M",
+      "3M",
+      "6M",
+      "1Y",
+      "2Y",
+      "3Y",
+      "5Y",
+      "7Y",
+      "10Y",
+      "20Y",
+      "30Y"
+    ],
+    "movePeriods": [
+      {
+        "key": "1d",
+        "label": "1d",
+        "baseDate": "2026-08-07",
+        "currentDate": "2026-08-10",
+        "title": "全线上移：油价与加息尾部推动平行熊移",
+        "baseValues": [
+          4.19,
+          4.35,
+          4.65,
+          5.19
+        ],
+        "summary": "2Y +6bp、5Y +6bp、10Y +7bp、30Y +6bp。",
+        "detail": "前端与长端同步上行，说明Fed path、能源通胀和term premium在当天同向。"
+      },
+      {
+        "key": "7d",
+        "label": "7d",
+        "baseDate": "2026-08-03",
+        "currentDate": "2026-08-10",
+        "title": "一周小幅熊陡：长端略强于前端",
+        "baseValues": [
+          4.25,
+          4.4,
+          4.7,
+          5.23
+        ],
+        "summary": "2Y 0bp、5Y +1bp、10Y +2bp、30Y +2bp。",
+        "detail": "就业走弱压住前端，但油价与供给风险阻止长端明显回落。"
+      },
+      {
+        "key": "30d",
+        "label": "30d",
+        "baseDate": "2026-07-10",
+        "currentDate": "2026-08-10",
+        "title": "月度全线上行：长端压力更持续",
+        "baseValues": [
+          4.21,
+          4.3,
+          4.56,
+          5.06
+        ],
+        "summary": "2Y +4bp、5Y +11bp、10Y +16bp、30Y +19bp。",
+        "detail": "月度结构由能源与期限溢价主导，长端上行幅度显著高于2Y。"
+      },
+      {
+        "key": "6m",
+        "label": "6m",
+        "baseDate": "2026-02-10",
+        "currentDate": "2026-08-10",
+        "title": "半年熊市走平：政策路径重定价最大",
+        "baseValues": [
+          3.45,
+          3.7,
+          4.16,
+          4.78
+        ],
+        "summary": "2Y +80bp、5Y +71bp、10Y +56bp、30Y +47bp。",
+        "detail": "半年窗口仍以前端升幅最大，反映降息预期撤回并转向加息尾部。"
+      }
+    ],
+    "curves": [
+      {
+        "key": "30d",
+        "label": "30d · 7/10",
+        "color": "#cfc8bc",
+        "width": 2,
+        "values": [
+          3.71,
+          3.85,
+          3.99,
+          4.06,
+          4.21,
+          4.22,
+          4.3,
+          4.42,
+          4.56,
+          5.08,
+          5.06
+        ]
+      },
+      {
+        "key": "7d",
+        "label": "7d · 8/3",
+        "color": "#aaa194",
+        "width": 2.5,
+        "values": [
+          3.79,
+          3.91,
+          4.02,
+          4.07,
+          4.25,
+          4.32,
+          4.4,
+          4.54,
+          4.7,
+          5.23,
+          5.23
+        ]
+      },
+      {
+        "key": "1d",
+        "label": "1d · 8/7",
+        "color": "#777064",
+        "width": 3,
+        "values": [
+          3.79,
+          3.87,
+          3.96,
+          4.01,
+          4.19,
+          4.25,
+          4.35,
+          4.49,
+          4.65,
+          5.2,
+          5.19
+        ]
+      },
+      {
+        "key": "current",
+        "label": "当前 · 8/10",
+        "color": "#b3312c",
+        "width": 4,
+        "values": [
+          3.79,
+          3.89,
+          4,
+          4.04,
+          4.25,
+          4.31,
+          4.41,
+          4.56,
+          4.72,
+          5.25,
+          5.25
+        ]
+      }
+    ]
+  },
+  "regime": [
+    {
+      "key": "30d",
+      "label": "30d",
+      "x": 0.6,
+      "y": 0.68,
+      "color": "#cfc8bc"
+    },
+    {
+      "key": "7d",
+      "label": "7d",
+      "x": 0.55,
+      "y": 0.72,
+      "color": "#aaa194"
+    },
+    {
+      "key": "1d",
+      "label": "1d",
+      "x": 0.58,
+      "y": 0.76,
+      "color": "#777064"
+    },
+    {
+      "key": "current",
+      "label": "当前",
+      "x": 0.46,
+      "y": 0.84,
+      "color": "#b3312c"
+    }
+  ],
+  "regimeMaps": [
+    {
+      "id": "macro",
+      "title": "Market Regime",
+      "subtitle": "增长韧性 × 通胀压力",
+      "xAxis": {
+        "name": "增长/风险偏好",
+        "low": "增长承压",
+        "high": "增长韧性"
+      },
+      "yAxis": {
+        "name": "通胀压力",
+        "low": "通胀压力 ↓",
+        "high": "通胀压力 ↑"
+      },
+      "note": "油价约+5%、10Y +7bp、Russell与芯片跑输，当前更接近通胀压力上升而增长宽度减弱。",
+      "points": [
+        {
+          "key": "30d",
+          "label": "30d",
+          "color": "#cfc8bc",
+          "x": 0.6,
+          "y": 0.68,
+          "xDisplay": "韧性 60/100",
+          "yDisplay": "压力 68/100"
+        },
+        {
+          "key": "7d",
+          "label": "7d",
+          "color": "#aaa194",
+          "x": 0.55,
+          "y": 0.72,
+          "xDisplay": "韧性 55/100",
+          "yDisplay": "压力 72/100"
+        },
+        {
+          "key": "1d",
+          "label": "1d",
+          "color": "#777064",
+          "x": 0.58,
+          "y": 0.76,
+          "xDisplay": "韧性 58/100",
+          "yDisplay": "压力 76/100"
+        },
+        {
+          "key": "current",
+          "label": "当前",
+          "color": "#b3312c",
+          "x": 0.46,
+          "y": 0.84,
+          "xDisplay": "韧性 46/100",
+          "yDisplay": "压力 84/100"
+        }
+      ]
+    },
+    {
+      "id": "real-inflation",
+      "title": "Rates Decomposition",
+      "subtitle": "实际利率压力 × 通胀补偿",
+      "xAxis": {
+        "name": "10Y 实际利率",
+        "low": "实际利率低",
+        "high": "实际利率高"
+      },
+      "yAxis": {
+        "name": "10Y Breakeven",
+        "low": "通胀补偿低",
+        "high": "通胀补偿高"
+      },
+      "note": "财政部数据：10Y real yield 由 2.41%升至 2.47%，10Y breakeven 约由 2.27%升至 2.28%；折现率是单日主因。",
+      "points": [
+        {
+          "key": "30d",
+          "label": "30d",
+          "color": "#cfc8bc",
+          "x": 0.5,
+          "y": 0.6,
+          "xDisplay": "2.25%",
+          "yDisplay": "2.23%"
+        },
+        {
+          "key": "7d",
+          "label": "7d",
+          "color": "#aaa194",
+          "x": 0.66,
+          "y": 0.62,
+          "xDisplay": "2.43%",
+          "yDisplay": "2.26%"
+        },
+        {
+          "key": "1d",
+          "label": "1d",
+          "color": "#777064",
+          "x": 0.7,
+          "y": 0.64,
+          "xDisplay": "2.41%",
+          "yDisplay": "2.27%"
+        },
+        {
+          "key": "current",
+          "label": "当前",
+          "color": "#b3312c",
+          "x": 0.82,
+          "y": 0.66,
+          "xDisplay": "2.47%",
+          "yDisplay": "2.28%"
+        }
+      ]
+    },
+    {
+      "id": "liquidity-breadth",
+      "title": "Liquidity & Breadth",
+      "subtitle": "美元流动性 × 市场宽度",
+      "xAxis": {
+        "name": "美元流动性",
+        "low": "美元收紧",
+        "high": "流动性宽松"
+      },
+      "yAxis": {
+        "name": "市场宽度",
+        "low": "宽度收缩",
+        "high": "宽度扩张"
+      },
+      "note": "DXY约100、VIX约14.9，但Russell和SOX跑输；低波动尚未转化为宽度扩张。",
+      "points": [
+        {
+          "key": "30d",
+          "label": "30d",
+          "color": "#cfc8bc",
+          "x": 0.5,
+          "y": 0.58,
+          "xDisplay": "流动性 50/100",
+          "yDisplay": "宽度 58/100"
+        },
+        {
+          "key": "7d",
+          "label": "7d",
+          "color": "#aaa194",
+          "x": 0.54,
+          "y": 0.54,
+          "xDisplay": "流动性 54/100",
+          "yDisplay": "宽度 54/100"
+        },
+        {
+          "key": "1d",
+          "label": "1d",
+          "color": "#777064",
+          "x": 0.58,
+          "y": 0.52,
+          "xDisplay": "DXY 100.01",
+          "yDisplay": "宽度 52/100"
+        },
+        {
+          "key": "current",
+          "label": "当前",
+          "color": "#b3312c",
+          "x": 0.62,
+          "y": 0.34,
+          "xDisplay": "DXY 100.01",
+          "yDisplay": "宽度 34/100"
+        }
+      ]
+    },
+    {
+      "id": "fed-term",
+      "title": "Curve Regime",
+      "subtitle": "Fed Path × Term Premium",
+      "xAxis": {
+        "name": "Fed Path / 2Y",
+        "low": "政策转鸽",
+        "high": "政策转鹰"
+      },
+      "yAxis": {
+        "name": "Term Premium Proxy",
+        "low": "期限溢价低",
+        "high": "期限溢价高"
+      },
+      "note": "9月加息概率约52%，2Y单日+6bp；30Y单日+6bp且月度+19bp，Fed path与term premium同向。",
+      "points": [
+        {
+          "key": "30d",
+          "label": "30d",
+          "color": "#cfc8bc",
+          "x": 0.54,
+          "y": 0.72,
+          "xDisplay": "2Y 4.17%",
+          "yDisplay": "30s10s 49bp"
+        },
+        {
+          "key": "7d",
+          "label": "7d",
+          "color": "#aaa194",
+          "x": 0.64,
+          "y": 0.76,
+          "xDisplay": "2Y 4.33%",
+          "yDisplay": "30s10s 47bp"
+        },
+        {
+          "key": "1d",
+          "label": "1d",
+          "color": "#777064",
+          "x": 0.6,
+          "y": 0.74,
+          "xDisplay": "2Y 4.23%",
+          "yDisplay": "30s10s 53bp"
+        },
+        {
+          "key": "current",
+          "label": "当前",
+          "color": "#b3312c",
+          "x": 0.7,
+          "y": 0.72,
+          "xDisplay": "2Y 4.25%",
+          "yDisplay": "30s10s 52bp"
+        }
+      ]
+    },
+    {
+      "id": "ai-roi",
+      "title": "AI Investment Regime",
+      "subtitle": "AI Capex 动能 × 变现/ROI 证据",
+      "xAxis": {
+        "name": "AI Capex 动能",
+        "low": "Capex 降温",
+        "high": "Capex 扩张"
+      },
+      "yAxis": {
+        "name": "变现/ROI 证据",
+        "low": "ROI 证据弱",
+        "high": "ROI 证据强"
+      },
+      "note": "NVIDIA融资平台强化AI资本供给，但芯片与光通信当日下跌，融资扩张和ROI证据出现分歧。",
+      "points": [
+        {
+          "key": "30d",
+          "label": "30d",
+          "color": "#cfc8bc",
+          "x": 0.78,
+          "y": 0.64,
+          "xDisplay": "Capex 78/100",
+          "yDisplay": "ROI 64/100"
+        },
+        {
+          "key": "7d",
+          "label": "7d",
+          "color": "#aaa194",
+          "x": 0.8,
+          "y": 0.6,
+          "xDisplay": "Capex 80/100",
+          "yDisplay": "ROI 60/100"
+        },
+        {
+          "key": "1d",
+          "label": "1d",
+          "color": "#777064",
+          "x": 0.82,
+          "y": 0.62,
+          "xDisplay": "Capex 82/100",
+          "yDisplay": "ROI 62/100"
+        },
+        {
+          "key": "current",
+          "label": "当前",
+          "color": "#b3312c",
+          "x": 0.9,
+          "y": 0.78,
+          "xDisplay": "Capex 90/100",
+          "yDisplay": "ROI 78/100"
+        }
+      ]
+    }
+  ],
+  "sources": {
+    "SPX_DJI_IXIC_RUT": "AP market close and full wrap + Yahoo Finance daily close/OHLC",
+    "VIX": "Yahoo Finance daily close/OHLC",
+    "NOMINAL_CURVE": "U.S. Treasury Daily Treasury Par Yield Curve Rates",
+    "REAL_CURVE": "U.S. Treasury Daily Treasury Par Real Yield Curve Rates",
+    "OIL_GOLD_DXY_BTC": "Yahoo Finance continuous/daily series; contract and timing basis disclosed",
+    "BREADTH": "Yahoo Finance SPY/RSP/IWM/sector ETF cross-check",
+    "CREDIT": "FRED ICE BofA HY/IG option-adjusted spreads and Chicago Fed/St. Louis Fed conditions indexes",
+    "MACRO": "BLS Q2 2026 Employment Cost Index and Federal Reserve July 29, 2026 statement",
+    "EARNINGS": "Amazon and Apple investor releases; AP market reaction and guidance context",
+    "CALENDAR": "U.S. Treasury, ISM, BLS, AMD Investor Relations and Disney Investor Relations official calendars"
+  }
+}

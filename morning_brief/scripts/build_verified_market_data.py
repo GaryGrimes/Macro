@@ -194,7 +194,17 @@ def main():
         )
 
         raw[coverage_date.isoformat()] = ticker["currentNumeric"]
-        raw[(coverage_date - timedelta(days=1)).isoformat()] = ticker["previousNumeric"]
+        previous_date = parse_date(
+            ticker.get("previousDate")
+            or facts.get("previousTradingDate")
+            or (coverage_date - timedelta(days=1)).isoformat()
+        )
+        raw[previous_date.isoformat()] = ticker["previousNumeric"]
+        if ticker["sym"] != "BTC":
+            cursor = previous_date + timedelta(days=1)
+            while cursor < coverage_date:
+                raw[cursor.isoformat()] = ticker["previousNumeric"]
+                cursor += timedelta(days=1)
         history = forward_fill(raw, start, coverage_date)
         if len(history) < 250:
             raise RuntimeError(f"{ticker['sym']} history too short after FRED/cache load: {len(history)}; fetch_error={fetch_error}")

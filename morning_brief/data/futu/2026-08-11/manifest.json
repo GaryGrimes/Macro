@@ -1,0 +1,241 @@
+{
+  "status": "complete",
+  "target_date": "2026-08-11",
+  "retrieved_at": "2026-08-11T00:43:44.063063+00:00",
+  "completed_at": "2026-08-11T01:15:00+00:00",
+  "topic_id": "162",
+  "topic_url": "https://news.futunn.com/news-topics/162/futu-morning-post",
+  "topic_api": "https://news.futunn.com/news-site-api/topic/get-topics-news-list?topicsId=162&pageSize=48",
+  "selection_rule": "published in Asia/Shanghai on target_date and title starts with 富途早报",
+  "acquisition_mode": "same-day topic metadata plus user-provided PDF fallback after public article WAF",
+  "article": {
+    "id": "77448169",
+    "title": "富途早报 | 特朗普称“100%控制”海峡，美伊围绕赔偿互不相让；美联储鹰派称或需多次加息，9月加息概率升破五成；英伟达携华尔街筹建5000亿美元AI融资平台",
+    "url": "https://news.futunn.com/post/77448169/futu-morning-brief-trump-claims-100-control-over-the-strait",
+    "source": "富途资讯",
+    "published_at": "2026-08-11T08:18:31+08:00",
+    "abstract": "特朗普称自沃什履新以来仅与其短暂交谈一次，否认频繁沟通；高盛：标普500约一半盈利增长依赖债务驱动的AI资本开支。",
+    "body_sha256": "fdcf7ffc5581464b24a997d2a4d935b7569c7177aedc59729b65fa71b6bc7ad0",
+    "text_characters": 13004,
+    "source_pdf_sha256": "a63af06a974170326ce19605aec99dc14aff987431bcad9bfb27702b2a36e6aa",
+    "source_pdf_pages": 19
+  },
+  "images": [
+    {
+      "url": "pdf-embedded://page-2/001_p2_2f30403ddb.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/001_p2_2f30403ddb.png",
+      "content_type": "image/png",
+      "bytes": 1491094,
+      "sha256": "2f30403ddb969495427bebfaaba1d9ff3a7e3e496be17811413288cb03770ad7",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-2/002_p2_1d9426e4f1.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/002_p2_1d9426e4f1.png",
+      "content_type": "image/png",
+      "bytes": 158632,
+      "sha256": "1d9426e4f1a5aa6e28db70adbf88694fa1c38095ace06886f0eaa2fb3be3a0fe",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-3/003_p3_820cf41ffa.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/003_p3_820cf41ffa.png",
+      "content_type": "image/png",
+      "bytes": 693541,
+      "sha256": "820cf41ffa0129ebdbbfa6e7f710ec7258e34ffce3c1668d9917b422a8c0cb77",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-3/004_p3_18c0949c98.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/004_p3_18c0949c98.png",
+      "content_type": "image/png",
+      "bytes": 517800,
+      "sha256": "18c0949c98e5bf963611446c08006990db8539e032e1a608950ff956d3336f2d",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-4/005_p4_4becada524.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/005_p4_4becada524.png",
+      "content_type": "image/png",
+      "bytes": 80108,
+      "sha256": "4becada524f0e8c8aa816fda435538c81ec47e532c71a771b0f82d249833f665",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-4/006_p4_7db95e2790.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/006_p4_7db95e2790.png",
+      "content_type": "image/png",
+      "bytes": 84600,
+      "sha256": "7db95e2790871005bb1123b98cf7ef22cb35a811a2bce953347446f818d22bf9",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-5/007_p5_fb6da197a7.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/007_p5_fb6da197a7.png",
+      "content_type": "image/png",
+      "bytes": 90991,
+      "sha256": "fb6da197a725f00bdb0e0c83d22ec6e3dc4f0ef0499b1aa563aedfbe3043767e",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-5/008_p5_3fd1e685e5.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/008_p5_3fd1e685e5.png",
+      "content_type": "image/png",
+      "bytes": 96982,
+      "sha256": "3fd1e685e5ea6f68572b8cf1241c927ccb430ecfd290b13e231c6281b1684c67",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-5/009_p5_67253bd6a1.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/009_p5_67253bd6a1.png",
+      "content_type": "image/png",
+      "bytes": 77235,
+      "sha256": "67253bd6a1a558ffd398be02b1708d66d8873f04c2cf197d3c896a0b7e869145",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-6/010_p6_9af481b748.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/010_p6_9af481b748.png",
+      "content_type": "image/png",
+      "bytes": 94994,
+      "sha256": "9af481b748a57666bb02df49f5fd8fa7f6b0064d7e362ab9e229971457820341",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-6/011_p6_c055ddde6f.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/011_p6_c055ddde6f.png",
+      "content_type": "image/png",
+      "bytes": 103625,
+      "sha256": "c055ddde6fe0dd3569fe2b5050c100e4b28faaa75aed1031aaf9fa8cd39d707e",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-7/012_p7_6836c9404b.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/012_p7_6836c9404b.png",
+      "content_type": "image/png",
+      "bytes": 259111,
+      "sha256": "6836c9404b38f63e07eaa78a904471b62135c6f9a3bb63f988ba1d0e5da0a389",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-8/013_p8_946eb732a8.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/013_p8_946eb732a8.png",
+      "content_type": "image/png",
+      "bytes": 296537,
+      "sha256": "946eb732a83298fdacf603f075716ce6e68c8f9abf46b30367256e75ab469cf7",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-9/014_p9_57890d5ff4.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/014_p9_57890d5ff4.png",
+      "content_type": "image/png",
+      "bytes": 276267,
+      "sha256": "57890d5ff4c87c9c44b10965e0eae57cf063d089d412a58fb112ed4d235a2cdc",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-9/015_p9_b86b0199b8.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/015_p9_b86b0199b8.png",
+      "content_type": "image/png",
+      "bytes": 275112,
+      "sha256": "b86b0199b8a56ae9beb0e1c1db39acb5dbc4e1349614448ed37f3f742cabdbb2",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-10/016_p10_ba5dc9b7c6.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/016_p10_ba5dc9b7c6.png",
+      "content_type": "image/png",
+      "bytes": 257098,
+      "sha256": "ba5dc9b7c61f7f29ab08e805d1cb6ba1339d98d55bc76090db3fa70e8727982f",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-11/017_p11_d2103c27f8.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/017_p11_d2103c27f8.png",
+      "content_type": "image/png",
+      "bytes": 258410,
+      "sha256": "d2103c27f8f67fcefd54b51138435555225e56e0ff5263810753fe667929d3f9",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-11/018_p11_724814d5a1.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/018_p11_724814d5a1.png",
+      "content_type": "image/png",
+      "bytes": 252839,
+      "sha256": "724814d5a16810032ab41881c54f4d5677d1897df4a990b6622594f2ff9f5c63",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-12/019_p12_b5b85ba1af.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/019_p12_b5b85ba1af.png",
+      "content_type": "image/png",
+      "bytes": 248801,
+      "sha256": "b5b85ba1af4ea991bdaed0afe54a87de886de0b78784e920783bbd51d5a4feb2",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-12/020_p12_e884f79480.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/020_p12_e884f79480.png",
+      "content_type": "image/png",
+      "bytes": 258667,
+      "sha256": "e884f79480d1392228be9e1c3a1d46ea0cf302c7a55d7ad734dc99377c4fc6f5",
+      "acquisition": "extracted from user-provided PDF"
+    },
+    {
+      "url": "pdf-embedded://page-14/021_p14_53edc2fee1.png",
+      "alt": "用户提供 PDF 中的富途正文图片",
+      "role": "body",
+      "file": "images/021_p14_53edc2fee1.png",
+      "content_type": "image/png",
+      "bytes": 975761,
+      "sha256": "53edc2fee1008efd2c1bb61f783f34b49c2805d551bde40f4cb2d3eb18b58a66",
+      "acquisition": "extracted from user-provided PDF"
+    }
+  ],
+  "errors": [],
+  "image_candidates": 21,
+  "source_limitations": [
+    "Original public HTML remained blocked by JavaScript/WAF; body and images were recovered from the exact same-day PDF supplied by the user.",
+    "PDF extraction preserves readable content and embedded images but not original image URLs."
+  ]
+}
